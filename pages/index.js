@@ -49,6 +49,8 @@ export default function Home() {
   console.log({ nfts });
   console.log({ loadingState });
 
+  // this is a test
+
   if (loadingState === "loaded" && !nfts.length)
     return <h1 className="px-20 py-10 text-3xl">No items in marketplace</h1>;
 
