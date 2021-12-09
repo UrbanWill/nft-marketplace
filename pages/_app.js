@@ -1,15 +1,14 @@
 import "../styles/globals.css";
-import Link from "next/link";
+import Layout from "../components/Layout/Layout";
 
-import Header from "../components/Header/Header";
-
-function MyApp({ Component, pageProps }) {
+function NFTMarketPlace({ Component, pageProps }) {
   return (
     <div>
-      <Header />
-      <Component {...pageProps} />
+      <Layout>
+        <Component {...pageProps} />
+      </Layout>
     </div>
   );
 }
 
-export default MyApp;
+export default NFTMarketPlace;
