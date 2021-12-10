@@ -10,8 +10,8 @@ const { HOME, CREATE_ITEM, MY_ASSETS, CREATOR_DASHBOARD } = HEADER_ROUTES;
 const navOptions = [
   { route: HOME, label: "Home" },
   { route: CREATE_ITEM, label: "Sell digital asset" },
-  { route: MY_ASSETS, label: "My digital Assets" },
-  { route: CREATOR_DASHBOARD, label: "CreatordDashboard" },
+  { route: MY_ASSETS, label: "My digital assets" },
+  { route: CREATOR_DASHBOARD, label: "Creatord dashboard" },
 ];
 
 const defaultMetaTitle = "Metaverse";
@@ -24,9 +24,9 @@ const Layout = ({ children }) => {
   return (
     <>
       <Meta title={`${defaultMetaTitle} ${routeTitle}`} />
-      <div className="max-w-screen-2xl">
+      <div>
         <Header currentRoute={route} navOptions={navOptions} />
-        <div className="px-4">{children}</div>
+        <div className="p-4">{children}</div>
       </div>
     </>
   );

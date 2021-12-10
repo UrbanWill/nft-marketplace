@@ -3,11 +3,9 @@ import Layout from "../components/Layout/Layout";
 
 function NFTMarketPlace({ Component, pageProps }) {
   return (
-    <div>
-      <Layout>
-        <Component {...pageProps} />
-      </Layout>
-    </div>
+    <Layout>
+      <Component {...pageProps} />
+    </Layout>
   );
 }
 

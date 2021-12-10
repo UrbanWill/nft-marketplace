@@ -13,7 +13,7 @@ const propTypes = {
 
 const Header = ({ navOptions, currentRoute }) => {
   return (
-    <nav className="border-b p-6">
+    <nav className="border-b p-6 sticky top-0 z-10 bg-white">
       <p className="text-4xl font-bold">Metaverse Marketplace</p>
       <div className="flex mt-4">
         {navOptions.map((option) => {
