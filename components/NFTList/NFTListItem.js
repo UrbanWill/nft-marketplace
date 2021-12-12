@@ -11,18 +11,24 @@ const propTypes = {
 const NFTListItem = ({ nft, onHandleAction }) => {
   const { name, image, description, price } = nft;
   return (
-    <div className="border shadow rounded-xl overflow-hidden">
-      <Image src={image} alt="NFT image" width="200px" height="200px" />
-      <div className="p-4">
-        <p style={{ height: "64px" }} className="text-2xl font-semibold">
-          {name}
-        </p>
+    <li className="border shadow rounded-xl overflow-hidden flex flex-col justify-between h-128">
+      <div className="h-4/5 relative">
+        <Image
+          src={image}
+          alt="NFT image"
+          layout="fill"
+          objectFit="cover"
+          objectPosition="top center"
+        />
+      </div>
+      <div className="p-2">
+        <p className="text-2xl font-semibold">{name}</p>
         <div>
           <p className="text-gray-400">{description}</p>
         </div>
       </div>
       <div className="p-4 bg-black">
-        <p className="text-2xl mb-4 font-bold text-white">{price} ETH</p>
+        <p className="text-2xl font-bold text-white">{price} ETH</p>
         <button
           className="w-full bg-pink-500 text-white font-bold py-2 px-12 rounded"
           onClick={() => onHandleAction(nft)}
@@ -30,7 +36,7 @@ const NFTListItem = ({ nft, onHandleAction }) => {
           Buy
         </button>
       </div>
-    </div>
+    </li>
   );
 };
 
