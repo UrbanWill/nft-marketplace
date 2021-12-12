@@ -5,11 +5,15 @@ import { nftPropType } from "../../utils/propTypes";
 
 const propTypes = {
   nft: nftPropType.isRequired,
-  onHandleAction: PropTypes.func.isRequired,
+  onHandleAction: PropTypes.func,
 };
 
 const NFTListItem = ({ nft, onHandleAction }) => {
   const { name, image, description, price } = nft;
+
+  // TODO: This is temporary, every NFT is actionable. (can buy, sell or de-list at at any time)
+  const hasAction = !!onHandleAction;
+
   return (
     <li className="border shadow rounded-xl overflow-hidden flex flex-col justify-between h-128">
       <div className="h-4/5 relative">
@@ -29,12 +33,14 @@ const NFTListItem = ({ nft, onHandleAction }) => {
       </div>
       <div className="p-4 bg-black">
         <p className="text-2xl font-bold text-white">{price} ETH</p>
-        <button
-          className="w-full bg-pink-500 text-white font-bold py-2 px-12 rounded"
-          onClick={() => onHandleAction(nft)}
-        >
-          Buy
-        </button>
+        {hasAction && (
+          <button
+            className="w-full bg-pink-500 text-white font-bold py-2 px-12 rounded"
+            onClick={() => onHandleAction(nft)}
+          >
+            Buy
+          </button>
+        )}
       </div>
     </li>
   );

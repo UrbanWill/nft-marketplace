@@ -3,18 +3,23 @@ import { useEffect, useState } from "react";
 import axios from "axios";
 import Web3Modal from "web3modal";
 
+import NFTList from "../components/NFTList/NFTList";
+
 import { nftmarketaddress, nftaddress } from "../config";
 
 import NFT from "../artifacts/contracts/NFT.sol/NFT.json";
 import Market from "../artifacts/contracts/NFTMarket.sol/NFTMarket.json";
 
+const emptyListMessage = "No assets owned";
+
 export default function MyAssets() {
   const [nfts, setNfts] = useState([]);
-  const [loadingState, setLoadingState] = useState("not-loaded");
+  const [isLoading, setIsLoading] = useState(false);
   useEffect(() => {
     loadNFTs();
   }, []);
   async function loadNFTs() {
+    setIsLoading(true);
     const web3Modal = new Web3Modal();
     const connection = await web3Modal.connect();
     const provider = new ethers.providers.Web3Provider(connection);
@@ -39,31 +44,23 @@ export default function MyAssets() {
           seller: i.seller,
           owner: i.owner,
           image: meta.data.image,
+          name: meta.data.name,
+          description: meta.data.description,
         };
         return item;
       })
     );
     setNfts(items);
-    setLoadingState("loaded");
+    setIsLoading(false);
   }
-  if (loadingState === "loaded" && !nfts.length)
-    return <h1 className="py-10 px-20 text-3xl">No assets owned</h1>;
+
   return (
-    <div className="flex justify-center">
-      <div className="p-4">
-        <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-4 pt-4">
-          {nfts.map((nft, i) => (
-            <div key={i} className="border shadow rounded-xl overflow-hidden">
-              <img src={nft.image} className="rounded" />
-              <div className="p-4 bg-black">
-                <p className="text-2xl font-bold text-white">
-                  Price - {nft.price} Eth
-                </p>
-              </div>
-            </div>
-          ))}
-        </div>
-      </div>
-    </div>
+    <NFTList
+      nfts={nfts}
+      // TODO: Add sell functionality
+      // onHandleAction={handleDoSomeAction}
+      isLoading={isLoading}
+      emptyListMessage={emptyListMessage}
+    />
   );
 }

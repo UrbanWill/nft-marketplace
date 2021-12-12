@@ -6,7 +6,7 @@ import { nftPropType } from "../../utils/propTypes";
 
 const propTypes = {
   nfts: PropTypes.arrayOf(nftPropType).isRequired,
-  onHandleAction: PropTypes.func.isRequired,
+  onHandleAction: PropTypes.func,
   isLoading: PropTypes.bool.isRequired,
   emptyListMessage: PropTypes.string.isRequired,
 };
@@ -30,7 +30,7 @@ const NFTList = ({ nfts, onHandleAction, isLoading, emptyListMessage }) => {
   }
 
   return (
-    <ul className="grid grid-cols-1 sm:grid-cols-2 sm:grid-cols-3 lg:grid-cols-4 2xl:grid-cols-5 gap-4 pt-4">
+    <ul className="grid grid-cols-1 gap-3 sm:grid-cols-2 sm:grid-cols-3 lg:grid-cols-4 2xl:grid-cols-5 lg:gap-4 pt-4">
       {nfts.map((nft) => (
         <NFTListItem
           nft={nft}
