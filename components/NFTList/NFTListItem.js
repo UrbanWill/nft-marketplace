@@ -11,7 +11,6 @@ const propTypes = {
 const NFTListItem = ({ nft, onHandleAction }) => {
   const { name, image, description, price } = nft;
 
-  // TODO: This is temporary, every NFT is actionable. (can buy, sell or de-list at at any time)
   const hasAction = !!onHandleAction;
 
   return (

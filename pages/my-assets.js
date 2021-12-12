@@ -18,8 +18,10 @@ export default function MyAssets() {
   useEffect(() => {
     loadNFTs();
   }, []);
-  async function loadNFTs() {
+
+  const loadNFTs = async () => {
     setIsLoading(true);
+
     const web3Modal = new Web3Modal();
     const connection = await web3Modal.connect();
     const provider = new ethers.providers.Web3Provider(connection);
@@ -52,7 +54,7 @@ export default function MyAssets() {
     );
     setNfts(items);
     setIsLoading(false);
-  }
+  };
 
   return (
     <NFTList
