@@ -4,12 +4,12 @@ import { create as ipfsHttpClient } from "ipfs-http-client";
 import { useRouter } from "next/router";
 import Web3Modal from "web3modal";
 
-const client = ipfsHttpClient("https://ipfs.infura.io:5001/api/v0");
-
 import { nftaddress, nftmarketaddress } from "../config";
 
 import NFT from "../artifacts/contracts/NFT.sol/NFT.json";
 import Market from "../artifacts/contracts/NFTMarket.sol/NFTMarket.json";
+
+const client = ipfsHttpClient("https://ipfs.infura.io:5001/api/v0");
 
 export default function CreateItem() {
   const [fileUrl, setFileUrl] = useState(null);
@@ -19,9 +19,10 @@ export default function CreateItem() {
     name: "",
     description: "",
   });
+
   const router = useRouter();
 
-  async function onImageUpload(e) {
+  const onImageUpload = async (e) => {
     const file = e.target.files[0];
     try {
       // TODO: Moved added to state
@@ -33,10 +34,38 @@ export default function CreateItem() {
     } catch (error) {
       console.log("Error uploading file: ", error);
     }
-  }
+  };
+
+  // TODO: Separete concerns, Creating an Item and listing an item should be two different functions
+  const createSale = async (url) => {
+    const web3Modal = new Web3Modal();
+    const connection = await web3Modal.connect();
+    const provider = new ethers.providers.Web3Provider(connection);
+    const signer = provider.getSigner();
+
+    /* next, create the item */
+    let contract = new ethers.Contract(nftaddress, NFT.abi, signer);
+    let transaction = await contract.createToken(url);
+    const tx = await transaction.wait();
+    const event = tx.events[0];
+    const value = event.args[2];
+    const tokenId = value.toNumber();
+    const price = ethers.utils.parseUnits(formInput.price, "ether");
+
+    /* then list the item for sale on the marketplace */
+    contract = new ethers.Contract(nftmarketaddress, Market.abi, signer);
+    let listingPrice = await contract.getListingPrice();
+    listingPrice = listingPrice.toString();
+
+    transaction = await contract.createMarketItem(nftaddress, tokenId, price, {
+      value: listingPrice,
+    });
+    await transaction.wait();
+    router.push("/");
+  };
 
   // TODO: Clean this function and use added.path from onImageUpload
-  async function createMarket() {
+  const createMarket = async () => {
     const { name, description, price } = formInput;
     if (!name || !description || !price || !fileUrl) return;
     /* first, upload to IPFS */
@@ -53,35 +82,7 @@ export default function CreateItem() {
     } catch (error) {
       console.log("Error uploading file: ", error);
     }
-  }
-
-  // TODO: Separete concerns, Creating an Item and listing an item should be two different functions
-  async function createSale(url) {
-    const web3Modal = new Web3Modal();
-    const connection = await web3Modal.connect();
-    const provider = new ethers.providers.Web3Provider(connection);
-    const signer = provider.getSigner();
-
-    /* next, create the item */
-    let contract = new ethers.Contract(nftaddress, NFT.abi, signer);
-    let transaction = await contract.createToken(url);
-    let tx = await transaction.wait();
-    let event = tx.events[0];
-    let value = event.args[2];
-    let tokenId = value.toNumber();
-    const price = ethers.utils.parseUnits(formInput.price, "ether");
-
-    /* then list the item for sale on the marketplace */
-    contract = new ethers.Contract(nftmarketaddress, Market.abi, signer);
-    let listingPrice = await contract.getListingPrice();
-    listingPrice = listingPrice.toString();
-
-    transaction = await contract.createMarketItem(nftaddress, tokenId, price, {
-      value: listingPrice,
-    });
-    await transaction.wait();
-    router.push("/");
-  }
+  };
 
   return (
     <div className="flex justify-center">
@@ -113,8 +114,18 @@ export default function CreateItem() {
           className="my-4"
           onChange={onImageUpload}
         />
-        {fileUrl && <img className="rounded mt-4" width="350" src={fileUrl} />}
+        {/* TODO: Use next image when refactoring this component */}
+        {/* eslint-disable-next-line @next/next/no-img-element */}
+        {fileUrl && (
+          <img
+            className="rounded mt-4"
+            width="350"
+            src={fileUrl}
+            alt="uploaded nft"
+          />
+        )}
         <button
+          type="button"
           onClick={createMarket}
           className="font-bold mt-4 bg-pink-500 text-white rounded p-4 shadow-lg"
         >

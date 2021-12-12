@@ -5,7 +5,7 @@ import { nftPropType } from "../../utils/propTypes";
 
 const propTypes = {
   nft: nftPropType.isRequired,
-  onHandleAction: PropTypes.func,
+  onHandleAction: PropTypes.oneOfType([PropTypes.func, PropTypes.bool]),
 };
 
 const NFTListItem = ({ nft, onHandleAction }) => {
@@ -34,6 +34,7 @@ const NFTListItem = ({ nft, onHandleAction }) => {
         <p className="text-2xl font-bold text-white">{price} ETH</p>
         {hasAction && (
           <button
+            type="button"
             className="w-full bg-pink-500 text-white font-bold py-2 px-12 rounded"
             onClick={() => onHandleAction(nft)}
           >
@@ -43,6 +44,10 @@ const NFTListItem = ({ nft, onHandleAction }) => {
       </div>
     </li>
   );
+};
+
+NFTListItem.defaultProps = {
+  onHandleAction: false,
 };
 
 NFTListItem.propTypes = propTypes;

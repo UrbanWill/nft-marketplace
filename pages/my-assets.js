@@ -15,9 +15,6 @@ const emptyListMessage = "No assets owned";
 export default function MyAssets() {
   const [nfts, setNfts] = useState([]);
   const [isLoading, setIsLoading] = useState(false);
-  useEffect(() => {
-    loadNFTs();
-  }, []);
 
   const loadNFTs = async () => {
     setIsLoading(true);
@@ -55,6 +52,10 @@ export default function MyAssets() {
     setNfts(items);
     setIsLoading(false);
   };
+
+  useEffect(() => {
+    loadNFTs();
+  }, []);
 
   return (
     <NFTList

@@ -18,10 +18,6 @@ export default function CreatorDashboard() {
   const [soldNfts, setSoldNfts] = useState([]);
   const [isLoading, setIsLoading] = useState(false);
 
-  useEffect(() => {
-    loadNFTs();
-  }, []);
-
   const loadNFTs = async () => {
     setIsLoading(true);
 
@@ -67,8 +63,11 @@ export default function CreatorDashboard() {
     setNfts(items);
     setIsLoading(false);
   };
-  if (!isLoading && !nfts.length)
-    return <h1 className="py-10 px-20 text-3xl">No assets created</h1>;
+
+  useEffect(() => {
+    loadNFTs();
+  }, []);
+
   return (
     <div>
       <h2 className="text-2xl py-2">Items Created</h2>

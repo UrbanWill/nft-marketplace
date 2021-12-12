@@ -38,6 +38,9 @@ yarn-error.log*
 
 node_modules
 
-#Hardhat files
+# hardhat files
 cache
 artifacts
+
+# eslint
+.eslintcache

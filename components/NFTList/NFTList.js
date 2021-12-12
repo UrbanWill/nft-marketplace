@@ -6,7 +6,7 @@ import { nftPropType } from "../../utils/propTypes";
 
 const propTypes = {
   nfts: PropTypes.arrayOf(nftPropType).isRequired,
-  onHandleAction: PropTypes.func,
+  onHandleAction: PropTypes.oneOfType([PropTypes.func, PropTypes.bool]),
   isLoading: PropTypes.bool.isRequired,
   emptyListMessage: PropTypes.string.isRequired,
 };
@@ -40,6 +40,10 @@ const NFTList = ({ nfts, onHandleAction, isLoading, emptyListMessage }) => {
       ))}
     </ul>
   );
+};
+
+NFTList.defaultProps = {
+  onHandleAction: false,
 };
 
 NFTList.propTypes = propTypes;

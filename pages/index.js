@@ -16,10 +16,6 @@ export default function Home() {
   const [nfts, setNfts] = useState([]);
   const [isLoading, setIsLoading] = useState(false);
 
-  useEffect(() => {
-    loadNFTs();
-  }, []);
-
   const loadNFTs = async () => {
     setIsLoading(true);
     const provider = new ethers.providers.JsonRpcProvider();
@@ -50,6 +46,10 @@ export default function Home() {
     setNfts(items);
     setIsLoading(false);
   };
+
+  useEffect(() => {
+    loadNFTs();
+  }, []);
 
   const handleBuyNft = async (nft) => {
     const web3Modal = new Web3Modal();
