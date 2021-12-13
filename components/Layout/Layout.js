@@ -1,7 +1,6 @@
+import { useRouter } from "next/router";
 import Header from "../Header/Header";
 import Meta from "../Meta/Meta";
-
-import { useRouter } from "next/router";
 
 import { HEADER_ROUTES } from "../../utils/constants";
 
