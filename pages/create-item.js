@@ -1,9 +1,9 @@
-import { useState } from "react";
 import { ethers } from "ethers";
 import { create as ipfsHttpClient } from "ipfs-http-client";
 import { useRouter } from "next/router";
 import Web3Modal from "web3modal";
 import { Formik, Form } from "formik";
+import * as yup from "yup";
 
 import { nftaddress, nftmarketaddress } from "../config";
 
@@ -13,11 +13,9 @@ import Market from "../artifacts/contracts/NFTMarket.sol/NFTMarket.json";
 const client = ipfsHttpClient("https://ipfs.infura.io:5001/api/v0");
 
 export default function CreateItem() {
-  const [fileUrl, setFileUrl] = useState(null);
-
   const router = useRouter();
 
-  const onImageUpload = async (e) => {
+  const onImageUpload = async (e, setFieldValue) => {
     const file = e.target.files[0];
     try {
       // TODO: Moved added to state
@@ -25,7 +23,7 @@ export default function CreateItem() {
         progress: (prog) => console.log(`received: ${prog}`),
       });
       const url = `https://ipfs.infura.io/ipfs/${added.path}`;
-      setFileUrl(url);
+      setFieldValue("fileUrl", url);
     } catch (error) {
       console.log("Error uploading file: ", error);
     }
@@ -61,8 +59,7 @@ export default function CreateItem() {
 
   // TODO: Clean this function and use added.path from onImageUpload
   const createMarket = async (values) => {
-    const { name, description, price } = values;
-    if (!name || !description || !price || !fileUrl) return;
+    const { name, description, price, fileUrl } = values;
     /* first, upload to IPFS */
     const data = JSON.stringify({
       name,
@@ -82,7 +79,16 @@ export default function CreateItem() {
   const initialValues = {
     name: "",
     description: "",
+    price: "",
+    fileUrl: "",
   };
+
+  const validationSchema = yup.object().shape({
+    name: yup.string().required(),
+    description: yup.string().required(),
+    price: yup.string().required(),
+    fileUrl: yup.string().required(),
+  });
 
   const handleSubmit = async (values) => {
     createMarket(values);
@@ -90,8 +96,13 @@ export default function CreateItem() {
 
   return (
     <div className="flex justify-center">
-      <Formik initialValues={initialValues} onSubmit={handleSubmit}>
-        {({ values, handleChange }) => (
+      <Formik
+        initialValues={initialValues}
+        onSubmit={handleSubmit}
+        validateOnMount
+        validationSchema={validationSchema}
+      >
+        {({ values, handleChange, isValid, setFieldValue }) => (
           <Form className="w-1/2 flex flex-col pb-12">
             <input
               name="name"
@@ -113,23 +124,25 @@ export default function CreateItem() {
             />
             <input
               type="file"
-              name="asset"
+              name="fileUrl"
               className="my-4"
-              onChange={onImageUpload}
+              onChange={(e) => onImageUpload(e, setFieldValue)}
             />
-            {fileUrl && (
+            {values.fileUrl && (
               // TODO: Use next image when refactoring this component
               // eslint-disable-next-line @next/next/no-img-element
               <img
                 className="rounded mt-4"
                 width="350"
-                src={fileUrl}
+                src={values.fileUrl}
                 alt="uploaded nft"
               />
             )}
             <button
               type="submit"
-              className="font-bold mt-4 bg-pink-500 text-white rounded p-4 shadow-lg"
+              className={`font-bold mt-4 text-white rounded p-4 shadow-lg ${
+                isValid ? "bg-pink-500" : "bg-red-500 cursor-not-allowed"
+              }`}
             >
               Create Digital Asset
             </button>
