@@ -1,6 +1,8 @@
 import PropTypes from "prop-types";
 import { useField } from "formik";
 
+import { INPUT_MAX_LENGTH } from "../../utils/constants";
+
 const propTypes = {
   name: PropTypes.string.isRequired,
   label: PropTypes.string,
@@ -8,6 +10,7 @@ const propTypes = {
   placeholder: PropTypes.string,
   errorMessage: PropTypes.string,
   onHandleChange: PropTypes.func.isRequired,
+  maxLength: PropTypes.number,
 };
 
 const Input = ({
@@ -17,6 +20,7 @@ const Input = ({
   placeholder,
   errorMessage,
   label,
+  maxLength,
 }) => {
   const [field, meta] = useField(name);
 
@@ -38,6 +42,7 @@ const Input = ({
         }`}
         onChange={onHandleChange}
         type={type}
+        maxLength={maxLength}
         {...field}
       />
       {hasError && <p className="mt-1 text-red-500 text-sm">{errorMessage}</p>}
@@ -52,5 +57,6 @@ Input.defaultProps = {
   placeholder: "",
   errorMessage: "This is a required field",
   label: "",
+  maxLength: INPUT_MAX_LENGTH,
 };
 export default Input;

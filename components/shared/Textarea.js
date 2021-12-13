@@ -1,12 +1,15 @@
 import PropTypes from "prop-types";
 import { useField } from "formik";
 
+import { TEXTAREA_MAX_LENGTH } from "../../utils/constants";
+
 const propTypes = {
   name: PropTypes.string.isRequired,
   label: PropTypes.string,
   placeholder: PropTypes.string,
   errorMessage: PropTypes.string,
   onHandleChange: PropTypes.func.isRequired,
+  maxLength: PropTypes.number,
 };
 
 const Textarea = ({
@@ -15,6 +18,7 @@ const Textarea = ({
   placeholder,
   errorMessage,
   label,
+  maxLength,
 }) => {
   const [field, meta] = useField(name);
 
@@ -35,6 +39,7 @@ const Textarea = ({
           hasError ? "border-4 border-red-500" : ""
         }`}
         onChange={onHandleChange}
+        maxLength={maxLength}
         {...field}
       />
       {hasError && <p className="mt-1 text-red-500 text-sm">{errorMessage}</p>}
@@ -48,5 +53,6 @@ Textarea.defaultProps = {
   placeholder: "Example: Asset description",
   errorMessage: "This is a required field",
   label: "",
+  maxLength: TEXTAREA_MAX_LENGTH,
 };
 export default Textarea;

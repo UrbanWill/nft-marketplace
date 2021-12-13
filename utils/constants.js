@@ -5,4 +5,8 @@ const HEADER_ROUTES = {
   CREATOR_DASHBOARD: "/creator-dashboard",
 };
 
-export { HEADER_ROUTES };
+const INPUT_MAX_LENGTH = 64;
+
+const TEXTAREA_MAX_LENGTH = 255;
+
+export { HEADER_ROUTES, INPUT_MAX_LENGTH, TEXTAREA_MAX_LENGTH };
