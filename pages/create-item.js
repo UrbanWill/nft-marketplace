@@ -5,6 +5,9 @@ import Web3Modal from "web3modal";
 import { Formik, Form } from "formik";
 import * as yup from "yup";
 
+import Input from "../components/shared/Input";
+import Textarea from "../components/shared/Textarea";
+
 import { nftaddress, nftmarketaddress } from "../config";
 
 import NFT from "../artifacts/contracts/NFT.sol/NFT.json";
@@ -104,23 +107,27 @@ export default function CreateItem() {
       >
         {({ values, handleChange, isValid, setFieldValue }) => (
           <Form className="w-1/2 flex flex-col pb-12">
-            <input
+            <Input
               name="name"
-              placeholder="Asset Name"
-              className="mt-8 border rounded p-4"
-              onChange={handleChange}
+              onHandleChange={handleChange}
+              label="Asset name"
+              placeholder="Example: The real raw Mooncake"
+              errorMessage="Asset name is a required field"
             />
-            <input
+            <Textarea
               name="description"
-              placeholder="Asset description"
-              className="mt-8 border rounded p-4"
-              onChange={handleChange}
+              onHandleChange={handleChange}
+              label="Asset description"
+              placeholder="Example: A planet-destroying spatial anomaly that was created by the residual energy"
+              errorMessage="Asset description is a required field"
             />
-            <input
+            <Input
               name="price"
-              placeholder="Asset price in ETH"
-              className="mt-8 border rounded p-4"
-              onChange={handleChange}
+              // TODO: Add proper currency formatting, numbers only
+              onHandleChange={handleChange}
+              label="Asset price in ETH"
+              placeholder="Example: 0.75"
+              errorMessage="Asset price is a required field"
             />
             <input
               type="file"
@@ -141,12 +148,11 @@ export default function CreateItem() {
             <button
               type="submit"
               className={`font-bold mt-4 text-white rounded p-4 shadow-lg ${
-                isValid ? "bg-pink-500" : "bg-red-500 cursor-not-allowed"
+                isValid ? "bg-pink-500" : "bg-gray-300 cursor-not-allowed"
               }`}
             >
               Create Digital Asset
             </button>
-            <pre>{JSON.stringify(values, null, 2)}</pre>
           </Form>
         )}
       </Formik>
