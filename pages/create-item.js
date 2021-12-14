@@ -143,17 +143,14 @@ export default function CreateItem() {
             />
             <ImageUpload onSetUploadedImage={setUploadedImage} />
             {ipfsUrl && (
-              <>
-                <h1>New:</h1>
-                {/* TODO: User next img tag */}
-                {/* eslint-disable-next-line @next/next/no-img-element */}
-                <img
-                  className="rounded mt-4"
-                  width="350"
-                  src={ipfsUrl}
-                  alt="uploaded nft"
-                />
-              </>
+              // TODO: User next img tag
+              //   eslint-disable-next-line @next/next/no-img-element
+              <img
+                className="rounded mt-4"
+                width="350"
+                src={ipfsUrl}
+                alt="uploaded nft"
+              />
             )}
             <button
               type="submit"
