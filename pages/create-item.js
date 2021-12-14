@@ -1,5 +1,6 @@
+import { useState, useEffect } from "react";
 import { ethers } from "ethers";
-import { create as ipfsHttpClient } from "ipfs-http-client";
+import { create } from "ipfs-http-client";
 import { useRouter } from "next/router";
 import Web3Modal from "web3modal";
 import { Formik, Form } from "formik";
@@ -7,30 +8,39 @@ import * as yup from "yup";
 
 import Input from "../components/shared/Input";
 import Textarea from "../components/shared/Textarea";
+import ImageUpload from "../components/shared/ImageUpload/ImageUpload";
 
 import { nftaddress, nftmarketaddress } from "../config";
 
 import NFT from "../artifacts/contracts/NFT.sol/NFT.json";
 import Market from "../artifacts/contracts/NFTMarket.sol/NFTMarket.json";
 
-const client = ipfsHttpClient("https://ipfs.infura.io:5001/api/v0");
+const client = create("https://ipfs.infura.io:5001/api/v0");
 
 export default function CreateItem() {
+  const [uploadedImage, setUploadedImage] = useState([]);
+  const [ipfsUrl, setIpfsUrl] = useState("");
+
   const router = useRouter();
 
-  const onImageUpload = async (e, setFieldValue) => {
-    const file = e.target.files[0];
+  const handleImageUpload = async (file) => {
     try {
-      // TODO: Moved added to state
       const added = await client.add(file, {
         progress: (prog) => console.log(`received: ${prog}`),
       });
       const url = `https://ipfs.infura.io/ipfs/${added.path}`;
-      setFieldValue("fileUrl", url);
+      setIpfsUrl(url);
     } catch (error) {
+      // TODO: Throw error toast
       console.log("Error uploading file: ", error);
     }
   };
+
+  useEffect(() => {
+    if (uploadedImage.length) {
+      handleImageUpload(uploadedImage[0]);
+    }
+  }, [uploadedImage]);
 
   // TODO: Separete concerns, Creating an Item and listing an item should be two different functions
   const createSale = async (url, salePrice) => {
@@ -62,19 +72,21 @@ export default function CreateItem() {
 
   // TODO: Clean this function and use added.path from onImageUpload
   const createMarket = async (values) => {
-    const { name, description, price, fileUrl } = values;
+    const { name, description, price } = values;
     /* first, upload to IPFS */
     const data = JSON.stringify({
       name,
       description,
-      image: fileUrl,
+      image: ipfsUrl,
     });
     try {
       const added = await client.add(data);
       const url = `https://ipfs.infura.io/ipfs/${added.path}`;
       /* after file is uploaded to IPFS, pass the URL to save it on Polygon */
+
       createSale(url, price);
     } catch (error) {
+      // TODO: Throw error toast
       console.log("Error uploading file: ", error);
     }
   };
@@ -83,17 +95,17 @@ export default function CreateItem() {
     name: "",
     description: "",
     price: "",
-    fileUrl: "",
   };
 
   const validationSchema = yup.object().shape({
     name: yup.string().required(),
     description: yup.string().required(),
     price: yup.string().required(),
-    fileUrl: yup.string().required(),
   });
 
+  // TODO: This is a function calling another function, DRY this up.
   const handleSubmit = async (values) => {
+    console.log("called handle submit");
     createMarket(values);
   };
 
@@ -105,7 +117,7 @@ export default function CreateItem() {
         validateOnMount
         validationSchema={validationSchema}
       >
-        {({ values, handleChange, isValid, setFieldValue }) => (
+        {({ handleChange, isValid }) => (
           <Form className="w-1/2 flex flex-col pb-12">
             <Input
               name="name"
@@ -129,27 +141,28 @@ export default function CreateItem() {
               placeholder="Example: 0.75"
               errorMessage="Asset price is a required field"
             />
-            <input
-              type="file"
-              name="fileUrl"
-              className="my-4"
-              onChange={(e) => onImageUpload(e, setFieldValue)}
-            />
-            {values.fileUrl && (
-              // TODO: Use next image when refactoring this component
-              // eslint-disable-next-line @next/next/no-img-element
-              <img
-                className="rounded mt-4"
-                width="350"
-                src={values.fileUrl}
-                alt="uploaded nft"
-              />
+            <ImageUpload onSetUploadedImage={setUploadedImage} />
+            {ipfsUrl && (
+              <>
+                <h1>New:</h1>
+                {/* TODO: User next img tag */}
+                {/* eslint-disable-next-line @next/next/no-img-element */}
+                <img
+                  className="rounded mt-4"
+                  width="350"
+                  src={ipfsUrl}
+                  alt="uploaded nft"
+                />
+              </>
             )}
             <button
               type="submit"
               className={`font-bold mt-4 text-white rounded p-4 shadow-lg ${
-                isValid ? "bg-pink-500" : "bg-gray-300 cursor-not-allowed"
+                isValid && ipfsUrl
+                  ? "bg-pink-500"
+                  : "bg-gray-300 cursor-not-allowed"
               }`}
+              disabled={!isValid && !ipfsUrl}
             >
               Create Digital Asset
             </button>
