@@ -23,7 +23,6 @@ const ImageUploadPreview = ({ ipfsUrl, handleRemoveImage }) => {
       >
         <Image src={gabageIcon} alt="remove icon" onClick={handleClick} />
       </button>
-
       <Image src={ipfsUrl} alt="NFT image" layout="fill" objectFit="cover" />
     </div>
   );

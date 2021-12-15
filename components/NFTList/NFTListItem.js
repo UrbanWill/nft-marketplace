@@ -3,6 +3,8 @@ import Image from "next/image";
 
 import { nftPropType } from "../../utils/propTypes";
 
+import Button from "../shared/Button";
+
 const propTypes = {
   nft: nftPropType.isRequired,
   onHandleAction: PropTypes.oneOfType([PropTypes.func, PropTypes.bool]),
@@ -27,19 +29,17 @@ const NFTListItem = ({ nft, onHandleAction }) => {
       <div className="p-2">
         <p className="text-2xl font-semibold">{name}</p>
         <div>
-          <p className="text-gray-400">{description}</p>
+          <p className="text-gray-400 truncate">{description}</p>
         </div>
       </div>
       <div className="p-4 bg-black">
         <p className="text-2xl font-bold text-white">{price} ETH</p>
         {hasAction && (
-          <button
-            type="button"
-            className="w-full bg-pink-500 text-white font-bold py-2 px-12 rounded"
-            onClick={() => onHandleAction(nft)}
-          >
-            Buy
-          </button>
+          <Button
+            onHandleClick={() => onHandleAction(nft)}
+            label="Buy"
+            className="w-full mt-2"
+          />
         )}
       </div>
     </li>

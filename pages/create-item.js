@@ -10,6 +10,8 @@ import Input from "../components/shared/Input";
 import Textarea from "../components/shared/Textarea";
 import ImageUpload from "../components/shared/ImageUpload/ImageUpload";
 
+import Button from "../components/shared/Button";
+
 import { nftaddress, nftmarketaddress } from "../config";
 
 import NFT from "../artifacts/contracts/NFT.sol/NFT.json";
@@ -110,7 +112,6 @@ export default function CreateItem() {
 
   // TODO: This is a function calling another function, DRY this up.
   const handleSubmit = async (values) => {
-    console.log("called handle submit");
     createMarket(values);
   };
 
@@ -152,17 +153,12 @@ export default function CreateItem() {
               handleRemoveImage={handleRemoveAllImages}
               isDisabled={!!ipfsUrl}
             />
-            <button
-              type="submit"
-              className={`font-bold mt-4 text-white rounded p-4 shadow-lg ${
-                isValid && ipfsUrl
-                  ? "bg-pink-500"
-                  : "bg-gray-300 cursor-not-allowed"
-              }`}
-              disabled={!isValid || !ipfsUrl}
-            >
-              Create Digital Asset
-            </button>
+            <Button
+              label="Create Digital Asset"
+              isDisabled={!isValid || !ipfsUrl}
+              className="mt-4"
+              isTypeSubmit
+            />
           </Form>
         )}
       </Formik>

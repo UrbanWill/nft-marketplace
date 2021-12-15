@@ -10,8 +10,6 @@ import { nftmarketaddress, nftaddress } from "../config";
 import NFT from "../artifacts/contracts/NFT.sol/NFT.json";
 import Market from "../artifacts/contracts/NFTMarket.sol/NFTMarket.json";
 
-const emptyCreatedListMessage = "No assets created";
-
 export default function CreatorDashboard() {
   // TODO: Better naming
   const [nfts, setNfts] = useState([]);
@@ -76,7 +74,7 @@ export default function CreatorDashboard() {
         // TODO: Add sell functionality
         // onHandleAction={handleDoSomeAction}
         isLoading={isLoading}
-        emptyListMessage={emptyCreatedListMessage}
+        emptyListMessage="No items created"
       />
 
       <h2 className="text-2xl py-2">Items sold</h2>
@@ -85,7 +83,7 @@ export default function CreatorDashboard() {
         // TODO: Add sell functionality
         // onHandleAction={handleDoSomeAction}
         isLoading={isLoading}
-        emptyListMessage={emptyCreatedListMessage}
+        emptyListMessage="No Items sold"
       />
     </div>
   );
