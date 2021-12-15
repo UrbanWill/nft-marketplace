@@ -42,6 +42,11 @@ export default function CreateItem() {
     }
   }, [uploadedImages]);
 
+  const handleRemoveAllImages = () => {
+    setUploadedImages([]);
+    setIpfsUrl("");
+  };
+
   // TODO: Separete concerns, Creating an Item and listing an item should be two different functions
   const createSale = async (url, salePrice) => {
     const web3Modal = new Web3Modal();
@@ -144,6 +149,8 @@ export default function CreateItem() {
             <ImageUpload
               onSetUploadedImages={setUploadedImages}
               ipfsUrl={ipfsUrl}
+              handleRemoveImage={handleRemoveAllImages}
+              isDisabled={!!ipfsUrl}
             />
             <button
               type="submit"
@@ -152,7 +159,7 @@ export default function CreateItem() {
                   ? "bg-pink-500"
                   : "bg-gray-300 cursor-not-allowed"
               }`}
-              disabled={!isValid && !ipfsUrl}
+              disabled={!isValid || !ipfsUrl}
             >
               Create Digital Asset
             </button>

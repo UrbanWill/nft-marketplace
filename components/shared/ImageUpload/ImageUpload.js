@@ -8,9 +8,16 @@ import ImageUploadPreview from "./ImageUploadPreview";
 const propTypes = {
   onSetUploadedImages: PropTypes.func.isRequired,
   ipfsUrl: PropTypes.string.isRequired,
+  handleRemoveImage: PropTypes.func.isRequired,
+  isDisabled: PropTypes.bool,
 };
 
-const ImageUpload = ({ onSetUploadedImages, ipfsUrl }) => {
+const ImageUpload = ({
+  onSetUploadedImages,
+  ipfsUrl,
+  handleRemoveImage,
+  isDisabled,
+}) => {
   /**
    * Handle on drop file for react-dropzone
    * Creates new file instance without path
@@ -32,6 +39,7 @@ const ImageUpload = ({ onSetUploadedImages, ipfsUrl }) => {
     onDrop,
     multiple: false,
     accept: "image/jpeg, image/png",
+    disabled: isDisabled,
   });
 
   const getDropMessage = isDragActive ? (
@@ -43,14 +51,25 @@ const ImageUpload = ({ onSetUploadedImages, ipfsUrl }) => {
   return (
     <div
       {...getRootProps()}
-      className={`border-dashed border-2 h-96 flex justify-center items-center overflow-hidden ${
-        !ipfsUrl ? "cursor-pointer" : ""
+      className={`h-96 flex justify-center items-center overflow-hidden ${
+        !ipfsUrl ? "cursor-pointer border-dashed border-2" : ""
       }`}
     >
       <input {...getInputProps()} />
-      {ipfsUrl ? <ImageUploadPreview ipfsUrl={ipfsUrl} /> : getDropMessage}
+      {ipfsUrl ? (
+        <ImageUploadPreview
+          ipfsUrl={ipfsUrl}
+          handleRemoveImage={handleRemoveImage}
+        />
+      ) : (
+        getDropMessage
+      )}
     </div>
   );
+};
+
+ImageUpload.defaultProps = {
+  isDisabled: false,
 };
 
 ImageUpload.propTypes = propTypes;
