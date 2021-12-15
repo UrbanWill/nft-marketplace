@@ -7,6 +7,8 @@ import useGetNfts from "../hooks/queries/useGetNfts";
 
 import { nftaddress, nftmarketaddress } from "../config";
 
+import { CRYPTO_CURRENCY } from "../utils/constants";
+
 import Market from "../artifacts/contracts/NFTMarket.sol/NFTMarket.json";
 
 const emptyListMessage = "No items in marketplace";
@@ -22,7 +24,10 @@ export default function Home() {
     const signer = provider.getSigner();
     const contract = new ethers.Contract(nftmarketaddress, Market.abi, signer);
 
-    const price = ethers.utils.parseUnits(nft.price.toString(), "ether");
+    const price = ethers.utils.parseUnits(
+      nft.price.toString(),
+      CRYPTO_CURRENCY
+    );
 
     const transaction = await contract.createMarketSale(
       nftaddress,

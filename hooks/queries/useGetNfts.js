@@ -2,6 +2,7 @@ import { useState, useEffect } from "react";
 import { ethers } from "ethers";
 
 import axios from "axios";
+import { CRYPTO_CURRENCY } from "../../utils/constants";
 
 import NFT from "../../artifacts/contracts/NFT.sol/NFT.json";
 import Market from "../../artifacts/contracts/NFTMarket.sol/NFTMarket.json";
@@ -26,7 +27,10 @@ const useGetNfts = () => {
       data.map(async (i) => {
         const tokenUri = await tokenContract.tokenURI(i.tokenId);
         const meta = await axios.get(tokenUri);
-        const price = ethers.utils.formatUnits(i.price.toString(), "ether");
+        const price = ethers.utils.formatUnits(
+          i.price.toString(),
+          CRYPTO_CURRENCY
+        );
         const item = {
           price,
           tokenId: i.tokenId.toNumber(),

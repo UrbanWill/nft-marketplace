@@ -6,6 +6,8 @@ import Web3Modal from "web3modal";
 import { Formik, Form } from "formik";
 import * as yup from "yup";
 
+import { CRYPTO_CURRENCY } from "../utils/constants";
+
 import Input from "../components/shared/Input";
 import Textarea from "../components/shared/Textarea";
 import ImageUpload from "../components/shared/ImageUpload/ImageUpload";
@@ -63,7 +65,7 @@ export default function CreateItem() {
     const event = tx.events[0];
     const value = event.args[2];
     const tokenId = value.toNumber();
-    const price = ethers.utils.parseUnits(salePrice, "ether");
+    const price = ethers.utils.parseUnits(salePrice, CRYPTO_CURRENCY);
 
     /* then list the item for sale on the marketplace */
     contract = new ethers.Contract(nftmarketaddress, Market.abi, signer);

@@ -5,6 +5,8 @@ import Web3Modal from "web3modal";
 
 import NFTList from "../components/NFTList/NFTList";
 
+import { CRYPTO_CURRENCY } from "../utils/constants";
+
 import { nftmarketaddress, nftaddress } from "../config";
 
 import NFT from "../artifacts/contracts/NFT.sol/NFT.json";
@@ -40,7 +42,10 @@ export default function CreatorDashboard() {
       data.map(async (i) => {
         const tokenUri = await tokenContract.tokenURI(i.tokenId);
         const meta = await axios.get(tokenUri);
-        const price = ethers.utils.formatUnits(i.price.toString(), "ether");
+        const price = ethers.utils.formatUnits(
+          i.price.toString(),
+          CRYPTO_CURRENCY
+        );
         const item = {
           price,
           tokenId: i.tokenId.toNumber(),
