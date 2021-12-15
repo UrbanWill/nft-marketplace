@@ -3,11 +3,14 @@ import { useDropzone } from "react-dropzone";
 
 import PropTypes from "prop-types";
 
+import ImageUploadPreview from "./ImageUploadPreview";
+
 const propTypes = {
-  onSetUploadedImage: PropTypes.func.isRequired,
+  onSetUploadedImages: PropTypes.func.isRequired,
+  ipfsUrl: PropTypes.string.isRequired,
 };
 
-const ImageUpload = ({ onSetUploadedImage }) => {
+const ImageUpload = ({ onSetUploadedImages, ipfsUrl }) => {
   /**
    * Handle on drop file for react-dropzone
    * Creates new file instance without path
@@ -19,25 +22,33 @@ const ImageUpload = ({ onSetUploadedImage }) => {
         const parsedFiles = acceptedFiles.map(
           (file) => new File([file], file.name)
         );
-        onSetUploadedImage(parsedFiles);
+        onSetUploadedImages(parsedFiles);
       }
     },
-    [onSetUploadedImage]
+    [onSetUploadedImages]
   );
 
   const { getRootProps, getInputProps, isDragActive } = useDropzone({
     onDrop,
     multiple: false,
+    accept: "image/jpeg, image/png",
   });
 
+  const getDropMessage = isDragActive ? (
+    <p>Drop the files here ...</p>
+  ) : (
+    <p>Drag and drop some files here, or click to select files</p>
+  );
+
   return (
-    <div {...getRootProps()}>
+    <div
+      {...getRootProps()}
+      className={`border-dashed border-2 h-96 flex justify-center items-center overflow-hidden ${
+        !ipfsUrl ? "cursor-pointer" : ""
+      }`}
+    >
       <input {...getInputProps()} />
-      {isDragActive ? (
-        <p>Drop the files here ...</p>
-      ) : (
-        <p>Drag and drop some files here, or click to select files</p>
-      )}
+      {ipfsUrl ? <ImageUploadPreview ipfsUrl={ipfsUrl} /> : getDropMessage}
     </div>
   );
 };

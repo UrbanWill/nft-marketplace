@@ -18,7 +18,7 @@ import Market from "../artifacts/contracts/NFTMarket.sol/NFTMarket.json";
 const client = create("https://ipfs.infura.io:5001/api/v0");
 
 export default function CreateItem() {
-  const [uploadedImage, setUploadedImage] = useState([]);
+  const [uploadedImages, setUploadedImages] = useState([]);
   const [ipfsUrl, setIpfsUrl] = useState("");
 
   const router = useRouter();
@@ -37,10 +37,10 @@ export default function CreateItem() {
   };
 
   useEffect(() => {
-    if (uploadedImage.length) {
-      handleImageUpload(uploadedImage[0]);
+    if (uploadedImages.length) {
+      handleImageUpload(uploadedImages[0]);
     }
-  }, [uploadedImage]);
+  }, [uploadedImages]);
 
   // TODO: Separete concerns, Creating an Item and listing an item should be two different functions
   const createSale = async (url, salePrice) => {
@@ -141,17 +141,10 @@ export default function CreateItem() {
               placeholder="Example: 0.75"
               errorMessage="Asset price is a required field"
             />
-            <ImageUpload onSetUploadedImage={setUploadedImage} />
-            {ipfsUrl && (
-              // TODO: User next img tag
-              //   eslint-disable-next-line @next/next/no-img-element
-              <img
-                className="rounded mt-4"
-                width="350"
-                src={ipfsUrl}
-                alt="uploaded nft"
-              />
-            )}
+            <ImageUpload
+              onSetUploadedImages={setUploadedImages}
+              ipfsUrl={ipfsUrl}
+            />
             <button
               type="submit"
               className={`font-bold mt-4 text-white rounded p-4 shadow-lg ${
