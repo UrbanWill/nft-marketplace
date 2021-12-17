@@ -30,7 +30,7 @@ const Header = ({ navOptions, currentRoute }) => {
     }
   };
 
-  const buttonLabel = active ? "Disconnect walled" : "Connect wallet";
+  const buttonLabel = active ? "Disconnect wallet" : "Connect wallet";
 
   return (
     <nav className="border-b p-6 pb-4 sticky top-0 z-50 bg-white">
