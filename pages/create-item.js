@@ -160,6 +160,7 @@ export default function CreateItem() {
               isDisabled={!isValid || !ipfsUrl}
               className="mt-4"
               isTypeSubmit
+              size="lg"
             />
           </Form>
         )}
