@@ -8,7 +8,11 @@ import NFT from "../../artifacts/contracts/NFT.sol/NFT.json";
 import Market from "../../artifacts/contracts/NFTMarket.sol/NFTMarket.json";
 import { nftaddress, nftmarketaddress } from "../../config";
 
-const useGetNfts = () => {
+/**
+ * hook to get nfts for sale
+ * @returns { nfts: [] | array of objects, isLoading: boolen }
+ */
+const useGetMarketNfts = () => {
   const [nfts, setNfts] = useState([]);
   const [isLoading, setIsLoading] = useState(false);
 
@@ -59,4 +63,4 @@ const useGetNfts = () => {
   };
 };
 
-export default useGetNfts;
+export default useGetMarketNfts;

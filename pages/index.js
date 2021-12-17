@@ -3,7 +3,7 @@ import Web3Modal from "web3modal";
 
 import NFTList from "../components/NFTList/NFTList";
 
-import useGetNfts from "../hooks/queries/useGetNfts";
+import useGetMarketNfts from "../hooks/queries/useGetMarketNfts";
 
 import { nftaddress, nftmarketaddress } from "../config";
 
@@ -14,7 +14,7 @@ import Market from "../artifacts/contracts/NFTMarket.sol/NFTMarket.json";
 const emptyListMessage = "No items in marketplace";
 
 export default function Home() {
-  const { data, isLoading, refetch } = useGetNfts();
+  const { data, isLoading, refetch } = useGetMarketNfts();
 
   const handleBuyNft = async (nft) => {
     const web3Modal = new Web3Modal();
