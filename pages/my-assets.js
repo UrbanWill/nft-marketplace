@@ -1,74 +1,30 @@
-import { ethers } from "ethers";
-import { useEffect, useState } from "react";
-import axios from "axios";
-import Web3Modal from "web3modal";
-
+import { useWeb3React } from "@web3-react/core";
 import NFTList from "../components/NFTList/NFTList";
 
-import { CRYPTO_CURRENCY } from "../utils/constants";
-
-import { nftmarketaddress, nftaddress } from "../config";
-
-import NFT from "../artifacts/contracts/NFT.sol/NFT.json";
-import Market from "../artifacts/contracts/NFTMarket.sol/NFTMarket.json";
-
-const emptyListMessage = "No assets owned";
+import useGetCurrentWalletNfts from "../hooks/queries/useGetCurrentWalletNfts";
 
 export default function MyAssets() {
-  const [nfts, setNfts] = useState([]);
-  const [isLoading, setIsLoading] = useState(false);
+  const { active } = useWeb3React();
 
-  const loadNFTs = async () => {
-    setIsLoading(true);
+  const { data, isLoading } = useGetCurrentWalletNfts();
 
-    const web3Modal = new Web3Modal();
-    const connection = await web3Modal.connect();
-    const provider = new ethers.providers.Web3Provider(connection);
-    const signer = provider.getSigner();
-
-    const marketContract = new ethers.Contract(
-      nftmarketaddress,
-      Market.abi,
-      signer
+  if (!active) {
+    return (
+      <div className="flex justify-center">
+        <h1 className="px-20 py-10 text-3xl">
+          Connect wallet to view your assets
+        </h1>
+      </div>
     );
-    const tokenContract = new ethers.Contract(nftaddress, NFT.abi, provider);
-    const data = await marketContract.fetchMyNFTs();
-
-    const items = await Promise.all(
-      data.map(async (i) => {
-        const tokenUri = await tokenContract.tokenURI(i.tokenId);
-        const meta = await axios.get(tokenUri);
-        const price = ethers.utils.formatUnits(
-          i.price.toString(),
-          CRYPTO_CURRENCY
-        );
-        const item = {
-          price,
-          tokenId: i.tokenId.toNumber(),
-          seller: i.seller,
-          owner: i.owner,
-          image: meta.data.image,
-          name: meta.data.name,
-          description: meta.data.description,
-        };
-        return item;
-      })
-    );
-    setNfts(items);
-    setIsLoading(false);
-  };
-
-  useEffect(() => {
-    loadNFTs();
-  }, []);
+  }
 
   return (
     <NFTList
-      nfts={nfts}
+      nfts={data}
       // TODO: Add sell functionality
       // onHandleAction={handleDoSomeAction}
       isLoading={isLoading}
-      emptyListMessage={emptyListMessage}
+      emptyListMessage="No assets owned"
     />
   );
 }
