@@ -8,10 +8,10 @@ import { CRYPTO_CURRENCY } from "../../utils/constants";
 import useEthers from "../contexts/useEthers";
 
 /**
- * hook to get nfts the connected wallet currently owns
+ * hook to get nfts the connected wallet created
  * @returns { data: [] | array of objects, isLoading: boolen }
  */
-const useGetOwnedNfts = () => {
+const useGetCreatedNfts = () => {
   const [nfts, setNfts] = useState([]);
   const [isLoading, setIsLoading] = useState(false);
 
@@ -30,7 +30,7 @@ const useGetOwnedNfts = () => {
 
     // TODO: Throw error toast
     const data = await signedMarketContract
-      .fetchMyNFTs()
+      .fetchItemsCreated()
       .catch((error) => console.log(`Failed to fetch market items ${error}`));
 
     if (data) {
@@ -47,6 +47,7 @@ const useGetOwnedNfts = () => {
             tokenId: item.tokenId.toNumber(),
             seller: item.seller,
             owner: item.owner,
+            sold: item.sold,
             image: meta.data.image,
             name: meta.data.name,
             description: meta.data.description,
@@ -71,4 +72,4 @@ const useGetOwnedNfts = () => {
   };
 };
 
-export default useGetOwnedNfts;
+export default useGetCreatedNfts;
