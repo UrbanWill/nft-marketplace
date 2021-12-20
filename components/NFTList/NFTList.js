@@ -16,7 +16,7 @@ const NFTList = ({ nfts, onHandleAction, isLoading, emptyListMessage }) => {
   if (isLoading) {
     return (
       <div className="flex justify-center">
-        <h1 className="px-20 py-10 text-3xl">Loading</h1>
+        <h1 className="px-20 py-10 text-2xl">Loading</h1>
       </div>
     );
   }
@@ -24,7 +24,7 @@ const NFTList = ({ nfts, onHandleAction, isLoading, emptyListMessage }) => {
   if (!isLoading && !nfts.length) {
     return (
       <div className="flex justify-center">
-        <h1 className="px-20 py-10 text-3xl">{emptyListMessage}</h1>
+        <h1 className="px-20 py-10 text-2xl">{emptyListMessage}</h1>
       </div>
     );
   }

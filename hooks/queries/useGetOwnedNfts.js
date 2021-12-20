@@ -22,6 +22,8 @@ const useGetOwnedNfts = () => {
     setIsLoading(true);
 
     if (!active || !signedMarketContract || !tokenContract) {
+      // TODO: Throw error toast
+      setIsLoading(false);
       return;
     }
 
