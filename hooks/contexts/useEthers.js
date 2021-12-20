@@ -11,17 +11,20 @@ const EthersContext = createContext();
 /**
  * Context function that handles dynamic contract related values
  * @returns {
- * {signedMarketContract: signed market contract | null}}
+ * {signedMarketContract: signed market contract | null}
+ *  signedTokenContract: signed market contract | null}
  */
 const useEthers = () => {
   const { active, account, library } = useWeb3React();
   const [signer, setSigner] = useState(null);
   const [signedMarketContract, setSignedMarketContract] = useState(null);
+  const [signedTokenContract, setSignedTokenContract] = useState(null);
 
   // Clears signer and signed contracts
   const handleClear = () => {
     setSigner(null);
     setSignedMarketContract(null);
+    setSignedTokenContract(null);
   };
 
   useEffect(() => {
@@ -33,16 +36,19 @@ const useEthers = () => {
 
   useEffect(() => {
     if (signer) {
-      const contract = new ethers.Contract(
+      const marketContract = new ethers.Contract(
         nftmarketaddress,
         Market.abi,
         signer
       );
-      setSignedMarketContract(contract);
+      const tokenContract = new ethers.Contract(nftaddress, NFT.abi, signer);
+
+      setSignedMarketContract(marketContract);
+      setSignedTokenContract(tokenContract);
     }
   }, [signer]);
 
-  return { signedMarketContract };
+  return { signedMarketContract, signedTokenContract };
 };
 
 // Static contract values

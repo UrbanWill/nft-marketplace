@@ -8,6 +8,8 @@ import * as yup from "yup";
 
 import { CRYPTO_CURRENCY } from "../utils/constants";
 
+import useCreateNft from "../hooks/mutations/useCreateNft";
+
 import Input from "../components/shared/Input";
 import Textarea from "../components/shared/Textarea";
 import ImageUpload from "../components/shared/ImageUpload/ImageUpload";
@@ -16,7 +18,6 @@ import Button from "../components/shared/Button";
 
 import { nftaddress, nftmarketaddress } from "../config";
 
-import NFT from "../artifacts/contracts/NFT.sol/NFT.json";
 import Market from "../artifacts/contracts/NFTMarket.sol/NFTMarket.json";
 
 const client = create("https://ipfs.infura.io:5001/api/v0");
@@ -24,6 +25,8 @@ const client = create("https://ipfs.infura.io:5001/api/v0");
 export default function CreateItem() {
   const [uploadedImages, setUploadedImages] = useState([]);
   const [ipfsUrl, setIpfsUrl] = useState("");
+
+  const { createNftMutation } = useCreateNft();
 
   const router = useRouter();
 
@@ -52,29 +55,26 @@ export default function CreateItem() {
   };
 
   // TODO: Separete concerns, Creating an Item and listing an item should be two different functions
-  const createSale = async (url, salePrice) => {
+  const createSale = async (tokenId, salePrice) => {
     const web3Modal = new Web3Modal();
     const connection = await web3Modal.connect();
     const provider = new ethers.providers.Web3Provider(connection);
     const signer = provider.getSigner();
 
-    /* next, create the item */
-    let contract = new ethers.Contract(nftaddress, NFT.abi, signer);
-    let transaction = await contract.createToken(url);
-    const tx = await transaction.wait();
-    const event = tx.events[0];
-    const value = event.args[2];
-    const tokenId = value.toNumber();
-    const price = ethers.utils.parseUnits(salePrice, CRYPTO_CURRENCY);
-
     /* then list the item for sale on the marketplace */
-    contract = new ethers.Contract(nftmarketaddress, Market.abi, signer);
+    const price = ethers.utils.parseUnits(salePrice, CRYPTO_CURRENCY);
+    const contract = new ethers.Contract(nftmarketaddress, Market.abi, signer);
     let listingPrice = await contract.getListingPrice();
     listingPrice = listingPrice.toString();
 
-    transaction = await contract.createMarketItem(nftaddress, tokenId, price, {
-      value: listingPrice,
-    });
+    const transaction = await contract.createMarketItem(
+      nftaddress,
+      tokenId,
+      price,
+      {
+        value: listingPrice,
+      }
+    );
     await transaction.wait();
     router.push("/");
   };
@@ -93,7 +93,9 @@ export default function CreateItem() {
       const url = `https://ipfs.infura.io/ipfs/${added.path}`;
       /* after file is uploaded to IPFS, pass the URL to save it on Polygon */
 
-      createSale(url, price);
+      createNftMutation(url).then(
+        (res) => res.success && createSale(res.tokenId, price)
+      );
     } catch (error) {
       // TODO: Throw error toast
       console.log("Error uploading file: ", error);
