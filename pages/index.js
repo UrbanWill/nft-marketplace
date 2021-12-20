@@ -8,7 +8,7 @@ export default function Home() {
   const { data, isLoading, refetch } = useGetMarketNfts();
   const { active } = useWeb3React();
 
-  const { handleBuyNftMutation } = useBuyNft();
+  const { buyNftMutation } = useBuyNft();
 
   const handleAction = (nft) => {
     if (!active) {
@@ -16,7 +16,7 @@ export default function Home() {
       // eslint-disable-next-line no-alert
       return window.alert("Connect your wallet to make a purchase");
     }
-    return handleBuyNftMutation(nft).then(() => refetch());
+    return buyNftMutation(nft).then(() => refetch());
   };
 
   return (

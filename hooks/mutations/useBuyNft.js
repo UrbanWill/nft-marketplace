@@ -6,7 +6,7 @@ import useEthers from "../contexts/useEthers";
 
 /**
  * hook to buy nft
- * @returns {{handleBuyNftMutation: function}}
+ * @returns {{buyNftMutation: function}}
  */
 const useBuyNft = () => {
   const { signedMarketContract } = useEthers();
@@ -15,7 +15,7 @@ const useBuyNft = () => {
    * @param {object} nft to be bought
    * @returns {Promise<*>} self-descriptive
    */
-  const handleBuyNftMutation = async (nft) => {
+  const buyNftMutation = async (nft) => {
     const price = ethers.utils.parseUnits(
       nft.price.toString(),
       CRYPTO_CURRENCY
@@ -34,7 +34,7 @@ const useBuyNft = () => {
     return marketSale;
   };
 
-  return { handleBuyNftMutation };
+  return { buyNftMutation };
 };
 
 export default useBuyNft;
