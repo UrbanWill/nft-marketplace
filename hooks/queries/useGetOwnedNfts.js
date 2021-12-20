@@ -8,10 +8,10 @@ import { CRYPTO_CURRENCY } from "../../utils/constants";
 import useEthers from "../contexts/useEthers";
 
 /**
- * hook to get nfts for sale
+ * hook to get nfts the connected wallet currently owns
  * @returns { data: [] | array of objects, isLoading: boolen }
  */
-const useGetCurrentWalletNfts = () => {
+const useGetOwnedNfts = () => {
   const [nfts, setNfts] = useState([]);
   const [isLoading, setIsLoading] = useState(false);
 
@@ -68,4 +68,4 @@ const useGetCurrentWalletNfts = () => {
   };
 };
 
-export default useGetCurrentWalletNfts;
+export default useGetOwnedNfts;

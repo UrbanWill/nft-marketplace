@@ -1,12 +1,12 @@
 import { useWeb3React } from "@web3-react/core";
 import NFTList from "../components/NFTList/NFTList";
 
-import useGetCurrentWalletNfts from "../hooks/queries/useGetCurrentWalletNfts";
+import useGetOwnedNfts from "../hooks/queries/useGetOwnedNfts";
 
 export default function MyAssets() {
   const { active } = useWeb3React();
 
-  const { data, isLoading } = useGetCurrentWalletNfts();
+  const { data, isLoading } = useGetOwnedNfts();
 
   if (!active) {
     return (
