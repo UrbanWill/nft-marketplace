@@ -1,14 +1,12 @@
 import { useState, useEffect } from "react";
-import { ethers } from "ethers";
-import { create } from "ipfs-http-client";
 import { useRouter } from "next/router";
-import Web3Modal from "web3modal";
+import { useWeb3React } from "@web3-react/core";
+import { create } from "ipfs-http-client";
 import { Formik, Form } from "formik";
 import * as yup from "yup";
 
-import { CRYPTO_CURRENCY } from "../utils/constants";
-
 import useCreateNft from "../hooks/mutations/useCreateNft";
+import useListNft from "../hooks/mutations/useListNft";
 
 import Input from "../components/shared/Input";
 import Textarea from "../components/shared/Textarea";
@@ -16,36 +14,35 @@ import ImageUpload from "../components/shared/ImageUpload/ImageUpload";
 
 import Button from "../components/shared/Button";
 
-import { nftaddress, nftmarketaddress } from "../config";
-
-import Market from "../artifacts/contracts/NFTMarket.sol/NFTMarket.json";
-
 const client = create("https://ipfs.infura.io:5001/api/v0");
+const ipfsInfuraUrl = "https://ipfs.infura.io/ipfs";
 
+// TODO: Refactor this page, it should only be handling minting assets, not listing.
 export default function CreateItem() {
   const [uploadedImages, setUploadedImages] = useState([]);
   const [ipfsUrl, setIpfsUrl] = useState("");
 
-  const { createNftMutation } = useCreateNft();
-
+  const { active } = useWeb3React();
   const router = useRouter();
+  const { createNftMutation } = useCreateNft();
+  const { listNftMutation } = useListNft();
 
-  const handleImageUpload = async (file) => {
-    try {
-      const added = await client.add(file, {
-        progress: (prog) => console.log(`received: ${prog}`),
+  const handleIpfsUpload = async (data) =>
+    client
+      .add(data)
+      .then((res) => res)
+      .catch((error) => {
+        // TODO: error toast
+        console.log("Error uploading file: ", error);
       });
-      const url = `https://ipfs.infura.io/ipfs/${added.path}`;
-      setIpfsUrl(url);
-    } catch (error) {
-      // TODO: Throw error toast
-      console.log("Error uploading file: ", error);
-    }
-  };
 
   useEffect(() => {
+    const ipfsUploadData = async () => {
+      const ipfsData = await handleIpfsUpload(uploadedImages[0]);
+      setIpfsUrl(`${ipfsInfuraUrl}/${ipfsData.path}`);
+    };
     if (uploadedImages.length) {
-      handleImageUpload(uploadedImages[0]);
+      ipfsUploadData();
     }
   }, [uploadedImages]);
 
@@ -54,52 +51,30 @@ export default function CreateItem() {
     setIpfsUrl("");
   };
 
-  // TODO: Separete concerns, Creating an Item and listing an item should be two different functions
-  const createSale = async (tokenId, salePrice) => {
-    const web3Modal = new Web3Modal();
-    const connection = await web3Modal.connect();
-    const provider = new ethers.providers.Web3Provider(connection);
-    const signer = provider.getSigner();
-
-    /* then list the item for sale on the marketplace */
-    const price = ethers.utils.parseUnits(salePrice, CRYPTO_CURRENCY);
-    const contract = new ethers.Contract(nftmarketaddress, Market.abi, signer);
-    let listingPrice = await contract.getListingPrice();
-    listingPrice = listingPrice.toString();
-
-    const transaction = await contract.createMarketItem(
-      nftaddress,
-      tokenId,
-      price,
-      {
-        value: listingPrice,
-      }
-    );
-    await transaction.wait();
-    router.push("/");
-  };
-
-  // TODO: Clean this function and use added.path from onImageUpload
-  const createMarket = async (values) => {
+  const handleSubmit = async (values) => {
     const { name, description, price } = values;
-    /* first, upload to IPFS */
+    if (!active) {
+      // TODO: Open "connect your wallet" modal
+      // eslint-disable-next-line no-alert
+      return window.alert("Connect your wallet to make a purchase");
+    }
+
     const data = JSON.stringify({
       name,
       description,
       image: ipfsUrl,
     });
-    try {
-      const added = await client.add(data);
-      const url = `https://ipfs.infura.io/ipfs/${added.path}`;
-      /* after file is uploaded to IPFS, pass the URL to save it on Polygon */
+    const uploadedData = await handleIpfsUpload(data);
+    const url = `${ipfsInfuraUrl}/${uploadedData.path}`;
 
-      createNftMutation(url).then(
-        (res) => res.success && createSale(res.tokenId, price)
-      );
-    } catch (error) {
-      // TODO: Throw error toast
-      console.log("Error uploading file: ", error);
-    }
+    // TODO: Refactor this page, it should only be handling minting assets, not listing.
+    return createNftMutation(url).then(
+      (res) =>
+        res.success &&
+        listNftMutation(res.tokenId, price).then(
+          (listingResponse) => listingResponse.success && router.push("/")
+        )
+    );
   };
 
   const initialValues = {
@@ -113,11 +88,6 @@ export default function CreateItem() {
     description: yup.string().required(),
     price: yup.string().required(),
   });
-
-  // TODO: This is a function calling another function, DRY this up.
-  const handleSubmit = async (values) => {
-    createMarket(values);
-  };
 
   return (
     <div className="flex justify-center">
