@@ -27,6 +27,11 @@ export default function CreateItem() {
   const { createNftMutation } = useCreateNft();
   const { listNftMutation } = useListNft();
 
+  /**
+   * function to upload data to ipfs
+   * @param {File | object} File or file data to be uploaded to ipfs
+   * @returns {Promise < Object >} ipfs data
+   */
   const handleIpfsUpload = async (data) =>
     client
       .add(data)
@@ -36,6 +41,7 @@ export default function CreateItem() {
         console.log("Error uploading file: ", error);
       });
 
+  /* Make an upload to ipfs and sets ipfsUrl whenever an image is uploaded */
   useEffect(() => {
     const ipfsUploadData = async () => {
       const ipfsData = await handleIpfsUpload(uploadedImages[0]);
@@ -46,6 +52,7 @@ export default function CreateItem() {
     }
   }, [uploadedImages]);
 
+  /* Clears uploaded iamges and ipfs url state */
   const handleRemoveAllImages = () => {
     setUploadedImages([]);
     setIpfsUrl("");
@@ -68,10 +75,11 @@ export default function CreateItem() {
     const url = `${ipfsInfuraUrl}/${uploadedData.path}`;
 
     // TODO: Refactor this page, it should only be handling minting assets, not listing.
+    /* Mints a new nft then list it */
     return createNftMutation(url).then(
       (res) =>
         res.success &&
-        listNftMutation(res.tokenId, price).then(
+        listNftMutation(res.tokenId, String(price)).then(
           (listingResponse) => listingResponse.success && router.push("/")
         )
     );
@@ -86,7 +94,7 @@ export default function CreateItem() {
   const validationSchema = yup.object().shape({
     name: yup.string().required(),
     description: yup.string().required(),
-    price: yup.string().required(),
+    price: yup.number().required(),
   });
 
   return (
@@ -120,6 +128,7 @@ export default function CreateItem() {
               label="Asset price in ETH"
               placeholder="Example: 0.75"
               errorMessage="Asset price is a required field"
+              type="number"
             />
             <ImageUpload
               onSetUploadedImages={setUploadedImages}
