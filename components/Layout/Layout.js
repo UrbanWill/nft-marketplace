@@ -1,6 +1,8 @@
+import { useState } from "react";
 import { useRouter } from "next/router";
 import Header from "../Header/Header";
 import Meta from "../Meta/Meta";
+import SlideOverPanel from "../SlideOverPanel/SlideOverPanel";
 
 import { HEADER_ROUTES } from "../../utils/constants";
 
@@ -16,6 +18,7 @@ const navOptions = [
 const defaultMetaTitle = "Metaverse";
 
 const Layout = ({ children }) => {
+  const [isOpen, setIsOpen] = useState(false);
   const { route } = useRouter();
 
   const routeTitle = navOptions.find((option) => option.route === route)?.label;
@@ -25,7 +28,19 @@ const Layout = ({ children }) => {
       <Meta title={`${defaultMetaTitle} ${routeTitle}`} />
       <div>
         <Header currentRoute={route} navOptions={navOptions} />
-        <div className="p-4">{children}</div>
+        <div className="relative">
+          <button
+            className="bg-red-200"
+            type="button"
+            onClick={() => setIsOpen((prev) => !prev)}
+          >
+            Click me!
+          </button>
+          <SlideOverPanel isOpen={isOpen} onSetIsOpen={setIsOpen} />
+          <div className="p-4" id="layout-body">
+            {children}
+          </div>
+        </div>
       </div>
     </>
   );
