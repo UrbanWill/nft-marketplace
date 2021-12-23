@@ -1,14 +1,15 @@
 import { useEffect, Fragment, useRef, useCallback } from "react";
 import PropTypes from "prop-types";
 import { Transition } from "@headlessui/react";
-import { XIcon } from "@heroicons/react/outline";
 
 const propTypes = {
   isOpen: PropTypes.bool.isRequired,
+  shouldStayOpen: PropTypes.bool.isRequired,
   onSetIsOpen: PropTypes.func.isRequired,
+  children: PropTypes.node.isRequired,
 };
 
-const SlideOverPanel = ({ isOpen, onSetIsOpen }) => {
+const SlideOverPanel = ({ isOpen, onSetIsOpen, children, shouldStayOpen }) => {
   const slideOverRef = useRef(null);
 
   /* Closes SlideOverPanel if click event is outside a slideOverRef child or pressing 'esc' key */
@@ -25,22 +26,35 @@ const SlideOverPanel = ({ isOpen, onSetIsOpen }) => {
   );
 
   useEffect(() => {
-    if (isOpen) {
-      /* Prevent scrolling on mount and adds background style */
+    if (isOpen && !shouldStayOpen) {
+      /* Prevent scrolling on mount and adds background style 
+      if shouldStayOpen is true do not add event listeners again
+      */
       document.body.style.overflow = "hidden";
       document.getElementById("layout-body").style.filter =
         "blur(5px) grayscale(50%)";
     }
+    /* Scrolls to the top of the page on mount */
+    window.scrollTo({
+      top: 0,
+      behavior: "smooth",
+    });
+
     /* Re-enable scrolling when component unmounts and removes background style */
     return () => {
       document.body.style.overflow = "visible";
       document.getElementById("layout-body").style.filter = "";
     };
-  }, [isOpen]); /* Only runs when isOpen changes */
+  }, [
+    isOpen,
+    shouldStayOpen,
+  ]); /* Only runs when isOpen or shouldStayOpen changes */
 
-  /* Adds/removes event listeners for click and key press events */
+  /* Adds/removes event listeners for click and key press events,
+  if shouldStayOpen is true do not add event listeners
+  */
   useEffect(() => {
-    if (slideOverRef.current && isOpen) {
+    if (slideOverRef.current && isOpen && !shouldStayOpen) {
       document.addEventListener("click", handleClose);
       document.addEventListener("keydown", handleClose);
     }
@@ -48,12 +62,16 @@ const SlideOverPanel = ({ isOpen, onSetIsOpen }) => {
       document.removeEventListener("click", handleClose);
       document.removeEventListener("keydown", handleClose);
     };
-  }, [isOpen, handleClose]); /* Only runs when isOpen changes */
+  }, [
+    isOpen,
+    handleClose,
+    shouldStayOpen,
+  ]); /* Only runs when isOpen or shouldStayOpen changes */
 
   return (
     <div ref={slideOverRef}>
       <Transition.Root show={isOpen} as={Fragment}>
-        <div className="absolute top-0 right-0 h-screen z-50">
+        <div className="absolute top-0 right-0 h-content z-50">
           <Transition.Child
             as={Fragment}
             enter="transform transition ease-in-out duration-300 sm:duration-500"
@@ -63,28 +81,8 @@ const SlideOverPanel = ({ isOpen, onSetIsOpen }) => {
             leaveFrom="translate-x-0"
             leaveTo="translate-x-full"
           >
-            <div className="relative w-screen h-full lg:max-w-md">
-              <button
-                type="button"
-                className="rounded-md text-gray-300 hover:text-black focus:outline-none focus:ring-2 focus:ring-white px-2 pt-2"
-                onClick={() => onSetIsOpen(false)}
-              >
-                <span className="sr-only">Close panel</span>
-                <XIcon className="h-6 w-6" aria-hidden="true" />
-              </button>
-              <div className="h-full flex flex-col bg-white h-full shadow-xl">
-                <div className="px-4 sm:px-6">
-                  <p>Panel Title</p>
-                </div>
-                <div className="mt-6 relative flex-1 px-4 sm:px-6">
-                  <div className="absolute inset-0 px-4 sm:px-6">
-                    <div
-                      className="h-full border-2 border-dashed border-gray-200"
-                      aria-hidden="true"
-                    />
-                  </div>
-                </div>
-              </div>
+            <div className="relative w-screen h-full lg:max-w-md bg-white shadow-2xl">
+              {children}
             </div>
           </Transition.Child>
         </div>
