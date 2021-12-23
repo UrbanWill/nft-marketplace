@@ -1,3 +1,8 @@
 @tailwind base;
 @tailwind components;
 @tailwind utilities;
+
+.h-content {
+  /* Deducts Header height from vh */
+  height: calc(100vh - theme("height.20"));
+}
