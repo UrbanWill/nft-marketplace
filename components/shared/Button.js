@@ -7,11 +7,12 @@ const buttonSize = {
 
 const propTypes = {
   onHandleClick: PropTypes.func,
-  label: PropTypes.string.isRequired,
+  label: PropTypes.string,
   isDisabled: PropTypes.bool,
   className: PropTypes.string,
   isTypeSubmit: PropTypes.bool,
   size: PropTypes.oneOf(Object.keys(buttonSize)),
+  icon: PropTypes.node,
 };
 
 const Button = ({
@@ -21,6 +22,7 @@ const Button = ({
   className,
   isTypeSubmit,
   size,
+  icon,
 }) => (
   <button
     type={isTypeSubmit ? "submit" : "button"}
@@ -33,15 +35,18 @@ const Button = ({
     disabled={isDisabled}
   >
     {label}
+    {icon}
   </button>
 );
 
 Button.defaultProps = {
+  label: "",
   isDisabled: false,
   className: "",
   isTypeSubmit: false,
   onHandleClick: () => {},
   size: "sm",
+  icon: null,
 };
 
 Button.propTypes = propTypes;
