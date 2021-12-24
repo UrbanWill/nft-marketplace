@@ -20,7 +20,7 @@ const useEthers = () => {
   const [signedMarketContract, setSignedMarketContract] = useState(null);
   const [signedTokenContract, setSignedTokenContract] = useState(null);
 
-  // Clears signer and signed contracts
+  /** Clears signer and signed contracts */
   const handleClear = () => {
     setSigner(null);
     setSignedMarketContract(null);
@@ -51,7 +51,7 @@ const useEthers = () => {
   return { signedMarketContract, signedTokenContract };
 };
 
-// Static contract values
+/** Static contract values */
 const provider = new ethers.providers.JsonRpcProvider();
 const tokenContract = new ethers.Contract(nftaddress, NFT.abi, provider);
 const marketContract = new ethers.Contract(
@@ -59,8 +59,7 @@ const marketContract = new ethers.Contract(
   Market.abi,
   provider
 );
-
-// Context provider
+/** Context provider */
 export const EthersProvider = ({ children }) => {
   const values = { ...useEthers(), tokenContract, marketContract };
   return (
@@ -68,5 +67,5 @@ export const EthersProvider = ({ children }) => {
   );
 };
 
-// Export context to be able to use them in child component
+/** Export context to be able to use them in child component */
 export default () => useContext(EthersContext);
