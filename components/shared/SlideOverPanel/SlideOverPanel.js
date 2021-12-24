@@ -71,7 +71,7 @@ const SlideOverPanel = ({ isOpen, onSetIsOpen, children, shouldStayOpen }) => {
   return (
     <div ref={slideOverRef}>
       <Transition.Root show={isOpen} as={Fragment}>
-        <div className="absolute top-0 right-0 h-content z-50">
+        <div className="absolute top-0 right-0 h-content z-10">
           <Transition.Child
             as={Fragment}
             enter="transform transition ease-in-out duration-300 sm:duration-500"
@@ -81,7 +81,7 @@ const SlideOverPanel = ({ isOpen, onSetIsOpen, children, shouldStayOpen }) => {
             leaveFrom="translate-x-0"
             leaveTo="translate-x-full"
           >
-            <div className="relative w-screen h-full lg:max-w-md bg-white shadow-2xl">
+            <div className="relative w-screen h-full lg:max-w-md bg-white shadow-2xl py-2 px-6">
               {children}
             </div>
           </Transition.Child>
