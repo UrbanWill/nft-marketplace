@@ -26,7 +26,7 @@ const Button = ({
 }) => (
   <button
     type={isTypeSubmit ? "submit" : "button"}
-    className={` text-white font-bold rounded ${
+    className={` text-white font-bold rounded flex justify-center ${
       buttonSize[size]
     } ${className} ${
       isDisabled ? "bg-gray-300 cursor-not-allowed" : "bg-pink-500"
@@ -34,8 +34,8 @@ const Button = ({
     onClick={onHandleClick}
     disabled={isDisabled}
   >
-    {label}
     {icon}
+    {label}
   </button>
 );
 
