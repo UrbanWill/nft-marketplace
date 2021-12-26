@@ -26,7 +26,7 @@ const Button = ({
 }) => (
   <button
     type={isTypeSubmit ? "submit" : "button"}
-    className={` text-white font-bold rounded flex justify-center ${
+    className={` text-white font-bold rounded flex justify-center hover:bg-pink-600 ${
       buttonSize[size]
     } ${className} ${
       isDisabled ? "bg-gray-300 cursor-not-allowed" : "bg-pink-500"

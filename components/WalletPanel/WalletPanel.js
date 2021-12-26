@@ -1,8 +1,10 @@
 import PropTypes from "prop-types";
 import { ChevronLeftIcon, UserCircleIcon } from "@heroicons/react/outline";
+import { useWeb3React } from "@web3-react/core";
 import SlideOverPanel from "../shared/SlideOverPanel/SlideOverPanel";
 import useToggleWalletPanel from "../../hooks/contexts/useToggleWalletPanel";
 import WalletProveidersList from "./WalletProvidersList";
+import WalletInfo from "./WalletInfo";
 
 const propTyepes = {
   isNavOpen: PropTypes.bool.isRequired,
@@ -10,6 +12,7 @@ const propTyepes = {
 
 const WalletPanel = ({ isNavOpen }) => {
   const { isWalletPanelOpen, setIsWalletPanelOpen } = useToggleWalletPanel();
+  const { account } = useWeb3React();
 
   return (
     <SlideOverPanel
@@ -36,7 +39,11 @@ const WalletPanel = ({ isNavOpen }) => {
           />
           <p className="font-bold">My wallet</p>
         </div>
-        <WalletProveidersList onSetIsWalletPanelOpen={setIsWalletPanelOpen} />
+        {account ? (
+          <WalletInfo />
+        ) : (
+          <WalletProveidersList onSetIsWalletPanelOpen={setIsWalletPanelOpen} />
+        )}
       </>
     </SlideOverPanel>
   );
