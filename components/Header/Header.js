@@ -1,8 +1,8 @@
 import Link from "next/link";
 import PropTypes from "prop-types";
-import { useWeb3React } from "@web3-react/core";
+import { CubeTransparentIcon, MenuIcon, XIcon } from "@heroicons/react/outline";
 import Button from "../shared/Button";
-import injected from "../../utils/connectors";
+import useToggleWalletPanel from "../../hooks/contexts/useToggleWalletPanel";
 
 const propTypes = {
   navOptions: PropTypes.arrayOf(
@@ -12,50 +12,60 @@ const propTypes = {
     })
   ).isRequired,
   currentRoute: PropTypes.string.isRequired,
+  isNavOpen: PropTypes.bool.isRequired,
+  onSetIsNavOpen: PropTypes.func.isRequired,
 };
 
-const Header = ({ navOptions, currentRoute }) => {
-  const { active, activate, deactivate } = useWeb3React();
-
-  const handleToggleConnect = async () => {
-    try {
-      if (active) {
-        deactivate();
-      } else {
-        await activate(injected);
-      }
-    } catch (error) {
-      // TODO: Throw error modal
-      console.log(error);
-    }
-  };
-
-  const buttonLabel = active ? "Disconnect wallet" : "Connect wallet";
+const Header = ({ navOptions, currentRoute, isNavOpen, onSetIsNavOpen }) => {
+  const { setIsWalletPanelOpen } = useToggleWalletPanel();
 
   return (
-    <nav className="border-b p-6 pb-4 sticky top-0 z-50 bg-white">
-      <p className="text-4xl font-bold">Metaverse Marketplace</p>
-      <div className="flex items-center justify-between mt-4">
-        <div>
-          {navOptions.map((option) => {
-            const { route, label } = option;
-            const isSelected = route === currentRoute;
-            return (
-              <Link href={route} key={route} passHref>
-                <a
-                  className={`p-2 ${
-                    isSelected
-                      ? "bg-black rounded-md text-white"
-                      : "text-pink-500"
-                  }`}
-                >
-                  {label}
-                </a>
-              </Link>
-            );
-          })}
+    <nav className="border-b shadow-md p-6 pb-4 sticky top-0 z-50 bg-white h-20">
+      <div className="flex items-center">
+        <h1 className="text-3xl font-bold mr-4">Metaverse</h1>
+        <div className="flex flex-1 items-center ">
+          <div className="hidden lg:block">
+            {navOptions.map((option) => {
+              const { route, label } = option;
+              const isSelected = route === currentRoute;
+              return (
+                <Link href={route} key={route} passHref>
+                  <a
+                    className={`p-2 font-bold ${
+                      isSelected
+                        ? "bg-black rounded-md text-white"
+                        : "text-pink-500"
+                    }`}
+                  >
+                    {label}
+                  </a>
+                </Link>
+              );
+            })}
+          </div>
+          <div className="ml-auto flex items-center">
+            <div className="lg:hidden flex">
+              <button
+                type="button"
+                onClick={() => onSetIsNavOpen((prev) => !prev)}
+              >
+                <span className="sr-only">Open main menu</span>
+                {isNavOpen ? (
+                  <XIcon className="block h-7 w-7" aria-hidden="true" />
+                ) : (
+                  <MenuIcon className="block h-7 w-7" aria-hidden="true" />
+                )}
+              </button>
+            </div>
+            <Button
+              icon={
+                <CubeTransparentIcon className="h-6 w-6" aria-hidden="true" />
+              }
+              onHandleClick={() => setIsWalletPanelOpen((prev) => !prev)}
+              className="hidden lg:block"
+            />
+          </div>
         </div>
-        <Button label={buttonLabel} onHandleClick={handleToggleConnect} />
       </div>
     </nav>
   );

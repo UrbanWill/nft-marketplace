@@ -58,7 +58,7 @@ const HeaderNavPanel = ({ isNavOpen, onSetIsNavOpen, navOptions }) => {
       onSetIsOpen={onSetIsNavOpen}
       shouldStayOpen={isWalletPanelOpen}
     >
-      <div className="flex flex-col h-full">
+      <div className="flex flex-col h-full py-2 px-6">
         <div className="">
           {navOptions.map((option) => {
             const { route, label } = option;

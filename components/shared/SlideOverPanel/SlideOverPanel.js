@@ -81,7 +81,7 @@ const SlideOverPanel = ({ isOpen, onSetIsOpen, children, shouldStayOpen }) => {
             leaveFrom="translate-x-0"
             leaveTo="translate-x-full"
           >
-            <div className="relative w-screen h-full lg:max-w-md bg-white shadow-2xl py-2 px-6">
+            <div className="relative w-screen h-full lg:max-w-md bg-white shadow-2xl">
               {children}
             </div>
           </Transition.Child>
