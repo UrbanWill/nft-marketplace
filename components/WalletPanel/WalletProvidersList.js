@@ -1,21 +1,38 @@
 import PropTypes from "prop-types";
 import { useWeb3React } from "@web3-react/core";
-import injected from "../../utils/connectors";
+import Image from "next/image";
+import { injected, fortmatic } from "../../utils/connectors";
+
+import MetaMaskLogo from "../../assets/images/metamask-logo.webp";
+import FortmaticLogo from "../../assets/images/fortmatic-logo.webp";
 
 const propTypes = {
   onSetIsWalletPanelOpen: PropTypes.func.isRequired,
+};
+
+const connectors = {
+  Injected: {
+    name: "MetaMask",
+    logo: <Image src={MetaMaskLogo} alt="Metamask logo" />,
+    method: injected,
+  },
+  Fortmatic: {
+    name: "Fortmatic",
+    logo: <Image src={FortmaticLogo} alt="FortmaticLogo logo" />,
+    method: fortmatic,
+  },
 };
 
 const WalletProvidersList = ({ onSetIsWalletPanelOpen }) => {
   const { active, activate, deactivate } = useWeb3React();
 
   //   TODO: Throw error/sucess modals
-  const handleToggleConnect = async () => {
+  const handleToggleConnect = async (connector) => {
     if (active) {
       deactivate();
       onSetIsWalletPanelOpen(false);
     } else {
-      await activate(injected)
+      await activate(connector)
         .then(() => {
           console.log("Connected wallet successfully");
         })
@@ -32,15 +49,21 @@ const WalletProvidersList = ({ onSetIsWalletPanelOpen }) => {
       </p>
       <div className="w-full bg-white rounded shadow">
         <ul className="divide-y-2 divide-gray-100">
-          <li className="hover:shadow-lg cursor-pointer">
-            <button
-              className="p-3 w-full flex"
-              type="button"
-              onClick={handleToggleConnect}
-            >
-              MetaMask
-            </button>
-          </li>
+          {Object.values(connectors).map((connector) => {
+            const { name, logo, method } = connector;
+            return (
+              <li className="shadow-around cursor-pointer" key={name}>
+                <button
+                  className="p-3 w-full flex items-center font-bold"
+                  type="button"
+                  onClick={() => handleToggleConnect(method)}
+                >
+                  <div className="h-full w-6 mr-4 relative flex">{logo}</div>
+                  {name}
+                </button>
+              </li>
+            );
+          })}
         </ul>
       </div>
     </div>
