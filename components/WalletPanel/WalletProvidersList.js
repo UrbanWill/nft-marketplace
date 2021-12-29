@@ -1,14 +1,9 @@
-import PropTypes from "prop-types";
 import { useWeb3React } from "@web3-react/core";
 import Image from "next/image";
 import { injected, fortmatic } from "../../utils/connectors";
 
 import MetaMaskLogo from "../../assets/images/metamask-logo.webp";
 import FortmaticLogo from "../../assets/images/fortmatic-logo.webp";
-
-const propTypes = {
-  onSetIsWalletPanelOpen: PropTypes.func.isRequired,
-};
 
 const connectors = {
   Injected: {
@@ -23,14 +18,13 @@ const connectors = {
   },
 };
 
-const WalletProvidersList = ({ onSetIsWalletPanelOpen }) => {
+const WalletProvidersList = () => {
   const { active, activate, deactivate } = useWeb3React();
 
   //   TODO: Throw error/sucess modals
   const handleToggleConnect = async (connector) => {
     if (active) {
       deactivate();
-      onSetIsWalletPanelOpen(false);
     } else {
       await activate(connector)
         .then(() => {
@@ -40,7 +34,6 @@ const WalletProvidersList = ({ onSetIsWalletPanelOpen }) => {
           console.log(err);
         });
     }
-    onSetIsWalletPanelOpen(false);
   };
   return (
     <div className="px-6">
@@ -70,5 +63,4 @@ const WalletProvidersList = ({ onSetIsWalletPanelOpen }) => {
   );
 };
 
-WalletProvidersList.propTypes = propTypes;
 export default WalletProvidersList;

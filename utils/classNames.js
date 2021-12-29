@@ -3,9 +3,6 @@
  * @param {classess: []}
  * @returns {classes: str}
  */
-const classNames = (...classes) => {
-  console.log(classes);
-  return classes.filter(Boolean).join(" ");
-};
+const classNames = (...classes) => classes.filter(Boolean).join(" ");
 
 export default classNames;
