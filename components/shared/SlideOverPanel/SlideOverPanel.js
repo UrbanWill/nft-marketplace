@@ -1,4 +1,4 @@
-import { useEffect, Fragment, useRef, useCallback } from "react";
+import { useEffect, Fragment, useRef, useCallback, useState } from "react";
 import PropTypes from "prop-types";
 import { Transition } from "@headlessui/react";
 
@@ -10,19 +10,27 @@ const propTypes = {
 };
 
 const SlideOverPanel = ({ isOpen, onSetIsOpen, children, shouldStayOpen }) => {
+  const [modalRoot, setModalRoot] = useState(null);
   const slideOverRef = useRef(null);
 
-  /* Closes SlideOverPanel if click event is outside a slideOverRef child or pressing 'esc' key */
+  useEffect(() => {
+    setModalRoot(document.getElementById("modal"));
+  }, [setModalRoot]);
+
+  /* Closes SlideOverPanel if click event is outside a slideOverRef child or pressing 'esc' key,
+  do not close if click event is inside modalRoot or child components */
   const handleClose = useCallback(
     (event) => {
       if (
-        (!slideOverRef.current?.contains(event.target) && !event.keyCode) ||
+        (!slideOverRef.current?.contains(event.target) &&
+          !modalRoot.contains(event.target) &&
+          !event.keyCode) ||
         event.keyCode === 27
       ) {
         onSetIsOpen(false);
       }
     },
-    [onSetIsOpen]
+    [onSetIsOpen, modalRoot]
   );
 
   useEffect(() => {

@@ -30,6 +30,7 @@ const Layout = ({ children }) => {
     <>
       <Meta title={`${defaultMetaTitle} ${routeTitle}`} />
       <div>
+        <div id="modal" />
         <Header
           currentRoute={route}
           navOptions={navOptions}

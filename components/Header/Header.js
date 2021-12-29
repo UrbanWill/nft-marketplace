@@ -20,7 +20,7 @@ const Header = ({ navOptions, currentRoute, isNavOpen, onSetIsNavOpen }) => {
   const { setIsWalletPanelOpen } = useToggleWalletPanel();
 
   return (
-    <nav className="border-b shadow-md p-6 pb-4 sticky top-0 z-50 bg-white h-20">
+    <nav className="border-b shadow-md p-6 pb-4 sticky top-0 z-40 bg-white h-20">
       <div className="flex items-center">
         <h1 className="text-3xl font-bold mr-4">Metaverse</h1>
         <div className="flex flex-1 items-center ">
