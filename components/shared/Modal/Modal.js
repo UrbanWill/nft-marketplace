@@ -15,6 +15,11 @@ const Modal = ({ children, isOpen, onHandleModalClose, title }) => {
   const [modalRoot, setModalRoot] = useState(null);
   const elRef = useRef(document.createElement("div"));
 
+  /**
+   * Provides a first-class way to render children into a DOM node that exists
+   *  outside the DOM hierarchy of the parent component. Eg:
+   *  Render modal from SlideOverPanel
+   */
   useEffect(() => {
     setModalRoot(document.getElementById("modal"));
   }, [setModalRoot]);
@@ -34,7 +39,7 @@ const Modal = ({ children, isOpen, onHandleModalClose, title }) => {
 
   return createPortal(
     <Transition.Root show={isOpen} as={Fragment}>
-      <div className="modal fixed z-50 w-full h-full flex items-center justify-center bg-pink-disabled">
+      <div className="modal fixed z-50 w-full h-full flex items-center justify-center bg-gray-500 bg-opacity-75">
         <Transition.Child
           as={Fragment}
           enter="ease-out duration-300"
@@ -46,23 +51,21 @@ const Modal = ({ children, isOpen, onHandleModalClose, title }) => {
         >
           <div className="inline-block align-bottom bg-white rounded-lg text-left overflow-hidden shadow-xl transform transition-all sm:my-8 sm:align-middle sm:max-w-lg sm:w-full">
             <div className="bg-white px-4 pt-5 pb-4 sm:p-6 sm:pb-4">
-              <div className="sm:flex sm:items-start">
-                <div className="mt-3 text-center sm:mt-0 sm:text-left">
-                  <h3 className="text-lg leading-6 font-bold text-gray-900 text-xl">
-                    {title}
-                  </h3>
-                  <button
-                    type="button"
-                    className="absolute right-4 top-4 pointer"
-                  >
-                    <XIcon
-                      className="block h-6 w-6"
-                      aria-hidden="true"
-                      onClick={onHandleModalClose}
-                    />
-                  </button>
-                  <div className="mt-2">{children}</div>
-                </div>
+              <div className="mt-3 text-center sm:mt-0 sm:text-left lg:my-2">
+                <h3 className="text-lg leading-6 font-bold text-gray-900 text-xl">
+                  {title}
+                </h3>
+                <button
+                  type="button"
+                  className="absolute right-4 top-4 pointer"
+                >
+                  <XIcon
+                    className="block h-6 w-6"
+                    aria-hidden="true"
+                    onClick={onHandleModalClose}
+                  />
+                </button>
+                <div className="mt-2">{children}</div>
               </div>
             </div>
           </div>

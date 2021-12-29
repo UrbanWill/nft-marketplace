@@ -2,6 +2,7 @@ import { useState, useEffect } from "react";
 import PropTypes from "prop-types";
 import { useWeb3React } from "@web3-react/core";
 import { ethers } from "ethers";
+import { CubeTransparentIcon } from "@heroicons/react/outline";
 import { CRYPTO_CURRENCY } from "../../utils/constants";
 import Button from "../shared/Button";
 import Modal from "../shared/Modal/Modal";
@@ -43,18 +44,21 @@ const WalletInfo = ({ walletAddress }) => {
   }, [account, library, chainId]);
 
   const modalBody = (
-    <div>
+    <div className="flex flex-col">
+      <CubeTransparentIcon
+        className="h-16 w-16 self-center text-pink-500 my-2 transform rotate-12"
+        aria-hidden="true"
+      />
       <p className="py-2">Transfer funds to your wallet address below:</p>
-      <div className="flex">
+      <div className="flex flex-col truncate lg:flex-row">
         <span className="bg-gray-100 p-2 rounded border-2 text-sm">
           {walletAddress}
         </span>
         <Button
           label="Copy"
-          className="ml-2 px-6"
-          onHandleClick={() =>
-            navigator.clipboard.writeText("Chourico knows it's Natal!!")
-          }
+          className="mt-2 px-6 lg:ml-2 lg:my-0"
+          // TODO: Throw success modal on copy
+          onHandleClick={() => navigator.clipboard.writeText(walletAddress)}
         />
       </div>
     </div>
