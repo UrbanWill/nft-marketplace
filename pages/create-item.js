@@ -8,8 +8,8 @@ import * as yup from "yup";
 import useCreateNft from "../hooks/mutations/useCreateNft";
 import useListNft from "../hooks/mutations/useListNft";
 
-import Input from "../components/shared/Input";
-import Textarea from "../components/shared/Textarea";
+import Input from "../components/shared/Input/Input";
+import Textarea from "../components/shared/Textarea/Textarea";
 import ImageUpload from "../components/shared/ImageUpload/ImageUpload";
 
 import Button from "../components/shared/Button/Button";

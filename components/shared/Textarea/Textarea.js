@@ -1,7 +1,7 @@
 import PropTypes from "prop-types";
 import { useField } from "formik";
 
-import { TEXTAREA_MAX_LENGTH } from "../../utils/constants";
+import { TEXTAREA_MAX_LENGTH } from "../../../utils/constants";
 
 const propTypes = {
   name: PropTypes.string.isRequired,
