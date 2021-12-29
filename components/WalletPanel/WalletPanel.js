@@ -1,3 +1,4 @@
+import { useState, useEffect } from "react";
 import PropTypes from "prop-types";
 import { ChevronLeftIcon, UserCircleIcon } from "@heroicons/react/outline";
 import { useWeb3React } from "@web3-react/core";
@@ -12,7 +13,15 @@ const propTyepes = {
 
 const WalletPanel = ({ isNavOpen }) => {
   const { isWalletPanelOpen, setIsWalletPanelOpen } = useToggleWalletPanel();
+  const [walletAddress, setWalletAddress] = useState("");
   const { account } = useWeb3React();
+
+  useEffect(() => {
+    if (account) {
+      return setWalletAddress(account);
+    }
+    return setWalletAddress("");
+  }, [account]);
 
   return (
     <SlideOverPanel
@@ -40,7 +49,7 @@ const WalletPanel = ({ isNavOpen }) => {
           <p className="font-bold">My wallet</p>
         </div>
         {account ? (
-          <WalletInfo />
+          <WalletInfo walletAddress={walletAddress} />
         ) : (
           <WalletProveidersList onSetIsWalletPanelOpen={setIsWalletPanelOpen} />
         )}
