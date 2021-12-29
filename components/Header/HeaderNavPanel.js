@@ -8,7 +8,7 @@ import {
   ViewGridIcon,
 } from "@heroicons/react/outline";
 import SlideOverPanel from "../shared/SlideOverPanel/SlideOverPanel";
-import Button from "../shared/Button";
+import Button from "../shared/Button/Button";
 import useToggleWalletPanel from "../../hooks/contexts/useToggleWalletPanel";
 import { HEADER_ROUTES } from "../../utils/constants";
 

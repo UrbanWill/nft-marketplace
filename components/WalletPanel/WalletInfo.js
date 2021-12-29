@@ -4,7 +4,7 @@ import { useWeb3React } from "@web3-react/core";
 import { ethers } from "ethers";
 import { CubeTransparentIcon } from "@heroicons/react/outline";
 import { CRYPTO_CURRENCY } from "../../utils/constants";
-import Button from "../shared/Button";
+import Button from "../shared/Button/Button";
 import Modal from "../shared/Modal/Modal";
 
 const propTypes = {

@@ -1,7 +1,7 @@
 import Link from "next/link";
 import PropTypes from "prop-types";
 import { CubeTransparentIcon, MenuIcon, XIcon } from "@heroicons/react/outline";
-import Button from "../shared/Button";
+import Button from "../shared/Button/Button";
 import useToggleWalletPanel from "../../hooks/contexts/useToggleWalletPanel";
 
 const propTypes = {

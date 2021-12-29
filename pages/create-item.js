@@ -12,7 +12,7 @@ import Input from "../components/shared/Input";
 import Textarea from "../components/shared/Textarea";
 import ImageUpload from "../components/shared/ImageUpload/ImageUpload";
 
-import Button from "../components/shared/Button";
+import Button from "../components/shared/Button/Button";
 
 const client = create("https://ipfs.infura.io:5001/api/v0");
 const ipfsInfuraUrl = "https://ipfs.infura.io/ipfs";

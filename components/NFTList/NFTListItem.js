@@ -3,7 +3,7 @@ import Image from "next/image";
 
 import { nftPropType } from "../../utils/propTypes";
 
-import Button from "../shared/Button";
+import Button from "../shared/Button/Button";
 
 const propTypes = {
   nft: nftPropType.isRequired,
