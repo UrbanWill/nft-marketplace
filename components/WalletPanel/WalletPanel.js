@@ -55,7 +55,7 @@ const WalletPanel = ({ isNavOpen }) => {
           <button
             type="button"
             className="rounded-md text-gray-300 hover:text-black focus:outline-none focus:ring-2 focus:ring-white"
-            // onClick={() => setIsWalletPanelOpen(false)}
+            onClick={() => setIsWalletPanelOpen(false)}
           >
             <span className="sr-only">Close panel</span>
             <ChevronLeftIcon
@@ -78,7 +78,7 @@ const WalletPanel = ({ isNavOpen }) => {
         {account ? (
           <WalletInfo walletAddress={walletAddress} />
         ) : (
-          <WalletProvidersList onSetIsWalletPanelOpen={setIsWalletPanelOpen} />
+          <WalletProvidersList />
         )}
       </>
     </SlideOverPanel>
