@@ -49,7 +49,7 @@ contract NFTMarket is ReentrancyGuard {
         uint256 price
     ) public payable nonReentrant {
         require(price > 0, "Price must be at lease 1 wei");
-        require(msg.value == listingPrice, "Price must be euqal to listing price");
+        require(msg.value == listingPrice, "Price must be equal to listing price");
 
         _itemIds.increment();
         uint256 itemId = _itemIds.current();
@@ -87,8 +87,8 @@ contract NFTMarket is ReentrancyGuard {
 
         idToMarketItem[itemId].seller.transfer(msg.value);
         IERC721(nftContract).transferFrom(address(this), msg.sender, tokenId);
-        idToMarketItem[tokenId].owner = payable(msg.sender);
-        idToMarketItem[tokenId].sold = true;
+        idToMarketItem[itemId].owner = payable(msg.sender);
+        idToMarketItem[itemId].sold = true;
         _itemsSold.increment();
         payable(owner).transfer(listingPrice);
     }

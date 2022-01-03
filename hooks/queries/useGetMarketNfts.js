@@ -36,6 +36,7 @@ const useGetMarketNfts = () => {
           const formattedItem = {
             price,
             tokenId: item.tokenId.toNumber(),
+            itemId: item.itemId.toNumber(),
             seller: item.seller,
             owner: item.owner,
             image: meta.data.image,

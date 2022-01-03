@@ -23,7 +23,7 @@ const useBuyNft = () => {
 
     // TODO: Throw success/fail toasts
     const marketSale = await signedMarketContract
-      .createMarketSale(nftaddress, nft.tokenId, {
+      .createMarketSale(nftaddress, nft.itemId, {
         value: price,
       })
       .then((res) => ({ success: true, ...res }))
