@@ -51,29 +51,43 @@ const WalletPanel = ({ isNavOpen }) => {
       isNavOpen={isNavOpen}
     >
       <>
-        <div className="flex items-center border-b py-4 px-6">
-          <button
-            type="button"
-            className="rounded-md text-gray-300 hover:text-black focus:outline-none focus:ring-2 focus:ring-white"
-            onClick={() => setIsWalletPanelOpen(false)}
-          >
-            <span className="sr-only">Close panel</span>
-            <ChevronLeftIcon
-              className="h-6 w-6 mr-2 lg:hidden"
-              aria-hidden="true"
-            />
-          </button>
-
-          <Dropdown
-            label="My wallet"
-            options={account ? dropdownOptions : []}
-            icon={
-              <UserCircleIcon
-                className="h-12 w-12 text-pink-400 mr-2"
+        <div className="flex items-center border-b py-4 px-6 justify-between">
+          <div className="flex items-center">
+            <button
+              type="button"
+              className="rounded-md text-gray-300 hover:text-black focus:outline-none focus:ring-2 focus:ring-white"
+              onClick={() => setIsWalletPanelOpen(false)}
+            >
+              <span className="sr-only">Close panel</span>
+              <ChevronLeftIcon
+                className="h-6 w-6 mr-2 lg:hidden"
                 aria-hidden="true"
               />
-            }
-          />
+            </button>
+            <Dropdown
+              label="My wallet"
+              options={account ? dropdownOptions : []}
+              icon={
+                <UserCircleIcon
+                  className="h-12 w-12 text-pink-400 mr-2"
+                  aria-hidden="true"
+                />
+              }
+            />
+          </div>
+          {account && (
+            <button
+              type="button"
+              // TODO: Throw sucess toast
+              onClick={() => navigator.clipboard.writeText(account)}
+            >
+              <span className="text-sm text-gray-500">
+                {`${account.substring(0, 6)}...${account.substring(
+                  account.length - 4
+                )}`}
+              </span>
+            </button>
+          )}
         </div>
         {account ? (
           <WalletInfo walletAddress={walletAddress} />

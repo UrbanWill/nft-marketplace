@@ -51,7 +51,7 @@ const WalletInfo = ({ walletAddress }) => {
       />
       <p className="py-2">Transfer funds to your wallet address below:</p>
       <div className="flex flex-col truncate lg:flex-row">
-        <span className="bg-gray-100 p-2 rounded border-2 text-sm">
+        <span className="bg-gray-100 p-2 rounded border-2 text-sm truncate lg:overflow-visible">
           {walletAddress}
         </span>
         <Button
