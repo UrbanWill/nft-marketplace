@@ -4,6 +4,7 @@ import { useWeb3React } from "@web3-react/core";
 import { create } from "ipfs-http-client";
 import { Formik, Form } from "formik";
 import * as yup from "yup";
+import useToggleWalletPanel from "../hooks/contexts/useToggleWalletPanel";
 
 import useCreateNft from "../hooks/mutations/useCreateNft";
 import useListNft from "../hooks/mutations/useListNft";
@@ -21,9 +22,10 @@ const ipfsInfuraUrl = "https://ipfs.infura.io/ipfs";
 export default function CreateItem() {
   const [uploadedImages, setUploadedImages] = useState([]);
   const [ipfsUrl, setIpfsUrl] = useState("");
-
+  const { setIsWalletPanelOpen } = useToggleWalletPanel();
   const { active } = useWeb3React();
   const router = useRouter();
+
   const { createNftMutation } = useCreateNft();
   const { listNftMutation } = useListNft();
 
@@ -61,9 +63,7 @@ export default function CreateItem() {
   const handleSubmit = async (values) => {
     const { name, description, price } = values;
     if (!active) {
-      // TODO: Open "connect your wallet" modal
-      // eslint-disable-next-line no-alert
-      return window.alert("Connect your wallet to make a purchase");
+      return setIsWalletPanelOpen(true);
     }
 
     const data = JSON.stringify({
