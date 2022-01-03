@@ -1,22 +1,28 @@
 import { useWeb3React } from "@web3-react/core";
 import NFTList from "../components/NFTList/NFTList";
 import useGetMarketNfts from "../hooks/queries/useGetMarketNfts";
+import useToggleWalletPanel from "../hooks/contexts/useToggleWalletPanel";
 
 import useBuyNft from "../hooks/mutations/useBuyNft";
 
 export default function Home() {
   const { data, isLoading, refetch } = useGetMarketNfts();
   const { active } = useWeb3React();
+  const { setIsWalletPanelOpen } = useToggleWalletPanel();
 
   const { buyNftMutation } = useBuyNft();
 
   const handleAction = (nft) => {
     if (!active) {
-      // TODO: Open "connect your wallet" modal
-      // eslint-disable-next-line no-alert
-      return window.alert("Connect your wallet to make a purchase");
+      // Opens wallet panel for user to connect wallet before making a purchase
+      return setIsWalletPanelOpen(true);
     }
-    return buyNftMutation(nft).then(() => refetch());
+    return buyNftMutation(nft).then((res) => {
+      // Only refetches if user did not cancel the transaction
+      if (res.code !== 4001) {
+        refetch();
+      }
+    });
   };
 
   return (

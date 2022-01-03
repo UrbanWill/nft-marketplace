@@ -13,7 +13,7 @@ const useBuyNft = () => {
 
   /** function to buy nft
    * @param {object} nft to be bought
-   * @returns {Promise<*>} self-descriptive
+   * @returns {Promise< object {success: bool, ...res: transaction data} >} self-descriptive
    */
   const buyNftMutation = async (nft) => {
     const price = ethers.utils.parseUnits(
@@ -26,10 +26,11 @@ const useBuyNft = () => {
       .createMarketSale(nftaddress, nft.tokenId, {
         value: price,
       })
-      .then(() => {
-        console.log("Purchase sucess!");
-      })
-      .catch(() => console.log("Purchaese failed"));
+      .then((res) => ({ success: true, ...res }))
+      .catch((res) => {
+        console.log("Purchaese failed");
+        return { success: false, ...res };
+      });
 
     return marketSale;
   };

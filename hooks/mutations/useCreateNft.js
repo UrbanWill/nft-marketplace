@@ -1,7 +1,7 @@
 import useEthers from "../contexts/useEthers";
 
 /**
- * hook to buy nft
+ * hook to create nft
  * @returns {{createNftMutation: function}}
  */
 const useCreateNft = () => {
