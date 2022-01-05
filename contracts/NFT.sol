@@ -1,18 +1,19 @@
-// SPDX-License-Identifier: MIT
+// SPDX-License-Identifier: MIT OR Apache-2.0
 pragma solidity ^0.8.4;
 
 import "@openzeppelin/contracts/utils/Counters.sol";
 import "@openzeppelin/contracts/token/ERC721/extensions/ERC721URIStorage.sol";
 import "@openzeppelin/contracts/token/ERC721/ERC721.sol";
 
+import "hardhat/console.sol";
 
 contract NFT is ERC721URIStorage {
     using Counters for Counters.Counter;
     Counters.Counter private _tokenIds;
     address contractAddress;
 
-    constructor(address marketPlaceAddress) ERC721("Metaverse Tokens", "MEET") {
-        contractAddress = marketPlaceAddress;
+    constructor(address marketplaceAddress) ERC721("Metaverse", "METT") {
+        contractAddress = marketplaceAddress;
     }
 
     function createToken(string memory tokenURI) public returns (uint) {
@@ -22,7 +23,6 @@ contract NFT is ERC721URIStorage {
         _mint(msg.sender, newItemId);
         _setTokenURI(newItemId, tokenURI);
         setApprovalForAll(contractAddress, true);
-        
         return newItemId;
     }
 }
