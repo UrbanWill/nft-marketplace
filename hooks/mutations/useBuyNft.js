@@ -13,8 +13,8 @@ import useEthers from "../contexts/useEthers";
  */
 const useBuyNft = () => {
   const [isLoading, setIsLoading] = useState(false);
-  const { signedMarketContract } = useEthers();
   const toastRef = useRef(null);
+  const { signedMarketContract } = useEthers();
 
   /** function to buy nft
    * @param {object} nft to be bought

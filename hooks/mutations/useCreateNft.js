@@ -1,5 +1,7 @@
-import { useState } from "react";
+import { useState, useRef } from "react";
+import { toast } from "react-toastify";
 import useEthers from "../contexts/useEthers";
+import toastUpdate from "../../utils/toastUpdate";
 
 /**
  * hook to create nft
@@ -7,6 +9,7 @@ import useEthers from "../contexts/useEthers";
  */
 const useCreateNft = () => {
   const [isLoading, setisLoading] = useState(false);
+  const toastRef = useRef(null);
   const { signedTokenContract } = useEthers();
 
   /** function to create nft
@@ -15,21 +18,38 @@ const useCreateNft = () => {
    */
   const createNftMutation = async (url) => {
     setisLoading(true);
-    // TODO: Throw success/fail toasts
+
+    toastRef.current = toast("Waiting for transaction approval", {
+      isLoading: true,
+    });
     const transaction = await signedTokenContract
       .createToken(url)
       .then(async (res) => {
+        toastUpdate(
+          toastRef.current,
+          toast.TYPE.DEFAULT,
+          "Processing transaction",
+          true
+        );
         const transactionReceipt = await res
           .wait()
-          .then((receipt) => receipt)
-          .catch((err) => console.log(err));
+          .then((receipt) => {
+            toastUpdate(
+              toastRef.current,
+              toast.TYPE.SUCCESS,
+              "NFT minted successfully!"
+            );
+            return receipt;
+          })
+          .catch((err) => {
+            toastUpdate(toastRef.current, toast.TYPE.ERROR, err.message);
+            return err;
+          });
         const tokenId = transactionReceipt.events[0].args[2].toNumber();
         return { ...transactionReceipt, tokenId };
       })
       .catch((err) => {
-        if (err.code === 4001) {
-          console.log("User cancelled transaction");
-        }
+        toastUpdate(toastRef.current, toast.TYPE.ERROR, err.message);
         return err;
       });
     setisLoading(false);

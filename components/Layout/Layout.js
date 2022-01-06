@@ -43,7 +43,7 @@ const Layout = ({ children }) => {
           } relative flex p-1 min-h-10 rounded-md justify-between overflow-hidden cursor-pointer mb-2`
         }
         bodyClassName={() => "flex text-sm font-white font-med block p-3"}
-        position="top-right"
+        position="bottom-right"
         autoClose={3000}
         closeOnClick
       />

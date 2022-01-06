@@ -1,7 +1,9 @@
-import { useState } from "react";
+import { useState, useRef } from "react";
 import { ethers } from "ethers";
+import { toast } from "react-toastify";
 import { CRYPTO_CURRENCY } from "../../utils/constants";
 import { nftaddress } from "../../config";
+import toastUpdate from "../../utils/toastUpdate";
 
 import useEthers from "../contexts/useEthers";
 
@@ -11,6 +13,7 @@ import useEthers from "../contexts/useEthers";
  */
 const useListNft = () => {
   const [isLoading, setIsloading] = useState(false);
+  const toastRef = useRef(null);
   const { signedMarketContract } = useEthers();
 
   /** function to list nft
@@ -27,25 +30,37 @@ const useListNft = () => {
       .getListingPrice()
       .then((res) => res.toString());
 
-    // TODO: Throw success/fail toasts
+    toastRef.current = toast("Waiting for transaction approval", {
+      isLoading: true,
+    });
     const transaction = await signedMarketContract
       .createMarketItem(nftaddress, tokenId, salePrice, {
         value: listingPrice,
       })
-      .then(async (res) =>
-        res
+      .then(async (res) => {
+        toastUpdate(
+          toastRef.current,
+          toast.TYPE.DEFAULT,
+          "Processing transaction",
+          true
+        );
+        return res
           .wait()
           .then((transactionReceipt) => {
-            console.log("Listed sucessfully!");
+            toastUpdate(
+              toastRef.current,
+              toast.TYPE.SUCCESS,
+              "Purchase successful!"
+            );
             return transactionReceipt;
           })
-          .catch((err) => err)
-      )
+          .catch((err) => {
+            toastUpdate(toastRef.current, toast.TYPE.ERROR, err.message);
+            return err;
+          });
+      })
       .catch((err) => {
-        if (err.code === 4001) {
-          console.log("user cancelled the transaction");
-        }
-        console.log("Listing failed!");
+        toastUpdate(toastRef.current, toast.TYPE.ERROR, err.message);
         return err;
       });
 
