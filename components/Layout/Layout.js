@@ -1,10 +1,12 @@
 import { useState } from "react";
 import { useRouter } from "next/router";
+import { ToastContainer } from "react-toastify";
 import Header from "../Header/Header";
 import HeaderNavPanel from "../Header/HeaderNavPanel";
 import Meta from "../Meta/Meta";
 import useToggleWalletPanel from "../../hooks/contexts/useToggleWalletPanel";
 import WalletPanel from "../WalletPanel/WalletPanel";
+import "react-toastify/dist/ReactToastify.css";
 
 import { HEADER_ROUTES } from "../../utils/constants";
 
@@ -19,6 +21,12 @@ const navOptions = [
 
 const defaultMetaTitle = "Metaverse";
 
+const contextClass = {
+  success: "bg-green-200 text-green-600",
+  error: "bg-red-600",
+  default: "bg-pink-400",
+};
+
 const Layout = ({ children }) => {
   const [isNavOpen, setIsNavOpen] = useState(false);
   const { isWalletPanelOpen, setIsWalletPanelOpen } = useToggleWalletPanel();
@@ -28,6 +36,17 @@ const Layout = ({ children }) => {
 
   return (
     <>
+      <ToastContainer
+        toastClassName={({ type }) =>
+          `${
+            contextClass[type || "default"]
+          } relative flex p-1 min-h-10 rounded-md justify-between overflow-hidden cursor-pointer mb-2`
+        }
+        bodyClassName={() => "flex text-sm font-white font-med block p-3"}
+        position="top-right"
+        autoClose={3000}
+        closeOnClick
+      />
       <Meta title={`${defaultMetaTitle} ${routeTitle}`} />
       <div>
         <div id="modal" />
