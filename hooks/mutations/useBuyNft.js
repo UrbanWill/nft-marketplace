@@ -1,7 +1,9 @@
-import { useState } from "react";
+import { useState, useRef } from "react";
 import { ethers } from "ethers";
+import { toast } from "react-toastify";
 import { CRYPTO_CURRENCY } from "../../utils/constants";
 import { nftaddress } from "../../config";
+import toastUpdate from "../../utils/toastUpdate";
 
 import useEthers from "../contexts/useEthers";
 
@@ -12,6 +14,7 @@ import useEthers from "../contexts/useEthers";
 const useBuyNft = () => {
   const [isLoading, setIsLoading] = useState(false);
   const { signedMarketContract } = useEthers();
+  const toastRef = useRef(null);
 
   /** function to buy nft
    * @param {object} nft to be bought
@@ -22,27 +25,39 @@ const useBuyNft = () => {
       nft.price.toString(),
       CRYPTO_CURRENCY
     );
-
     setIsLoading(true);
-    // TODO: Throw success/fail toasts
+
+    toastRef.current = toast("Waiting for transaction approval", {
+      isLoading: true,
+    });
     const transaction = await signedMarketContract
       .createMarketSale(nftaddress, nft.itemId, {
         value: price,
       })
-      .then(async (res) =>
-        res
+      .then(async (res) => {
+        toastUpdate(
+          toastRef.current,
+          toast.TYPE.DEFAULT,
+          "Processing transaction",
+          true
+        );
+        return res
           .wait()
           .then((transactionReceipt) => {
-            console.log("Purchase successful!");
+            toastUpdate(
+              toastRef.current,
+              toast.TYPE.SUCCESS,
+              "Purchase successful!"
+            );
             return transactionReceipt;
           })
-          .catch((err) => err)
-      )
+          .catch((err) => {
+            toastUpdate(toastRef.current, toast.TYPE.ERROR, err.message);
+            return err;
+          });
+      })
       .catch((err) => {
-        if (err.code === 4001) {
-          console.log("user cancelled the transaction");
-        }
-        console.log("Purchase failed!");
+        toastUpdate(toastRef.current, toast.TYPE.ERROR, err.message);
         return err;
       });
 

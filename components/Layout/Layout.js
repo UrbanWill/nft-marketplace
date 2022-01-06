@@ -24,7 +24,7 @@ const defaultMetaTitle = "Metaverse";
 const contextClass = {
   success: "bg-green-200 text-green-600",
   error: "bg-red-600",
-  default: "bg-pink-400",
+  default: "bg-gray-300",
 };
 
 const Layout = ({ children }) => {

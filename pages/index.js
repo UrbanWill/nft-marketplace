@@ -18,10 +18,14 @@ export default function Home() {
       return setIsWalletPanelOpen(true);
     }
     return buyNftMutation(nft).then((res) => {
-      // Only refetches if user did not cancel the transaction
-      if (res.code !== 4001) {
-        refetch();
+      // Only refetches if user did not cancel the transaction or has insufficient funds
+      if (
+        res.code === 4001 ||
+        (res.code === -32603 && res.data.code === -32000)
+      ) {
+        return null;
       }
+      return refetch();
     });
   };
 
