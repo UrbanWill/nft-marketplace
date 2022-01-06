@@ -1,36 +1,42 @@
+import { useState } from "react";
 import useEthers from "../contexts/useEthers";
 
 /**
  * hook to create nft
- * @returns {{createNftMutation: function}}
+ * @returns {{createNftMutation: function}, {isLoading: bool}}
  */
 const useCreateNft = () => {
+  const [isLoading, setisLoading] = useState(false);
   const { signedTokenContract } = useEthers();
 
   /** function to create nft
    * @param {url} nft url to be minted
-   * @returns {Promise<{ object {success: bool, tokenId: int} | {success: bool, error: object}}> }
+   * @returns {Promise<{ object {transaction receipt data, tokenId: int}> }
    */
   const createNftMutation = async (url) => {
+    setisLoading(true);
     // TODO: Throw success/fail toasts
     const transaction = await signedTokenContract
       .createToken(url)
       .then(async (res) => {
-        const tokenId = await res
+        const transactionReceipt = await res
           .wait()
-          .then((tx) => tx.events[0].args[2].toNumber());
-        return { success: true, tokenId };
+          .then((receipt) => receipt)
+          .catch((err) => console.log(err));
+        const tokenId = transactionReceipt.events[0].args[2].toNumber();
+        return { ...transactionReceipt, tokenId };
       })
       .catch((err) => {
         if (err.code === 4001) {
           console.log("User cancelled transaction");
         }
-        return { success: false, ...err };
+        return err;
       });
+    setisLoading(false);
     return transaction;
   };
 
-  return { createNftMutation };
+  return { createNftMutation, isLoading };
 };
 
 export default useCreateNft;

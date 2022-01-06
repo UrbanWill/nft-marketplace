@@ -37,7 +37,7 @@ export default function CreateItem() {
   const handleIpfsUpload = async (data) =>
     client
       .add(data)
-      .then((res) => res)
+      .then((createNftReceipt) => createNftReceipt)
       .catch((error) => {
         // TODO: error toast
         console.log("Error uploading file: ", error);
@@ -77,10 +77,10 @@ export default function CreateItem() {
     // TODO: Refactor this page, it should only be handling minting assets, not listing.
     /* Mints a new nft then list it */
     return createNftMutation(url).then(
-      (res) =>
-        res.success &&
-        listNftMutation(res.tokenId, String(price)).then(
-          (listingResponse) => listingResponse.success && router.push("/")
+      (createNftReceipt) =>
+        createNftReceipt.status &&
+        listNftMutation(createNftReceipt.tokenId, String(price)).then(
+          (listingReceipt) => listingReceipt.status && router.push("/")
         )
     );
   };
@@ -118,7 +118,7 @@ export default function CreateItem() {
               name="description"
               onHandleChange={handleChange}
               label="Asset description"
-              placeholder="Example: A planet-destroying spatial anomaly that was created by the residual energy"
+              placeholder="Example: A planet-destroying spatial anomaly that was created by the createNftReceiptidual energy"
               errorMessage="Asset description is a required field"
             />
             <Input
