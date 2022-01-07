@@ -6,6 +6,7 @@ import {
   LogoutIcon,
 } from "@heroicons/react/outline";
 import { useWeb3React } from "@web3-react/core";
+import { toast } from "react-toastify";
 import SlideOverPanel from "../shared/SlideOverPanel/SlideOverPanel";
 import useToggleWalletPanel from "../../hooks/contexts/useToggleWalletPanel";
 import WalletProvidersList from "./WalletProvidersList";
@@ -31,6 +32,7 @@ const WalletPanel = ({ isNavOpen }) => {
   const handleWalletDisconnect = (event) => {
     event.stopPropagation();
     deactivate();
+    toast.warn("Wallet disconnected successfully");
   };
 
   const dropdownOptions = [

@@ -25,6 +25,7 @@ const contextClass = {
   success: "bg-green-200 text-green-600",
   error: "bg-red-600",
   default: "bg-gray-300",
+  warning: "bg-yellow-200 text-yellow-600",
 };
 
 const Layout = ({ children }) => {
