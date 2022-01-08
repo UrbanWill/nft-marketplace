@@ -7,18 +7,20 @@ import ImageUploadPreview from "./ImageUploadPreview";
 
 const propTypes = {
   onSetUploadedImages: PropTypes.func.isRequired,
-  ipfsUrl: PropTypes.string.isRequired,
+  imgPreviewUrl: PropTypes.string.isRequired,
   handleRemoveImage: PropTypes.func.isRequired,
   isDisabled: PropTypes.bool,
   className: PropTypes.string,
+  isLoading: PropTypes.bool.isRequired,
 };
 
 const ImageUpload = ({
   onSetUploadedImages,
-  ipfsUrl,
+  imgPreviewUrl,
   handleRemoveImage,
   isDisabled,
   className,
+  isLoading,
 }) => {
   /**
    * Handle on drop file for react-dropzone
@@ -31,7 +33,12 @@ const ImageUpload = ({
         const parsedFiles = acceptedFiles.map(
           (file) => new File([file], file.name)
         );
-        onSetUploadedImages(parsedFiles);
+        const parsedFilesWithPreview = parsedFiles.map((file) =>
+          Object.assign(file, {
+            preview: URL.createObjectURL(file),
+          })
+        );
+        onSetUploadedImages(parsedFilesWithPreview);
       }
     },
     [onSetUploadedImages]
@@ -45,26 +52,27 @@ const ImageUpload = ({
   });
 
   const getDropMessage = isDragActive ? (
-    <p>Drop the files here ...</p>
+    <p>Drop image here...</p>
   ) : (
-    <p>Drag and drop some files here, or click to select files</p>
+    <p>Drag and drop image here, or click to select</p>
   );
 
   return (
     <div
       {...getRootProps()}
-      className={`h-96 flex justify-center items-center overflow-hidden ${className} ${
-        !ipfsUrl ? "cursor-pointer border-dashed border-2" : ""
+      className={`h-96 w-96 flex justify-center items-center overflow-hidden ${className} ${
+        !imgPreviewUrl ? "cursor-pointer rounded-xl border-dashed border-2" : ""
       }`}
     >
       <input {...getInputProps()} />
-      {ipfsUrl ? (
+      {imgPreviewUrl ? (
         <ImageUploadPreview
-          ipfsUrl={ipfsUrl}
+          imgPreviewUrl={imgPreviewUrl}
           handleRemoveImage={handleRemoveImage}
+          isLoading={isLoading}
         />
       ) : (
-        getDropMessage
+        <div className="px-2">{getDropMessage}</div>
       )}
     </div>
   );
