@@ -35,7 +35,7 @@ const Textarea = ({
         id={name}
         name={name}
         placeholder={placeholder}
-        className={`border rounded p-4 h-28 ${
+        className={`border rounded p-4 h-26 ${
           hasError ? "border-4 border-red-500" : ""
         }`}
         onChange={onHandleChange}

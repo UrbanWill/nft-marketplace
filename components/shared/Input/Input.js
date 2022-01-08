@@ -27,7 +27,7 @@ const Input = ({
   const hasError = meta.touched && !!meta.error;
 
   return (
-    <div className="flex flex-col py-2">
+    <div className="flex flex-col">
       {label && (
         <label className="font-medium pb-2" htmlFor={name}>
           {label}

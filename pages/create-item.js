@@ -106,43 +106,48 @@ export default function CreateItem() {
         validationSchema={validationSchema}
       >
         {({ handleChange, isValid }) => (
-          <Form className="w-1/2 flex flex-col pb-12">
-            <Input
-              name="name"
-              onHandleChange={handleChange}
-              label="Asset name"
-              placeholder="Example: The real raw Mooncake"
-              errorMessage="Asset name is a required field"
-            />
-            <Textarea
-              name="description"
-              onHandleChange={handleChange}
-              label="Asset description"
-              placeholder="Example: A planet-destroying spatial anomaly that was created by the createNftReceiptidual energy"
-              errorMessage="Asset description is a required field"
-            />
-            <Input
-              name="price"
-              // TODO: Add proper currency formatting, numbers only
-              onHandleChange={handleChange}
-              label="Asset price in ETH"
-              placeholder="Example: 0.75"
-              errorMessage="Asset price is a required field"
-              type="number"
-            />
-            <ImageUpload
-              onSetUploadedImages={setUploadedImages}
-              ipfsUrl={ipfsUrl}
-              handleRemoveImage={handleRemoveAllImages}
-              isDisabled={!!ipfsUrl}
-            />
-            <Button
-              label="Create Digital Asset"
-              isDisabled={!isValid || !ipfsUrl}
-              className="mt-4"
-              isTypeSubmit
-              size="lg"
-            />
+          <Form className="w-full md:w-5/6 xl:w-2/3 2xl:w-3/5">
+            <h1 className="py-10 text-2xl font-bold">Create new item</h1>
+            <div className="flex flex-col lg:flex-row">
+              <ImageUpload
+                onSetUploadedImages={setUploadedImages}
+                ipfsUrl={ipfsUrl}
+                handleRemoveImage={handleRemoveAllImages}
+                isDisabled={!!ipfsUrl}
+                className="lg:mr-4"
+              />
+              <div className="flex-1 flex flex-col justify-between">
+                <Input
+                  name="name"
+                  onHandleChange={handleChange}
+                  label="Asset name"
+                  placeholder="Example: The real raw Mooncake"
+                  errorMessage="Asset name is a required field"
+                />
+                <Textarea
+                  name="description"
+                  onHandleChange={handleChange}
+                  label="Asset description"
+                  placeholder="Example: A planet-destroying spatial anomaly that was created by the residual energy of an anti-matter bomb"
+                  errorMessage="Asset description is a required field"
+                />
+                <Input
+                  name="price"
+                  onHandleChange={handleChange}
+                  label="Asset price in ETH"
+                  placeholder="Example: 0.75"
+                  errorMessage="Asset price is a required field"
+                  type="number"
+                />
+                <Button
+                  label="Create Digital Asset"
+                  isDisabled={!isValid || !ipfsUrl}
+                  className="mt-4 w-full"
+                  isTypeSubmit
+                  size="lg"
+                />
+              </div>
+            </div>
           </Form>
         )}
       </Formik>

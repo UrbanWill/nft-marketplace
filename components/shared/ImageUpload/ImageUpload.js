@@ -10,6 +10,7 @@ const propTypes = {
   ipfsUrl: PropTypes.string.isRequired,
   handleRemoveImage: PropTypes.func.isRequired,
   isDisabled: PropTypes.bool,
+  className: PropTypes.string,
 };
 
 const ImageUpload = ({
@@ -17,6 +18,7 @@ const ImageUpload = ({
   ipfsUrl,
   handleRemoveImage,
   isDisabled,
+  className,
 }) => {
   /**
    * Handle on drop file for react-dropzone
@@ -51,7 +53,7 @@ const ImageUpload = ({
   return (
     <div
       {...getRootProps()}
-      className={`h-96 flex justify-center items-center overflow-hidden ${
+      className={`h-96 flex justify-center items-center overflow-hidden ${className} ${
         !ipfsUrl ? "cursor-pointer border-dashed border-2" : ""
       }`}
     >
@@ -70,6 +72,7 @@ const ImageUpload = ({
 
 ImageUpload.defaultProps = {
   isDisabled: false,
+  className: "",
 };
 
 ImageUpload.propTypes = propTypes;
