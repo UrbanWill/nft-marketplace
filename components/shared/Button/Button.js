@@ -1,4 +1,5 @@
 import PropTypes from "prop-types";
+import Spinner from "../Spinner/Spinner";
 
 const buttonSize = {
   sm: "p-2",
@@ -9,6 +10,7 @@ const propTypes = {
   onHandleClick: PropTypes.func,
   label: PropTypes.string,
   isDisabled: PropTypes.bool,
+  isLoading: PropTypes.bool,
   className: PropTypes.string,
   isTypeSubmit: PropTypes.bool,
   size: PropTypes.oneOf(Object.keys(buttonSize)),
@@ -19,6 +21,7 @@ const Button = ({
   onHandleClick,
   label,
   isDisabled,
+  isLoading,
   className,
   isTypeSubmit,
   size,
@@ -26,7 +29,7 @@ const Button = ({
 }) => (
   <button
     type={isTypeSubmit ? "submit" : "button"}
-    className={` text-white font-bold rounded flex justify-center ${
+    className={` text-white font-bold rounded flex justify-center items-center ${
       buttonSize[size]
     } ${className} ${
       isDisabled
@@ -38,12 +41,18 @@ const Button = ({
   >
     {icon}
     {label}
+    {isLoading && (
+      <div className="ml-4">
+        <Spinner color={isDisabled && "text-gray-400"} />
+      </div>
+    )}
   </button>
 );
 
 Button.defaultProps = {
   label: "",
   isDisabled: false,
+  isLoading: false,
   className: "",
   isTypeSubmit: false,
   onHandleClick: () => {},
