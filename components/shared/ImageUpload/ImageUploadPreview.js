@@ -1,29 +1,59 @@
 import PropTypes from "prop-types";
 import Image from "next/image";
-
-import gabageIcon from "../../../assets/images/garbage-icon-black.png";
+import { XIcon } from "@heroicons/react/outline";
+import Spinner from "../Spinner/Spinner";
+import classNames from "../../../utils/classNames";
 
 const propTypes = {
-  ipfsUrl: PropTypes.string.isRequired,
+  imgPreviewUrl: PropTypes.string.isRequired,
   handleRemoveImage: PropTypes.func.isRequired,
+  isLoading: PropTypes.bool.isRequired,
 };
 
-const ImageUploadPreview = ({ ipfsUrl, handleRemoveImage }) => {
+const ImageUploadPreview = ({
+  imgPreviewUrl,
+  handleRemoveImage,
+  isLoading,
+}) => {
   const handleClick = (e) => {
-    e.stopPropagation();
-    handleRemoveImage();
+    if (!isLoading) {
+      e.stopPropagation();
+      handleRemoveImage();
+    }
   };
 
   return (
-    <div className="h-full w-96 border shadow rounded-xl relative">
+    <div className="h-full w-96 shadow relative">
+      {isLoading && (
+        <div className="absolute z-20 left-1/2 top-1/2 transform -translate-x-1/2 -translate-y-1/2">
+          <Spinner size="10" />
+        </div>
+      )}
       <button
         type="button"
         onClick={handleClick}
-        className="z-10 absolute right-2 top-2"
+        className={classNames(
+          isLoading && "cursor-not-allowed",
+          "z-10 absolute right-2 top-2"
+        )}
       >
-        <Image src={gabageIcon} alt="remove icon" onClick={handleClick} />
+        <XIcon
+          className="block h-6 w-6"
+          aria-hidden="true"
+          onClick={handleClick}
+        />
       </button>
-      <Image src={ipfsUrl} alt="NFT image" layout="fill" objectFit="cover" />
+      <Image
+        unoptimized
+        src={imgPreviewUrl}
+        alt="NFT image"
+        layout="fill"
+        objectFit="cover"
+        className={classNames(
+          "rounded-xl",
+          isLoading && "bg-gray-400 opacity-50"
+        )}
+      />
     </div>
   );
 };
