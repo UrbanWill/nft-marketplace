@@ -50,7 +50,7 @@ const useListNft = () => {
             toastUpdate(
               toastRef.current,
               toast.TYPE.SUCCESS,
-              "Purchase successful!"
+              "Listing successful!"
             );
             return transactionReceipt;
           })
