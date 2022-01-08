@@ -4,6 +4,7 @@ import { useWeb3React } from "@web3-react/core";
 import { create } from "ipfs-http-client";
 import { Formik, Form } from "formik";
 import * as yup from "yup";
+import { toast } from "react-toastify";
 import useToggleWalletPanel from "../hooks/contexts/useToggleWalletPanel";
 
 import useCreateNft from "../hooks/mutations/useCreateNft";
@@ -22,6 +23,7 @@ const ipfsInfuraUrl = "https://ipfs.infura.io/ipfs";
 export default function CreateItem() {
   const [uploadedImages, setUploadedImages] = useState([]);
   const [ipfsUrl, setIpfsUrl] = useState("");
+  const [isIpfsLoading, setIsIpfsLoading] = useState(false);
   const { setIsWalletPanelOpen } = useToggleWalletPanel();
   const { active } = useWeb3React();
   const router = useRouter();
@@ -34,14 +36,18 @@ export default function CreateItem() {
    * @param {File | object} File or file data to be uploaded to ipfs
    * @returns {Promise < Object >} ipfs data
    */
-  const handleIpfsUpload = async (data) =>
-    client
+  const handleIpfsUpload = async (data) => {
+    setIsIpfsLoading(true);
+    return client
       .add(data)
-      .then((createNftReceipt) => createNftReceipt)
+      .then((createNftReceipt) => {
+        setIsIpfsLoading(false);
+        return createNftReceipt;
+      })
       .catch((error) => {
-        // TODO: error toast
-        console.log("Error uploading file: ", error);
+        toast.error(`Failed to upload file to IPFS ${error}`);
       });
+  };
 
   /* Make an upload to ipfs and sets ipfsUrl whenever an image is uploaded */
   useEffect(() => {
@@ -111,9 +117,10 @@ export default function CreateItem() {
             <div className="flex flex-col lg:flex-row">
               <ImageUpload
                 onSetUploadedImages={setUploadedImages}
-                ipfsUrl={ipfsUrl}
+                imgPreviewUrl={uploadedImages[0]?.preview || ""}
                 handleRemoveImage={handleRemoveAllImages}
-                isDisabled={!!ipfsUrl}
+                isDisabled={!!uploadedImages[0]?.preview}
+                isLoading={isIpfsLoading}
                 className="lg:mr-4"
               />
               <div className="flex-1 flex flex-col justify-between">
