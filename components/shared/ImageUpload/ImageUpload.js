@@ -60,7 +60,7 @@ const ImageUpload = ({
   return (
     <div
       {...getRootProps()}
-      className={`h-96 w-96 flex justify-center items-center overflow-hidden ${className} ${
+      className={`h-96 sm:w-96 flex justify-center items-center overflow-hidden ${className} ${
         !imgPreviewUrl ? "cursor-pointer rounded-xl border-dashed border-2" : ""
       }`}
     >

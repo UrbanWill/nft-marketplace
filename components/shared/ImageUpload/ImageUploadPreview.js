@@ -23,7 +23,7 @@ const ImageUploadPreview = ({
   };
 
   return (
-    <div className="h-full w-96 shadow relative border-2 rounded-xl">
+    <div className="h-full min-w-full sm:w-96 lg:w-96 shadow relative border-2 rounded-xl">
       {isLoading && (
         <div className="absolute z-20 left-1/2 top-1/2 transform -translate-x-1/2 -translate-y-1/2">
           <Spinner size="10" />
