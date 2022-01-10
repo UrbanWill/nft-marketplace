@@ -27,7 +27,9 @@ const contextClass = {
   default: "bg-gray-300",
   warning: "bg-yellow-200 text-yellow-600",
 };
-
+/**
+ * Renders default app layout style
+ */
 const Layout = ({ children }) => {
   const [isNavOpen, setIsNavOpen] = useState(false);
   const { isWalletPanelOpen, setIsWalletPanelOpen } = useToggleWalletPanel();
@@ -36,7 +38,9 @@ const Layout = ({ children }) => {
   const routeTitle = navOptions.find((option) => option.route === route)?.label;
 
   return (
-    <>
+    /** pt-20 to match navbar height */
+    <div className="min-h-screen flex flex-col overflow-x-hidden pt-20">
+      {/* toast config */}
       <ToastContainer
         toastClassName={({ type }) =>
           `${
@@ -45,33 +49,35 @@ const Layout = ({ children }) => {
         }
         bodyClassName={() => "flex text-sm font-white font-med block p-3"}
         position="bottom-right"
+        pauseOnFocusLoss={false}
         autoClose={3000}
         closeOnClick
       />
+      {/* meta component for browser description */}
       <Meta title={`${defaultMetaTitle} ${routeTitle}`} />
-      <div>
-        <div id="modal" />
-        <Header
-          currentRoute={route}
-          navOptions={navOptions}
+      {/* div tag with modal id for modal to be rendered with react createPortal */}
+      <div id="modal" />
+      <Header
+        currentRoute={route}
+        navOptions={navOptions}
+        isNavOpen={isNavOpen}
+        onSetIsNavOpen={setIsNavOpen}
+      />
+      {/* div with relative class needed to render slideover panel */}
+      <div className="relative">
+        <HeaderNavPanel
           isNavOpen={isNavOpen}
           onSetIsNavOpen={setIsNavOpen}
+          onSetIsWalletPanelOpen={setIsWalletPanelOpen}
+          isWalletPanelOpen={isWalletPanelOpen}
+          navOptions={navOptions}
         />
-        <div className="relative">
-          <HeaderNavPanel
-            isNavOpen={isNavOpen}
-            onSetIsNavOpen={setIsNavOpen}
-            onSetIsWalletPanelOpen={setIsWalletPanelOpen}
-            isWalletPanelOpen={isWalletPanelOpen}
-            navOptions={navOptions}
-          />
-          <WalletPanel isNavOpen={isNavOpen} />
-          <div className="p-4" id="layout-body">
-            {children}
-          </div>
-        </div>
+        <WalletPanel isNavOpen={isNavOpen} />
       </div>
-    </>
+      <div className="p-4 lg:px-8 flex flex-col flex-1" id="layout-body">
+        {children}
+      </div>
+    </div>
   );
 };
 
