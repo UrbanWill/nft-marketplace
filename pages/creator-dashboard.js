@@ -6,8 +6,8 @@ import NFTList from "../components/NFTList/NFTList";
 import useGetCreatedNfts from "../hooks/queries/useGetCreatedNfts";
 
 const getConnectMessage = (message) => (
-  <div className="flex justify-center">
-    <h1 className="px-20 py-10 text-2xl">{message}</h1>
+  <div className="flex flex-col justify-center items-center flex-1">
+    <h1 className="py-10 text-2xl">{message}</h1>
   </div>
 );
 
@@ -31,8 +31,8 @@ export default function CreatorDashboard() {
   }, [active, data]);
 
   return (
-    <div>
-      <h2 className="text-2xl py-2">Items Created</h2>
+    <>
+      <h1 className="py-5 text-2xl font-bold">Items Created</h1>
       {!active ? (
         getConnectMessage("Connect wallet to view your created assets")
       ) : (
@@ -45,7 +45,7 @@ export default function CreatorDashboard() {
         />
       )}
 
-      <h2 className="text-2xl py-2">Items sold</h2>
+      <h1 className="py-5 text-2xl font-bold">Items sold</h1>
       {!active ? (
         getConnectMessage("Connect wallet to view your sold assets")
       ) : (
@@ -55,6 +55,6 @@ export default function CreatorDashboard() {
           emptyListMessage="No Items sold"
         />
       )}
-    </div>
+    </>
   );
 }

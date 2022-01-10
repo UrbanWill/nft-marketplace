@@ -12,25 +12,21 @@ const propTypes = {
   emptyListMessage: PropTypes.string.isRequired,
 };
 
+const getContent = (content) => (
+  <div className="flex justify-center items-center flex-1">{content}</div>
+);
+
 const NFTList = ({ nfts, onHandleAction, isLoading, emptyListMessage }) => {
   if (isLoading) {
-    return (
-      <div className="flex justify-center items-center h-content p-0 m-0">
-        <Spinner size="10" />
-      </div>
-    );
+    return getContent(<Spinner size="10" />);
   }
 
   if (!isLoading && !nfts.length) {
-    return (
-      <div className="flex justify-center">
-        <h1 className="px-20 py-10 text-2xl">{emptyListMessage}</h1>
-      </div>
-    );
+    return getContent(<h1 className="text-2xl">{emptyListMessage}</h1>);
   }
 
   return (
-    <ul className="grid gap-3 grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 lg:gap-4 xl:grid-cols-4 2xl:grid-cols-5 pt-4">
+    <ul className="grid gap-3 grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 lg:gap-4 xl:grid-cols-4 2xl:grid-cols-5 pt-5">
       {nfts.map((nft) => (
         <NFTListItem
           nft={nft}

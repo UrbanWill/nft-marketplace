@@ -116,8 +116,8 @@ export default function CreateItem() {
       >
         {({ handleChange, isValid }) => (
           <Form className="w-full md:w-5/6 xl:w-2/3 2xl:w-3/5">
-            <h1 className="py-10 text-2xl font-bold">Create new item</h1>
-            <div className="flex flex-col lg:flex-row">
+            <h1 className="py-5 text-2xl font-bold">Create new item</h1>
+            <div className="flex flex-col lg:flex-row pt-5">
               <ImageUpload
                 onSetUploadedImages={setUploadedImages}
                 imgPreviewUrl={uploadedImages[0]?.preview || ""}

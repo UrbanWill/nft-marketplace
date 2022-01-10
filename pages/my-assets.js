@@ -9,21 +9,22 @@ export default function MyAssets() {
 
   if (!active) {
     return (
-      <div className="flex justify-center">
-        <h1 className="px-20 py-10 text-2xl">
-          Connect wallet to view your assets
-        </h1>
+      <div className="flex flex-col justify-center items-center flex-1">
+        <h1 className="py-10 text-2xl">Connect wallet to view your assets</h1>
       </div>
     );
   }
 
   return (
-    <NFTList
-      nfts={data}
-      // TODO: Add sell functionality
-      // onHandleAction={handleDoSomeAction}
-      isLoading={isLoading}
-      emptyListMessage="No assets owned"
-    />
+    <>
+      <h1 className="py-5 text-2xl font-bold">My assets</h1>
+      <NFTList
+        nfts={data}
+        // TODO: Add sell functionality
+        // onHandleAction={handleDoSomeAction}
+        isLoading={isLoading}
+        emptyListMessage="No assets owned"
+      />
+    </>
   );
 }

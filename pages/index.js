@@ -30,11 +30,14 @@ export default function Home() {
   };
 
   return (
-    <NFTList
-      nfts={data}
-      onHandleAction={handleAction}
-      isLoading={isLoading}
-      emptyListMessage="No items in marketplace"
-    />
+    <>
+      <h1 className="py-5 text-2xl font-bold">Explore NFTs</h1>
+      <NFTList
+        nfts={data}
+        onHandleAction={handleAction}
+        isLoading={isLoading}
+        emptyListMessage="No items in marketplace"
+      />
+    </>
   );
 }
