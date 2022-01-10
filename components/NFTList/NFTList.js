@@ -1,4 +1,5 @@
 import PropTypes from "prop-types";
+import Spinner from "../shared/Spinner/Spinner";
 
 import NFTListItem from "./NFTListItem";
 
@@ -12,11 +13,10 @@ const propTypes = {
 };
 
 const NFTList = ({ nfts, onHandleAction, isLoading, emptyListMessage }) => {
-  // TODO: add loading animation
   if (isLoading) {
     return (
-      <div className="flex justify-center">
-        <h1 className="px-20 py-10 text-2xl">Loading</h1>
+      <div className="flex justify-center items-center h-content p-0 m-0">
+        <Spinner size="10" />
       </div>
     );
   }
