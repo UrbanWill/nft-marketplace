@@ -28,9 +28,12 @@ export default function CreateItem() {
   const { active } = useWeb3React();
   const router = useRouter();
 
-  const { createNftMutation } = useCreateNft();
-  const { listNftMutation } = useListNft();
+  const { createNftMutation, isLoading: isNftCreateLoading } = useCreateNft();
+  const { listNftMutation, isLoading: isNftListLoading } = useListNft();
 
+  const isMutationLoading = isNftCreateLoading || isNftListLoading;
+
+  // TODO: handleIpfsUpload should be a hook
   /**
    * function to upload data to ipfs
    * @param {File | object} File or file data to be uploaded to ipfs
@@ -148,7 +151,8 @@ export default function CreateItem() {
                 />
                 <Button
                   label="Create Digital Asset"
-                  isDisabled={!isValid || !ipfsUrl}
+                  isDisabled={!isValid || !ipfsUrl || isMutationLoading}
+                  isLoading={isIpfsLoading || isMutationLoading}
                   className="mt-4 w-full"
                   isTypeSubmit
                   size="lg"
