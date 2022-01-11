@@ -43,7 +43,7 @@ const Button = ({
     {label}
     {isLoading && (
       <div className="ml-4">
-        <Spinner color={isDisabled && "text-gray-400"} />
+        <Spinner color={(isDisabled && "text-gray-400") || ""} />
       </div>
     )}
   </button>
