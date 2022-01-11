@@ -1,6 +1,7 @@
 import { useState, useEffect, useCallback } from "react";
 import { ethers } from "ethers";
 import { useWeb3React } from "@web3-react/core";
+import { toast } from "react-toastify";
 
 import axios from "axios";
 import { CRYPTO_CURRENCY } from "../../utils/constants";
@@ -28,10 +29,12 @@ const useGetCreatedNfts = () => {
       return;
     }
 
-    // TODO: Throw error toast
     const data = await signedMarketContract
       .fetchItemsCreated()
-      .catch((error) => console.log(`Failed to fetch market items ${error}`));
+      .catch((error) => {
+        toast.error(`${error}`);
+        return null;
+      });
 
     if (data) {
       const formattedItems = await Promise.all(

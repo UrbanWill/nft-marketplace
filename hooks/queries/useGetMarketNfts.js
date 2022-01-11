@@ -1,5 +1,6 @@
 import { useState, useEffect, useCallback } from "react";
 import { ethers } from "ethers";
+import { toast } from "react-toastify";
 
 import axios from "axios";
 import { CRYPTO_CURRENCY } from "../../utils/constants";
@@ -19,10 +20,10 @@ const useGetMarketNfts = () => {
   const loadNFTs = useCallback(async () => {
     setIsLoading(true);
 
-    // TODO: Throw error toast
-    const data = await marketContract
-      .fetchMarketItems()
-      .catch((error) => console.log(`Failed to fetch market items ${error}`));
+    const data = await marketContract.fetchMarketItems().catch((error) => {
+      toast.error(`${error}`);
+      return null;
+    });
 
     if (data) {
       const formattedItems = await Promise.all(

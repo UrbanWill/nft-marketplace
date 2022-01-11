@@ -3,6 +3,7 @@ import PropTypes from "prop-types";
 import { useWeb3React } from "@web3-react/core";
 import { ethers } from "ethers";
 import { CubeTransparentIcon } from "@heroicons/react/outline";
+import { toast } from "react-toastify";
 import { CRYPTO_CURRENCY } from "../../utils/constants";
 import Button from "../shared/Button/Button";
 import Modal from "../shared/Modal/Modal";
@@ -57,8 +58,10 @@ const WalletInfo = ({ walletAddress }) => {
         <Button
           label="Copy"
           className="mt-2 px-6 lg:ml-2 lg:my-0"
-          // TODO: Throw success modal on copy
-          onHandleClick={() => navigator.clipboard.writeText(walletAddress)}
+          onHandleClick={() => {
+            navigator.clipboard.writeText(walletAddress);
+            toast.success("Copied wallet dddress!");
+          }}
         />
       </div>
     </div>

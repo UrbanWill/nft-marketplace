@@ -80,8 +80,10 @@ const WalletPanel = ({ isNavOpen }) => {
           {account && (
             <button
               type="button"
-              // TODO: Throw sucess toast
-              onClick={() => navigator.clipboard.writeText(account)}
+              onClick={() => {
+                navigator.clipboard.writeText(account);
+                toast.success("Copied wallet dddress!");
+              }}
             >
               <span className="text-sm text-gray-500">
                 {`${account.substring(0, 6)}...${account.substring(
