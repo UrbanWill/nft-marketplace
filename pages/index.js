@@ -2,6 +2,7 @@ import { useWeb3React } from "@web3-react/core";
 import NFTList from "../components/NFTList/NFTList";
 import useGetMarketNfts from "../hooks/queries/useGetMarketNfts";
 import useToggleWalletPanel from "../hooks/contexts/useToggleWalletPanel";
+import { ACTION_TYPES } from "../utils/constants";
 
 import useBuyNft from "../hooks/mutations/useBuyNft";
 
@@ -35,6 +36,7 @@ export default function Home() {
       <NFTList
         nfts={data}
         onHandleAction={handleAction}
+        actionType={ACTION_TYPES.BUY}
         isLoading={isLoading}
         emptyListMessage="No items in marketplace"
       />

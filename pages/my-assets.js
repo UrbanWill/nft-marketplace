@@ -1,11 +1,25 @@
 import { useWeb3React } from "@web3-react/core";
+import { ACTION_TYPES } from "../utils/constants";
 import NFTList from "../components/NFTList/NFTList";
 
 import useGetOwnedNfts from "../hooks/queries/useGetOwnedNfts";
+import useListNft from "../hooks/mutations/useListNft";
 
 export default function MyAssets() {
   const { active } = useWeb3React();
-  const { data, isLoading } = useGetOwnedNfts();
+  const { data, isLoading, refetch } = useGetOwnedNfts();
+
+  const { listNftMutation } = useListNft();
+
+  // TODO: create a modal to input the price.
+  const handleAction = (nft) => {
+    console.log(nft);
+    listNftMutation(nft.tokenId, "99").then((res) => {
+      if (res.code !== 4001) {
+        refetch();
+      }
+    });
+  };
 
   if (!active) {
     return (
@@ -20,8 +34,8 @@ export default function MyAssets() {
       <h1 className="py-5 text-2xl font-bold">My assets</h1>
       <NFTList
         nfts={data}
-        // TODO: Add sell functionality
-        // onHandleAction={handleDoSomeAction}
+        onHandleAction={handleAction}
+        actionType={ACTION_TYPES.LIST_ITEM}
         isLoading={isLoading}
         emptyListMessage="No assets owned"
       />

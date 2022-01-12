@@ -2,15 +2,25 @@ import PropTypes from "prop-types";
 import Image from "next/image";
 
 import { nftPropType } from "../../utils/propTypes";
+import { ACTION_TYPES } from "../../utils/constants";
 
 import Button from "../shared/Button/Button";
+
+const { LIST_ITEM, REMOVE_ITEM, BUY } = ACTION_TYPES;
+
+const actionLabel = {
+  [LIST_ITEM]: "List item",
+  [REMOVE_ITEM]: "Delist item",
+  [BUY]: "Buy",
+};
 
 const propTypes = {
   nft: nftPropType.isRequired,
   onHandleAction: PropTypes.oneOfType([PropTypes.func, PropTypes.bool]),
+  actionType: PropTypes.oneOf(Object.values(ACTION_TYPES)),
 };
 
-const NFTListItem = ({ nft, onHandleAction }) => {
+const NFTListItem = ({ nft, onHandleAction, actionType }) => {
   const { name, image, description, price } = nft;
 
   const hasAction = !!onHandleAction;
@@ -32,12 +42,13 @@ const NFTListItem = ({ nft, onHandleAction }) => {
           <p className="text-gray-400 truncate">{description}</p>
         </div>
       </div>
+      {/* TODO: only show this footer of items that are for sale */}
       <div className="p-4 bg-black">
         <p className="text-2xl font-bold text-white">{price} ETH</p>
         {hasAction && (
           <Button
             onHandleClick={() => onHandleAction(nft)}
-            label="Buy"
+            label={actionLabel[actionType]}
             className="w-full mt-2"
           />
         )}
@@ -48,6 +59,7 @@ const NFTListItem = ({ nft, onHandleAction }) => {
 
 NFTListItem.defaultProps = {
   onHandleAction: false,
+  actionType: "",
 };
 
 NFTListItem.propTypes = propTypes;

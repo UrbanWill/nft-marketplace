@@ -1,5 +1,6 @@
 import PropTypes from "prop-types";
 import Spinner from "../shared/Spinner/Spinner";
+import { ACTION_TYPES } from "../../utils/constants";
 
 import NFTListItem from "./NFTListItem";
 
@@ -10,13 +11,20 @@ const propTypes = {
   onHandleAction: PropTypes.oneOfType([PropTypes.func, PropTypes.bool]),
   isLoading: PropTypes.bool.isRequired,
   emptyListMessage: PropTypes.string.isRequired,
+  actionType: PropTypes.oneOf(Object.values(ACTION_TYPES)),
 };
 
 const getContent = (content) => (
   <div className="flex justify-center items-center flex-1">{content}</div>
 );
 
-const NFTList = ({ nfts, onHandleAction, isLoading, emptyListMessage }) => {
+const NFTList = ({
+  nfts,
+  onHandleAction,
+  isLoading,
+  emptyListMessage,
+  actionType,
+}) => {
   if (isLoading) {
     return getContent(<Spinner size="10" />);
   }
@@ -32,6 +40,7 @@ const NFTList = ({ nfts, onHandleAction, isLoading, emptyListMessage }) => {
           nft={nft}
           key={nft.tokenId}
           onHandleAction={onHandleAction}
+          actionType={actionType}
         />
       ))}
     </ul>
@@ -40,6 +49,7 @@ const NFTList = ({ nfts, onHandleAction, isLoading, emptyListMessage }) => {
 
 NFTList.defaultProps = {
   onHandleAction: false,
+  actionType: "",
 };
 
 NFTList.propTypes = propTypes;
