@@ -1,5 +1,4 @@
 import { useWeb3React } from "@web3-react/core";
-import { ACTION_TYPES } from "../utils/constants";
 import NFTList from "../components/NFTList/NFTList";
 
 import useGetOwnedNfts from "../hooks/queries/useGetOwnedNfts";
@@ -35,7 +34,6 @@ export default function MyAssets() {
       <NFTList
         nfts={data}
         onHandleAction={handleAction}
-        actionType={ACTION_TYPES.LIST_ITEM}
         isLoading={isLoading}
         emptyListMessage="No assets owned"
       />

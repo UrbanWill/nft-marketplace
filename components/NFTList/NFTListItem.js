@@ -1,5 +1,6 @@
 import PropTypes from "prop-types";
 import Image from "next/image";
+import { useWeb3React } from "@web3-react/core";
 
 import { nftPropType } from "../../utils/propTypes";
 import { ACTION_TYPES } from "../../utils/constants";
@@ -8,22 +9,33 @@ import Button from "../shared/Button/Button";
 
 const { LIST_ITEM, REMOVE_ITEM, BUY } = ACTION_TYPES;
 
-const actionLabel = {
-  [LIST_ITEM]: "List item",
-  [REMOVE_ITEM]: "Delist item",
-  [BUY]: "Buy",
+const actions = {
+  [LIST_ITEM]: { label: "List item", action: LIST_ITEM },
+  [REMOVE_ITEM]: { label: "Delist item", action: REMOVE_ITEM },
+  [BUY]: { label: "Buy", action: BUY },
 };
 
 const propTypes = {
   nft: nftPropType.isRequired,
   onHandleAction: PropTypes.oneOfType([PropTypes.func, PropTypes.bool]),
-  actionType: PropTypes.oneOf(Object.values(ACTION_TYPES)),
 };
 
-const NFTListItem = ({ nft, onHandleAction, actionType }) => {
-  const { name, image, description, price } = nft;
+const NFTListItem = ({ nft, onHandleAction }) => {
+  const { account } = useWeb3React();
+
+  const { name, image, description, price, seller } = nft;
 
   const hasAction = !!onHandleAction;
+
+  const getAction = () => {
+    if (!seller) {
+      return actions[LIST_ITEM];
+    }
+    if (seller === account) {
+      return actions[REMOVE_ITEM];
+    }
+    return actions[BUY];
+  };
 
   return (
     <li className="border shadow rounded-xl overflow-hidden flex flex-col justify-between h-128">
@@ -47,8 +59,8 @@ const NFTListItem = ({ nft, onHandleAction, actionType }) => {
         <p className="text-2xl font-bold text-white">{price} ETH</p>
         {hasAction && (
           <Button
-            onHandleClick={() => onHandleAction(nft)}
-            label={actionLabel[actionType]}
+            onHandleClick={() => onHandleAction(nft, getAction().action)}
+            label={getAction().label}
             className="w-full mt-2"
           />
         )}
@@ -59,7 +71,6 @@ const NFTListItem = ({ nft, onHandleAction, actionType }) => {
 
 NFTListItem.defaultProps = {
   onHandleAction: false,
-  actionType: "",
 };
 
 NFTListItem.propTypes = propTypes;

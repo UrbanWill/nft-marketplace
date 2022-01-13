@@ -5,6 +5,9 @@ import useToggleWalletPanel from "../hooks/contexts/useToggleWalletPanel";
 import { ACTION_TYPES } from "../utils/constants";
 
 import useBuyNft from "../hooks/mutations/useBuyNft";
+import useRemoveListedNft from "../hooks/mutations/useRemoveListedNft";
+
+const { REMOVE_ITEM, BUY } = ACTION_TYPES;
 
 export default function Home() {
   const { data, isLoading, refetch } = useGetMarketNfts();
@@ -12,13 +15,20 @@ export default function Home() {
   const { setIsWalletPanelOpen } = useToggleWalletPanel();
 
   const { buyNftMutation } = useBuyNft();
+  const { removeListingNftMutation } = useRemoveListedNft();
 
-  const handleAction = (nft) => {
+  const handleAction = (nft, action) => {
     if (!active) {
       // Opens wallet panel for user to connect wallet before making a purchase
       return setIsWalletPanelOpen(true);
     }
-    return buyNftMutation(nft).then((res) => {
+
+    const actions = {
+      [REMOVE_ITEM]: () => removeListingNftMutation(nft.itemId),
+      [BUY]: () => buyNftMutation(nft),
+    };
+
+    return actions[action]().then((res) => {
       // Only refetches if user did not cancel the transaction or has insufficient funds
       if (
         res.code === 4001 ||
@@ -36,7 +46,6 @@ export default function Home() {
       <NFTList
         nfts={data}
         onHandleAction={handleAction}
-        actionType={ACTION_TYPES.BUY}
         isLoading={isLoading}
         emptyListMessage="No items in marketplace"
       />
