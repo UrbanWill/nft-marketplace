@@ -12,7 +12,6 @@ export default function MyAssets() {
 
   // TODO: create a modal to input the price.
   const handleAction = (nft) => {
-    console.log(nft);
     listNftMutation(nft.tokenId, "99").then((res) => {
       if (res.code !== 4001) {
         refetch();
