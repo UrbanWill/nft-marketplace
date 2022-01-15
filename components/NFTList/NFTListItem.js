@@ -1,6 +1,10 @@
+/* eslint-disable jsx-a11y/no-noninteractive-element-interactions */
+/* eslint-disable jsx-a11y/click-events-have-key-events */
+// TODO: Consider accessibility
 import PropTypes from "prop-types";
 import Image from "next/image";
 import { useWeb3React } from "@web3-react/core";
+import { useRouter } from "next/router";
 
 import { nftPropType } from "../../utils/propTypes";
 import { ACTION_TYPES } from "../../utils/constants";
@@ -22,8 +26,9 @@ const propTypes = {
 
 const NFTListItem = ({ nft, onHandleAction }) => {
   const { account } = useWeb3React();
+  const router = useRouter();
 
-  const { name, image, description, price, seller } = nft;
+  const { name, image, description, price, seller, tokenId } = nft;
 
   const hasAction = !!onHandleAction;
 
@@ -37,8 +42,20 @@ const NFTListItem = ({ nft, onHandleAction }) => {
     return actions[BUY];
   };
 
+  const handleClick = () => {
+    router.push({ pathname: "/nft/[nft]", query: { nft: tokenId } });
+  };
+
+  const handleAction = (event) => {
+    event.stopPropagation();
+    onHandleAction(nft, getAction().action);
+  };
+
   return (
-    <li className="border shadow rounded-xl overflow-hidden flex flex-col justify-between h-128">
+    <li
+      className="border shadow rounded-xl overflow-hidden flex flex-col justify-between h-128 cursor-pointer"
+      onClick={handleClick}
+    >
       <div className="h-4/5 relative">
         <Image
           src={image}
@@ -59,7 +76,7 @@ const NFTListItem = ({ nft, onHandleAction }) => {
         <p className="text-2xl font-bold text-white">{price} ETH</p>
         {hasAction && (
           <Button
-            onHandleClick={() => onHandleAction(nft, getAction().action)}
+            onHandleClick={handleAction}
             label={getAction().label}
             className="w-full mt-2"
           />
