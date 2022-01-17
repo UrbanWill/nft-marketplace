@@ -12,11 +12,20 @@ import useEthers from "../contexts/useEthers";
 const useGetNft = (tokenId) => {
   const [nft, setNft] = useState({});
   const [isLoading, setIsLoading] = useState(true);
+  const [error, setError] = useState(false);
 
   const { tokenContract } = useEthers();
 
   const getNft = useCallback(async () => {
     if (!tokenContract) {
+      return;
+    }
+
+    const totalSupply = await tokenContract.totalSupply();
+
+    if (tokenId > totalSupply) {
+      setError(true);
+      setIsLoading(false);
       return;
     }
 
@@ -41,6 +50,7 @@ const useGetNft = (tokenId) => {
     data: nft,
     isLoading,
     refetch: getNft,
+    error,
   };
 };
 
