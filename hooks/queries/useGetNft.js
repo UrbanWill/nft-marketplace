@@ -29,6 +29,8 @@ const useGetNft = (tokenId) => {
       return;
     }
 
+    const owner = await tokenContract.ownerOf(tokenId);
+
     const tokenUri = await tokenContract.tokenURI(tokenId);
     const meta = await axios.get(tokenUri);
     const formattedItem = {
@@ -36,6 +38,7 @@ const useGetNft = (tokenId) => {
       image: meta.data.image,
       name: meta.data.name,
       description: meta.data.description,
+      owner,
     };
     setNft(formattedItem);
 
