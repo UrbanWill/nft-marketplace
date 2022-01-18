@@ -1,3 +1,4 @@
+import { useEffect, useState } from "react";
 import PropTypes from "prop-types";
 import Image from "next/image";
 import { useWeb3React } from "@web3-react/core";
@@ -25,6 +26,7 @@ const propTypes = {
 };
 
 const NftItem = ({ nftId }) => {
+  const [action, setAction] = useState(BUY);
   const { data, isLoading, error } = useGetNft(Number(nftId));
   const {
     data: marketNftHistory,
@@ -54,6 +56,16 @@ const NftItem = ({ nftId }) => {
   //  canDelistItem is true only if user is logged in, there is an item, is not sold and seller is the owner
   const canDelistItem = !!active && !sold && !!itemId && isOwner;
 
+  useEffect(() => {
+    if (canListItem) {
+      return setAction(LIST_ITEM);
+    }
+    if (canDelistItem) {
+      return setAction(REMOVE_ITEM);
+    }
+    return setAction(BUY);
+  }, [canListItem, canDelistItem]);
+
   const handleBuy = () => {
     if (!active) {
       // Opens wallet panel for user to connect wallet before making a purchase
@@ -76,16 +88,6 @@ const NftItem = ({ nftId }) => {
       label: "Buy",
       action: () => handleBuy(),
     },
-  };
-
-  const getAction = () => {
-    if (canListItem) {
-      return actions[LIST_ITEM];
-    }
-    if (canDelistItem) {
-      return actions[REMOVE_ITEM];
-    }
-    return actions[BUY];
   };
 
   if (isLoading) {
@@ -153,8 +155,8 @@ const NftItem = ({ nftId }) => {
             </Formik> */}
 
             <Button
-              label={getAction().label}
-              onHandleClick={getAction().action}
+              label={actions[action].label}
+              onHandleClick={actions[action].action}
               // isLoading={isIpfsLoading || isMutationLoading}
               isDisabled={sold && !isOwner}
               className="mt-4 w-full"
