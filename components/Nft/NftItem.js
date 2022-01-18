@@ -1,22 +1,97 @@
 import PropTypes from "prop-types";
 import Image from "next/image";
+import { useWeb3React } from "@web3-react/core";
 import Button from "../shared/Button/Button";
 import Spinner from "../shared/Spinner/Spinner";
 
 import useGetNft from "../../hooks/queries/useGetNft";
+import useGetMarketNftHistory from "../../hooks/queries/useGetMarketNftHistory";
+
+import useRemoveListedNft from "../../hooks/mutations/useRemoveListedNft";
+import useBuyNft from "../../hooks/mutations/useBuyNft";
+import useListNft from "../../hooks/mutations/useListNft";
+
+import useToggleWalletPanel from "../../hooks/contexts/useToggleWalletPanel";
+
+import { ACTION_TYPES } from "../../utils/constants";
+
+const { LIST_ITEM, REMOVE_ITEM, BUY } = ACTION_TYPES;
 
 const propTypes = {
   nftId: PropTypes.string.isRequired,
 };
 
 const NftItem = ({ nftId }) => {
-  const { data, isLoading } = useGetNft(nftId);
+  const { data, isLoading, error } = useGetNft(Number(nftId));
+  const {
+    data: marketNftHistory,
+    // isLoading: isMarketNftLoading,
+    refetch: refetchHistory,
+  } = useGetMarketNftHistory(Number(nftId));
+
+  const { setIsWalletPanelOpen } = useToggleWalletPanel();
+
+  const { removeListingNftMutation } = useRemoveListedNft();
+  const { buyNftMutation } = useBuyNft();
+  const { listNftMutation } = useListNft();
+
+  const { account, active } = useWeb3React();
+
   const { name, description, image } = data;
+
+  const currentMarketListing =
+    marketNftHistory[marketNftHistory.length - 1] || {};
+
+  const { seller, owner, price, sold, itemId } = currentMarketListing;
+
+  const isOwner = account === owner;
+
+  const handleBuy = () => {
+    if (!active) {
+      // Opens wallet panel for user to connect wallet before making a purchase
+      return setIsWalletPanelOpen(true);
+    }
+    return buyNftMutation({ itemId, price }).then(() => refetchHistory());
+  };
+
+  const actions = {
+    [LIST_ITEM]: {
+      label: "List item",
+      action: () => listNftMutation(nftId, "3").then(() => refetchHistory()),
+    },
+    [REMOVE_ITEM]: {
+      label: "Delist item",
+      action: () =>
+        removeListingNftMutation(itemId).then(() => refetchHistory()),
+    },
+    [BUY]: {
+      label: "Buy",
+      action: () => handleBuy(),
+    },
+  };
+
+  const getAction = () => {
+    if (!seller || (isOwner && sold)) {
+      return actions[LIST_ITEM];
+    }
+    if (seller === account && !sold) {
+      return actions[REMOVE_ITEM];
+    }
+    return actions[BUY];
+  };
 
   if (isLoading) {
     return (
       <div className="flex justify-center items-center flex-1">
         <Spinner size="10" />
+      </div>
+    );
+  }
+
+  if (error) {
+    return (
+      <div className="flex justify-center items-center flex-1">
+        <h1 className="text-2xl">Item do not exist</h1>
       </div>
     );
   }
@@ -39,9 +114,10 @@ const NftItem = ({ nftId }) => {
             <h1 className="text-2xl font-bold">{`${name} #${nftId}`}</h1>
             <p className="font-medium">{description}</p>
             <Button
-              label="Create Digital Asset"
-              // isDisabled={!isValid || !ipfsUrl || isMutationLoading}
+              label={getAction().label}
+              onHandleClick={getAction().action}
               // isLoading={isIpfsLoading || isMutationLoading}
+              isDisabled={sold && !isOwner}
               className="mt-4 w-full"
               isTypeSubmit
               size="lg"
