@@ -9,7 +9,7 @@ import useEthers from "../contexts/useEthers";
  * hook to list nft for sale
  * @returns {{removeListingNftMutation: function}, {isLoading: bool}}
  */
-const useListNft = () => {
+const useRemoveListedNft = () => {
   const [isLoading, setIsloading] = useState(false);
   const toastRef = useRef(null);
   const { signedMarketContract } = useEthers();
@@ -39,7 +39,7 @@ const useListNft = () => {
             toastUpdate(
               toastRef.current,
               toast.TYPE.SUCCESS,
-              "Listing successful!"
+              "Delisting successful!"
             );
             return transactionReceipt;
           })
@@ -61,4 +61,4 @@ const useListNft = () => {
   return { removeListingNftMutation, isLoading };
 };
 
-export default useListNft;
+export default useRemoveListedNft;
