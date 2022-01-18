@@ -1,6 +1,7 @@
 import PropTypes from "prop-types";
 import Image from "next/image";
 import { useWeb3React } from "@web3-react/core";
+// import { Formik, Form } from "formik";
 import Button from "../shared/Button/Button";
 import Spinner from "../shared/Spinner/Spinner";
 
@@ -12,6 +13,8 @@ import useBuyNft from "../../hooks/mutations/useBuyNft";
 import useListNft from "../../hooks/mutations/useListNft";
 
 import useToggleWalletPanel from "../../hooks/contexts/useToggleWalletPanel";
+
+// import Input from "../shared/Input/Input";
 
 import { ACTION_TYPES } from "../../utils/constants";
 
@@ -37,14 +40,19 @@ const NftItem = ({ nftId }) => {
 
   const { account, active } = useWeb3React();
 
-  const { name, description, image } = data;
+  const { name, description, image, owner: tokenOwner } = data;
 
   const currentMarketListing =
     marketNftHistory[marketNftHistory.length - 1] || {};
 
-  const { seller, owner, price, sold, itemId } = currentMarketListing;
+  const { price, sold, itemId } = currentMarketListing;
 
-  const isOwner = account === owner;
+  const isOwner = account === tokenOwner;
+  // canListItem is true if the item has never been listed before and isOwner
+  // or is owner and item is currently not for sale
+  const canListItem = (!itemId && isOwner) || (isOwner && sold);
+  //  canDelistItem is true only if user is logged in, there is an item, is not sold and seller is the owner
+  const canDelistItem = !!active && !sold && !!itemId && isOwner;
 
   const handleBuy = () => {
     if (!active) {
@@ -71,10 +79,10 @@ const NftItem = ({ nftId }) => {
   };
 
   const getAction = () => {
-    if (!seller || (isOwner && sold)) {
+    if (canListItem) {
       return actions[LIST_ITEM];
     }
-    if (seller === account && !sold) {
+    if (canDelistItem) {
       return actions[REMOVE_ITEM];
     }
     return actions[BUY];
@@ -113,6 +121,37 @@ const NftItem = ({ nftId }) => {
           <div className="flex-1 flex flex-col justify-between pt-5">
             <h1 className="text-2xl font-bold">{`${name} #${nftId}`}</h1>
             <p className="font-medium">{description}</p>
+            {/* <Formik
+              // initialValues={initialValues}
+              // onSubmit={handleSubmit}
+              // validationSchema={validationSchema}
+              validateOnMount
+            >
+              {() => (
+                <Form>
+                  {canListItem && (
+                    <Input
+                      name="price"
+                      onHandleChange={() => {}}
+                      label="Asset price in ETH"
+                      placeholder="Example: 0.75"
+                      errorMessage="Asset price is a required field"
+                      type="number"
+                    />
+                  )}
+                  <Button
+                    label={getAction().label}
+                    onHandleClick={getAction().action}
+                    // isLoading={isIpfsLoading || isMutationLoading}
+                    isDisabled={sold && !isOwner}
+                    className="mt-4 w-full"
+                    isTypeSubmit
+                    size="lg"
+                  />
+                </Form>
+              )}
+            </Formik> */}
+
             <Button
               label={getAction().label}
               onHandleClick={getAction().action}
