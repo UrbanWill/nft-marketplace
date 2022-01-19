@@ -10,7 +10,7 @@ import useEthers from "../contexts/useEthers";
  * @returns {{removeListingNftMutation: function}, {isLoading: bool}}
  */
 const useRemoveListedNft = () => {
-  const [isLoading, setIsloading] = useState(false);
+  const [isLoading, setIsLoading] = useState(false);
   const toastRef = useRef(null);
   const { signedMarketContract } = useEthers();
 
@@ -19,7 +19,7 @@ const useRemoveListedNft = () => {
    * @returns {Promise< object {transaction receipt data} >} self-descriptive
    */
   const removeListingNftMutation = async (tokenId) => {
-    setIsloading(true);
+    setIsLoading(true);
 
     toastRef.current = toast("Waiting for transaction approval", {
       isLoading: true,
@@ -53,7 +53,7 @@ const useRemoveListedNft = () => {
         return err;
       });
 
-    setIsloading(false);
+    setIsLoading(false);
 
     return transaction;
   };
