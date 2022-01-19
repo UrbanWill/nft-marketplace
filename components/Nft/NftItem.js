@@ -52,9 +52,9 @@ const NftItem = ({ nftId }) => {
   const currentMarketListing =
     marketNftHistory[marketNftHistory.length - 1] || {};
 
-  const { price, sold, itemId } = currentMarketListing;
+  const { price, sold, itemId, seller } = currentMarketListing;
 
-  const isOwner = account === tokenOwner;
+  const isOwner = account === tokenOwner || account === seller;
   // canListItem is true if the item has never been listed before and isOwner
   // or is owner and item is currently not for sale
   const canListItem = (!itemId && isOwner) || (isOwner && sold);
@@ -146,7 +146,7 @@ const NftItem = ({ nftId }) => {
           <div className="flex-1 flex flex-col justify-between pt-5">
             <h1 className="text-2xl font-bold">{`${name} #${nftId}`}</h1>
             <p className="font-medium">{description}</p>
-            {!sold && (
+            {!sold && !canListItem && (
               <div>
                 <p className="font-medium py-2">Price</p>
                 <div className="flex items-center">
