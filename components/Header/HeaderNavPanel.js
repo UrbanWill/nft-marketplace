@@ -66,16 +66,15 @@ const HeaderNavPanel = ({ isNavOpen, onSetIsNavOpen, navOptions }) => {
           {navOptions.map((option) => {
             const { route, label } = option;
             return (
-              <div key={route} className="py-4">
-                <button
-                  type="button"
-                  className="flex items-center hover:text-pink-400"
-                  onClick={() => handleClick(route)}
-                >
-                  {navIcons[route]}
-                  <span className="font-bold">{label}</span>
-                </button>
-              </div>
+              <button
+                key={route}
+                type="button"
+                className="flex items-center hover:text-pink-400 py-4 w-full"
+                onClick={() => handleClick(route)}
+              >
+                {navIcons[route]}
+                <span className="font-bold">{label}</span>
+              </button>
             );
           })}
           {active && (
