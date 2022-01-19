@@ -13,7 +13,7 @@ import useEthers from "../contexts/useEthers";
  * @returns {{ListNftMutation: function}, {isLoading: bool}}
  */
 const useListNft = () => {
-  const [isLoading, setIsloading] = useState(false);
+  const [isLoading, setIsLoading] = useState(false);
   const toastRef = useRef(null);
 
   const { signedMarketContract, signedTokenContract } = useEthers();
@@ -27,7 +27,7 @@ const useListNft = () => {
   const listNftMutation = async (tokenId, price) => {
     const salePrice = ethers.utils.parseUnits(price, CRYPTO_CURRENCY);
 
-    setIsloading(true);
+    setIsLoading(true);
 
     /** Checks if nftMarket is approved to transact the token */
     const isMarketApproved = await signedTokenContract.isApprovedForAll(
@@ -98,7 +98,7 @@ const useListNft = () => {
         return err;
       });
 
-    setIsloading(false);
+    setIsLoading(false);
 
     return transaction;
   };

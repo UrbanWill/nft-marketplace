@@ -2,7 +2,8 @@ import { useEffect, useState } from "react";
 import PropTypes from "prop-types";
 import Image from "next/image";
 import { useWeb3React } from "@web3-react/core";
-// import { Formik, Form } from "formik";
+import { Formik, Form } from "formik";
+import * as yup from "yup";
 import Button from "../shared/Button/Button";
 import Spinner from "../shared/Spinner/Spinner";
 
@@ -15,7 +16,7 @@ import useListNft from "../../hooks/mutations/useListNft";
 
 import useToggleWalletPanel from "../../hooks/contexts/useToggleWalletPanel";
 
-// import Input from "../shared/Input/Input";
+import Input from "../shared/Input/Input";
 
 import { ACTION_TYPES } from "../../utils/constants";
 
@@ -27,12 +28,9 @@ const propTypes = {
 
 const NftItem = ({ nftId }) => {
   const [action, setAction] = useState(BUY);
-  const { data, isLoading, error } = useGetNft(Number(nftId));
-  const {
-    data: marketNftHistory,
-    // isLoading: isMarketNftLoading,
-    refetch: refetchHistory,
-  } = useGetMarketNftHistory(Number(nftId));
+  const { data, isLoading, error, refetchNft } = useGetNft(Number(nftId));
+  const { data: marketNftHistory, refetch: refetchHistory } =
+    useGetMarketNftHistory(Number(nftId));
 
   const { setIsWalletPanelOpen } = useToggleWalletPanel();
 
@@ -71,18 +69,17 @@ const NftItem = ({ nftId }) => {
       // Opens wallet panel for user to connect wallet before making a purchase
       return setIsWalletPanelOpen(true);
     }
-    return buyNftMutation({ itemId, price }).then(() => refetchHistory());
+    return buyNftMutation({ itemId, price });
   };
 
   const actions = {
     [LIST_ITEM]: {
       label: "List item",
-      action: () => listNftMutation(nftId, "3").then(() => refetchHistory()),
+      action: (listingPrice) => listNftMutation(nftId, listingPrice),
     },
     [REMOVE_ITEM]: {
       label: "Remove item",
-      action: () =>
-        removeListingNftMutation(itemId).then(() => refetchHistory()),
+      action: () => removeListingNftMutation(itemId),
     },
     [BUY]: {
       label: "Buy",
@@ -106,6 +103,25 @@ const NftItem = ({ nftId }) => {
     );
   }
 
+  const handleSubmit = (values) => {
+    actions[action].action(String(values.price)).then(() => {
+      refetchNft();
+      refetchHistory();
+    });
+  };
+
+  const initialValues = {
+    price: "",
+  };
+
+  const validationSchema = yup.object().shape({
+    price: yup.number().when({
+      is: () => action === LIST_ITEM,
+      then: yup.number().min(0.000000000000000001).required(),
+      otherwise: yup.number(),
+    }),
+  });
+
   return (
     <div className="flex justify-center pt-10">
       <div className="w-full md:w-5/6  xl:w-2/3 2xl:w-3/5 border-2 p-10 rounded-xl">
@@ -123,13 +139,13 @@ const NftItem = ({ nftId }) => {
           <div className="flex-1 flex flex-col justify-between pt-5">
             <h1 className="text-2xl font-bold">{`${name} #${nftId}`}</h1>
             <p className="font-medium">{description}</p>
-            {/* <Formik
-              // initialValues={initialValues}
-              // onSubmit={handleSubmit}
-              // validationSchema={validationSchema}
+            <Formik
+              initialValues={initialValues}
+              onSubmit={handleSubmit}
+              validationSchema={validationSchema}
               validateOnMount
             >
-              {() => (
+              {({ isValid }) => (
                 <Form>
                   {canListItem && (
                     <Input
@@ -142,27 +158,15 @@ const NftItem = ({ nftId }) => {
                     />
                   )}
                   <Button
-                    label={getAction().label}
-                    onHandleClick={getAction().action}
-                    // isLoading={isIpfsLoading || isMutationLoading}
-                    isDisabled={sold && !isOwner}
+                    label={actions[action].label}
+                    isDisabled={(sold && !isOwner) || !isValid}
                     className="mt-4 w-full"
                     isTypeSubmit
                     size="lg"
                   />
                 </Form>
               )}
-            </Formik> */}
-
-            <Button
-              label={actions[action].label}
-              onHandleClick={actions[action].action}
-              // isLoading={isIpfsLoading || isMutationLoading}
-              isDisabled={sold && !isOwner}
-              className="mt-4 w-full"
-              isTypeSubmit
-              size="lg"
-            />
+            </Formik>
           </div>
         </div>
       </div>
