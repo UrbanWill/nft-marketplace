@@ -4,6 +4,7 @@ import { useWeb3React } from "@web3-react/core";
 import NFTList from "../components/NFTList/NFTList";
 
 import useGetCreatedNfts from "../hooks/queries/useGetCreatedNfts";
+import useRemoveListedNft from "../hooks/mutations/useRemoveListedNft";
 
 const getConnectMessage = (message) => (
   <div className="flex flex-col justify-center items-center flex-1">
@@ -16,7 +17,8 @@ export default function CreatorDashboard() {
   const [isSoldNftsLoading, setIsSoldNftsLoading] = useState(false);
 
   const { active } = useWeb3React();
-  const { data, isLoading } = useGetCreatedNfts();
+  const { data, isLoading, refetch } = useGetCreatedNfts();
+  const { removeListingNftMutation } = useRemoveListedNft();
 
   useEffect(() => {
     // Clears soldNfts when wallet is disconnected
@@ -30,16 +32,28 @@ export default function CreatorDashboard() {
     setIsSoldNftsLoading(false);
   }, [active, data]);
 
+  const handleRemoveNft = (nft) => {
+    console.log(nft);
+    removeListingNftMutation(nft.itemId).then((res) => {
+      if (
+        res.code === 4001 ||
+        (res.code === -32603 && res.data.code === -32000)
+      ) {
+        return null;
+      }
+      return refetch();
+    });
+  };
+
   return (
     <>
-      <h1 className="py-5 text-2xl font-bold">Items Created</h1>
+      <h1 className="py-5 text-2xl font-bold">My listed items</h1>
       {!active ? (
         getConnectMessage("Connect wallet to view your created assets")
       ) : (
         <NFTList
           nfts={data}
-          // TODO: Add list/delist functionality
-          // onHandleAction={handleDoSomeAction}
+          onHandleAction={handleRemoveNft}
           isLoading={isLoading}
           emptyListMessage="No items created"
         />
