@@ -53,18 +53,18 @@ const NftItem = ({ nftId }) => {
   // canListItem is true if the item has never been listed before and isOwner
   // or is owner and item is currently not for sale
   const canListItem = (!itemId && isOwner) || (isOwner && sold);
-  //  canDelistItem is true only if user is logged in, there is an item, is not sold and seller is the owner
-  const canDelistItem = !!active && !sold && !!itemId && isOwner;
+  //  canRemoveItem is true only if user is logged in, there is an item, is not sold and seller is the owner
+  const canRemoveItem = !!active && !sold && !!itemId && isOwner;
 
   useEffect(() => {
     if (canListItem) {
       return setAction(LIST_ITEM);
     }
-    if (canDelistItem) {
+    if (canRemoveItem) {
       return setAction(REMOVE_ITEM);
     }
     return setAction(BUY);
-  }, [canListItem, canDelistItem]);
+  }, [canListItem, canRemoveItem]);
 
   const handleBuy = () => {
     if (!active) {
@@ -80,7 +80,7 @@ const NftItem = ({ nftId }) => {
       action: () => listNftMutation(nftId, "3").then(() => refetchHistory()),
     },
     [REMOVE_ITEM]: {
-      label: "Delist item",
+      label: "Remove item",
       action: () =>
         removeListingNftMutation(itemId).then(() => refetchHistory()),
     },

@@ -15,7 +15,7 @@ const { LIST_ITEM, REMOVE_ITEM, BUY } = ACTION_TYPES;
 
 const actions = {
   [LIST_ITEM]: { label: "List item", action: LIST_ITEM },
-  [REMOVE_ITEM]: { label: "Delist item", action: REMOVE_ITEM },
+  [REMOVE_ITEM]: { label: "Remove item", action: REMOVE_ITEM },
   [BUY]: { label: "Buy", action: BUY },
 };
 

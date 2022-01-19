@@ -14,9 +14,9 @@ const { HOME, CREATE_ITEM, MY_ASSETS, CREATOR_DASHBOARD } = HEADER_ROUTES;
 
 const navOptions = [
   { route: HOME, label: "Home" },
-  { route: CREATE_ITEM, label: "Sell digital asset" },
+  { route: CREATE_ITEM, label: "Create digital asset" },
   { route: MY_ASSETS, label: "My digital assets" },
-  { route: CREATOR_DASHBOARD, label: "Creatord dashboard" },
+  { route: CREATOR_DASHBOARD, label: "Creator dashboard" },
 ];
 
 const defaultMetaTitle = "Metaverse";

@@ -33,7 +33,6 @@ export default function CreatorDashboard() {
   }, [active, data]);
 
   const handleRemoveNft = (nft) => {
-    console.log(nft);
     removeListingNftMutation(nft.itemId).then((res) => {
       if (
         res.code === 4001 ||
