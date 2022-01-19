@@ -18,6 +18,8 @@ import useToggleWalletPanel from "../../hooks/contexts/useToggleWalletPanel";
 
 import Input from "../shared/Input/Input";
 
+import maticIcon from "../../assets/images/polygon-matic.svg";
+
 import { ACTION_TYPES } from "../../utils/constants";
 
 const { LIST_ITEM, REMOVE_ITEM, BUY } = ACTION_TYPES;
@@ -28,7 +30,12 @@ const propTypes = {
 
 const NftItem = ({ nftId }) => {
   const [action, setAction] = useState(BUY);
-  const { data, isLoading, error, refetchNft } = useGetNft(Number(nftId));
+  const {
+    data,
+    isLoading,
+    error,
+    refetch: refetchNft,
+  } = useGetNft(Number(nftId));
   const { data: marketNftHistory, refetch: refetchHistory } =
     useGetMarketNftHistory(Number(nftId));
 
@@ -139,6 +146,20 @@ const NftItem = ({ nftId }) => {
           <div className="flex-1 flex flex-col justify-between pt-5">
             <h1 className="text-2xl font-bold">{`${name} #${nftId}`}</h1>
             <p className="font-medium">{description}</p>
+            {!sold && (
+              <div>
+                <p className="font-medium py-2">Price</p>
+                <div className="flex items-center">
+                  <Image
+                    src={maticIcon}
+                    alt="Metamask logo"
+                    height={24}
+                    width={24}
+                  />
+                  <p className="font-bold text-2xl ml-2">{price}</p>
+                </div>
+              </div>
+            )}
             <Formik
               initialValues={initialValues}
               onSubmit={handleSubmit}
