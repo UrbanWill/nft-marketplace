@@ -15,17 +15,17 @@ const useRemoveListedNft = () => {
   const { signedMarketContract } = useEthers();
 
   /** function to list nft
-   * @param {tokenId} tokenId id to be listed
+   * @param {itemId} itemId id to be removed from listing
    * @returns {Promise< object {transaction receipt data} >} self-descriptive
    */
-  const removeListingNftMutation = async (tokenId) => {
+  const removeListingNftMutation = async (itemId) => {
     setIsLoading(true);
 
     toastRef.current = toast("Waiting for transaction approval", {
       isLoading: true,
     });
     const transaction = await signedMarketContract
-      .removeMarketSale(nftaddress, tokenId)
+      .removeMarketSale(nftaddress, itemId)
       .then(async (res) => {
         toastUpdate(
           toastRef.current,
@@ -39,7 +39,7 @@ const useRemoveListedNft = () => {
             toastUpdate(
               toastRef.current,
               toast.TYPE.SUCCESS,
-              "Delisting successful!"
+              "Item removed successfully!"
             );
             return transactionReceipt;
           })
