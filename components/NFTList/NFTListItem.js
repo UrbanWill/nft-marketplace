@@ -71,17 +71,18 @@ const NFTListItem = ({ nft, onHandleAction }) => {
           <p className="text-gray-400 truncate">{description}</p>
         </div>
       </div>
-      {/* TODO: only show this footer of items that are for sale */}
-      <div className="p-4 bg-black">
-        <p className="text-2xl font-bold text-white">{price} ETH</p>
-        {hasAction && (
-          <Button
-            onHandleClick={handleAction}
-            label={getAction().label}
-            className="w-full mt-2"
-          />
-        )}
-      </div>
+      {price && (
+        <div className="p-4 bg-black">
+          <p className="text-2xl font-bold text-white">{price} ETH</p>
+          {hasAction && (
+            <Button
+              onHandleClick={handleAction}
+              label={getAction().label}
+              className="w-full mt-2"
+            />
+          )}
+        </div>
+      )}
     </li>
   );
 };
