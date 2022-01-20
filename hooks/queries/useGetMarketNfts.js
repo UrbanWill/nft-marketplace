@@ -9,7 +9,7 @@ import useEthers from "../contexts/useEthers";
 
 /**
  * hook to get nfts for sale
- * @returns { nfts: [] | array of objects, isLoading: boolen }
+ * @returns { nfts: [] | array of objects, isLoading: boolean }
  */
 const useGetMarketNfts = () => {
   const [nfts, setNfts] = useState([]);

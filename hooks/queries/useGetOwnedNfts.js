@@ -8,7 +8,7 @@ import useEthers from "../contexts/useEthers";
 
 /**
  * hook to get nfts the connected wallet currently owns
- * @returns { data: [] | array of objects, isLoading: boolen }
+ * @returns { data: [] | array of objects, isLoading: boolean }
  */
 const useGetOwnedNfts = () => {
   const [nfts, setNfts] = useState([]);

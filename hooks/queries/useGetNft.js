@@ -6,7 +6,7 @@ import useEthers from "../contexts/useEthers";
 
 /**
  * hook to get nft from tokenContract
- * @returns { nft: {} , isLoading: boolen }
+ * @returns { nft: {} , isLoading: boolean }
  */
 
 const useGetNft = (tokenId) => {
