@@ -2,22 +2,10 @@ import { useWeb3React } from "@web3-react/core";
 import NFTList from "../components/NFTList/NFTList";
 
 import useGetOwnedNfts from "../hooks/queries/useGetOwnedNfts";
-import useListNft from "../hooks/mutations/useListNft";
 
 export default function MyAssets() {
   const { active } = useWeb3React();
-  const { data, isLoading, refetch } = useGetOwnedNfts();
-
-  const { listNftMutation } = useListNft();
-
-  // TODO: create a modal to input the price.
-  const handleAction = (nft) => {
-    listNftMutation(nft.tokenId, "99").then((res) => {
-      if (res.code !== 4001) {
-        refetch();
-      }
-    });
-  };
+  const { data, isLoading } = useGetOwnedNfts();
 
   if (!active) {
     return (
@@ -32,7 +20,6 @@ export default function MyAssets() {
       <h1 className="py-5 text-2xl font-bold">My assets</h1>
       <NFTList
         nfts={data}
-        onHandleAction={handleAction}
         isLoading={isLoading}
         emptyListMessage="No assets owned"
       />
