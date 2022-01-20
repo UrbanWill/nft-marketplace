@@ -8,7 +8,6 @@ import { toast } from "react-toastify";
 import useToggleWalletPanel from "../hooks/contexts/useToggleWalletPanel";
 
 import useCreateNft from "../hooks/mutations/useCreateNft";
-import useListNft from "../hooks/mutations/useListNft";
 
 import Input from "../components/shared/Input/Input";
 import Textarea from "../components/shared/Textarea/Textarea";
@@ -19,7 +18,6 @@ import Button from "../components/shared/Button/Button";
 const client = create("https://ipfs.infura.io:5001/api/v0");
 const ipfsInfuraUrl = "https://ipfs.infura.io/ipfs";
 
-// TODO: Refactor this page, it should only be handling minting assets, not listing.
 export default function CreateItem() {
   const [uploadedImages, setUploadedImages] = useState([]);
   const [ipfsUrl, setIpfsUrl] = useState("");
@@ -28,10 +26,7 @@ export default function CreateItem() {
   const { active } = useWeb3React();
   const router = useRouter();
 
-  const { createNftMutation, isLoading: isNftCreateLoading } = useCreateNft();
-  const { listNftMutation, isLoading: isNftListLoading } = useListNft();
-
-  const isMutationLoading = isNftCreateLoading || isNftListLoading;
+  const { createNftMutation, isLoading } = useCreateNft();
 
   // TODO: handleIpfsUpload should be a hook
   /**
@@ -63,14 +58,14 @@ export default function CreateItem() {
     }
   }, [uploadedImages]);
 
-  /* Clears uploaded iamges and ipfs url state */
+  /* Clears uploaded images and ipfs url state */
   const handleRemoveAllImages = () => {
     setUploadedImages([]);
     setIpfsUrl("");
   };
 
   const handleSubmit = async (values) => {
-    const { name, description, price } = values;
+    const { name, description } = values;
     if (!active) {
       return setIsWalletPanelOpen(true);
     }
@@ -83,27 +78,21 @@ export default function CreateItem() {
     const uploadedData = await handleIpfsUpload(data);
     const url = `${ipfsInfuraUrl}/${uploadedData.path}`;
 
-    // TODO: Refactor this page, it should only be handling minting assets, not listing.
-    /* Mints a new nft then list it */
     return createNftMutation(url).then(
       (createNftReceipt) =>
         createNftReceipt.status &&
-        listNftMutation(createNftReceipt.tokenId, String(price)).then(
-          (listingReceipt) => listingReceipt.status && router.push("/")
-        )
+        router.push(`/nft/${createNftReceipt.tokenId}`)
     );
   };
 
   const initialValues = {
     name: "",
     description: "",
-    price: "",
   };
 
   const validationSchema = yup.object().shape({
     name: yup.string().required(),
     description: yup.string().required(),
-    price: yup.number().required(),
   });
 
   return (
@@ -114,7 +103,7 @@ export default function CreateItem() {
         validateOnMount
         validationSchema={validationSchema}
       >
-        {({ handleChange, isValid }) => (
+        {({ isValid }) => (
           <Form className="w-full md:w-5/6 xl:w-2/3 2xl:w-3/5">
             <h1 className="py-5 text-2xl font-bold">Create new item</h1>
             <div className="flex flex-col lg:flex-row pt-5">
@@ -129,30 +118,20 @@ export default function CreateItem() {
               <div className="flex-1 flex flex-col justify-between">
                 <Input
                   name="name"
-                  onHandleChange={handleChange}
                   label="Asset name"
                   placeholder="Example: The real raw Mooncake"
                   errorMessage="Asset name is a required field"
                 />
                 <Textarea
                   name="description"
-                  onHandleChange={handleChange}
                   label="Asset description"
                   placeholder="Example: A planet-destroying spatial anomaly that was created by the residual energy of an anti-matter bomb"
                   errorMessage="Asset description is a required field"
                 />
-                <Input
-                  name="price"
-                  onHandleChange={handleChange}
-                  label="Asset price in ETH"
-                  placeholder="Example: 0.75"
-                  errorMessage="Asset price is a required field"
-                  type="number"
-                />
                 <Button
                   label="Create Digital Asset"
-                  isDisabled={!isValid || !ipfsUrl || isMutationLoading}
-                  isLoading={isIpfsLoading || isMutationLoading}
+                  isDisabled={!isValid || !ipfsUrl || isLoading}
+                  isLoading={isIpfsLoading || isLoading}
                   className="mt-4 w-full"
                   isTypeSubmit
                   size="lg"

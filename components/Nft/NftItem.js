@@ -171,7 +171,6 @@ const NftItem = ({ nftId }) => {
                   {canListItem && (
                     <Input
                       name="price"
-                      onHandleChange={() => {}}
                       label="Asset price in ETH"
                       placeholder="Example: 0.75"
                       errorMessage="Asset price is a required field"
