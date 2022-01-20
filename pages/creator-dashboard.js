@@ -14,22 +14,36 @@ const getConnectMessage = (message) => (
 
 export default function CreatorDashboard() {
   const [soldNfts, setSoldNfts] = useState([]);
-  const [isSoldNftsLoading, setIsSoldNftsLoading] = useState(false);
+  const [listedNfts, setListedNfts] = useState([]);
+  const [isSortNftsLoading, setIsSortNftsLoading] = useState(true);
 
   const { active } = useWeb3React();
   const { data, isLoading, refetch } = useGetCreatedNfts();
   const { removeListingNftMutation } = useRemoveListedNft();
 
   useEffect(() => {
-    // Clears soldNfts when wallet is disconnected
+    // Clears sold and listed nfts when wallet is disconnected
     if (!active) {
       setSoldNfts([]);
+      setListedNfts([]);
     }
-    setIsSoldNftsLoading(true);
-    // Filters for sold nfts
-    const soldItems = data.filter((nft) => nft.sold);
-    setSoldNfts(soldItems);
-    setIsSoldNftsLoading(false);
+    setIsSortNftsLoading(true);
+    const sortedNfts = data.reduce(
+      (acc, nftItem) => {
+        if (nftItem.sold) {
+          acc.sold.push(nftItem);
+        } else {
+          acc.listed.push(nftItem);
+        }
+
+        return acc;
+      },
+      { sold: [], listed: [] }
+    );
+    setSoldNfts(sortedNfts.sold);
+    setListedNfts(sortedNfts.listed);
+
+    setIsSortNftsLoading(false);
   }, [active, data]);
 
   const handleRemoveNft = (nft) => {
@@ -51,9 +65,9 @@ export default function CreatorDashboard() {
         getConnectMessage("Connect wallet to view your created assets")
       ) : (
         <NFTList
-          nfts={data}
+          nfts={listedNfts}
           onHandleAction={handleRemoveNft}
-          isLoading={isLoading}
+          isLoading={isLoading || isSortNftsLoading}
           emptyListMessage="No items created"
         />
       )}
@@ -64,7 +78,7 @@ export default function CreatorDashboard() {
       ) : (
         <NFTList
           nfts={soldNfts}
-          isLoading={isSoldNftsLoading}
+          isLoading={isLoading || isSortNftsLoading}
           emptyListMessage="No Items sold"
         />
       )}
