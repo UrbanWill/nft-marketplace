@@ -22,9 +22,10 @@ const actions = {
 const propTypes = {
   nft: nftPropType.isRequired,
   onHandleAction: PropTypes.oneOfType([PropTypes.func, PropTypes.bool]),
+  isActionLoading: PropTypes.bool,
 };
 
-const NFTListItem = ({ nft, onHandleAction }) => {
+const NFTListItem = ({ nft, onHandleAction, isActionLoading }) => {
   const { account } = useWeb3React();
   const router = useRouter();
 
@@ -79,6 +80,7 @@ const NFTListItem = ({ nft, onHandleAction }) => {
               onHandleClick={handleAction}
               label={getAction().label}
               className="w-full mt-2"
+              isLoading={isActionLoading}
             />
           )}
         </div>
@@ -88,7 +90,8 @@ const NFTListItem = ({ nft, onHandleAction }) => {
 };
 
 NFTListItem.defaultProps = {
-  onHandleAction: false,
+  onHandleAction: null,
+  isActionLoading: false,
 };
 
 NFTListItem.propTypes = propTypes;

@@ -8,6 +8,7 @@ import { nftPropType } from "../../utils/propTypes";
 const propTypes = {
   nfts: PropTypes.arrayOf(nftPropType).isRequired,
   onHandleAction: PropTypes.oneOfType([PropTypes.func, PropTypes.bool]),
+  isActionLoading: PropTypes.bool,
   isLoading: PropTypes.bool.isRequired,
   emptyListMessage: PropTypes.string.isRequired,
 };
@@ -16,7 +17,13 @@ const getContent = (content) => (
   <div className="flex justify-center items-center flex-1">{content}</div>
 );
 
-const NFTList = ({ nfts, onHandleAction, isLoading, emptyListMessage }) => {
+const NFTList = ({
+  nfts,
+  onHandleAction,
+  isActionLoading,
+  isLoading,
+  emptyListMessage,
+}) => {
   if (isLoading) {
     return getContent(<Spinner size="10" />);
   }
@@ -32,6 +39,7 @@ const NFTList = ({ nfts, onHandleAction, isLoading, emptyListMessage }) => {
           nft={nft}
           key={nft.tokenId}
           onHandleAction={onHandleAction}
+          isActionLoading={isActionLoading}
         />
       ))}
     </ul>
@@ -39,7 +47,8 @@ const NFTList = ({ nfts, onHandleAction, isLoading, emptyListMessage }) => {
 };
 
 NFTList.defaultProps = {
-  onHandleAction: false,
+  onHandleAction: null,
+  isActionLoading: false,
 };
 
 NFTList.propTypes = propTypes;

@@ -32,18 +32,29 @@ const NftItem = ({ nftId }) => {
   const [action, setAction] = useState(BUY);
   const {
     data,
-    isLoading,
+    isLoading: isGetNftLoading,
     error,
     refetch: refetchNft,
   } = useGetNft(Number(nftId));
-  const { data: marketNftHistory, refetch: refetchHistory } =
-    useGetMarketNftHistory(Number(nftId));
+  const {
+    data: marketNftHistory,
+    refetch: refetchHistory,
+    isLoading: isGetMarketLoading,
+  } = useGetMarketNftHistory(Number(nftId));
 
   const { setIsWalletPanelOpen } = useToggleWalletPanel();
 
-  const { removeListingNftMutation } = useRemoveListedNft();
-  const { buyNftMutation } = useBuyNft();
-  const { listNftMutation } = useListNft();
+  const { removeListingNftMutation, isLoading: isRemoveLoading } =
+    useRemoveListedNft();
+  const { buyNftMutation, isLoading: isBuyLoading } = useBuyNft();
+  const { listNftMutation, isLoading: isListLoading } = useListNft();
+
+  const isLoading =
+    isGetNftLoading ||
+    isGetMarketLoading ||
+    isRemoveLoading ||
+    isBuyLoading ||
+    isListLoading;
 
   const { account, active } = useWeb3React();
 
@@ -94,7 +105,7 @@ const NftItem = ({ nftId }) => {
     },
   };
 
-  if (isLoading) {
+  if (isGetNftLoading) {
     return (
       <div className="flex justify-center items-center flex-1">
         <Spinner size="10" />
@@ -180,6 +191,7 @@ const NftItem = ({ nftId }) => {
                   <Button
                     label={actions[action].label}
                     isDisabled={(sold && !isOwner) || !isValid}
+                    isLoading={isLoading}
                     className="mt-4 w-full"
                     isTypeSubmit
                     size="lg"

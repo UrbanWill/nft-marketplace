@@ -19,7 +19,8 @@ export default function CreatorDashboard() {
 
   const { active } = useWeb3React();
   const { data, isLoading, refetch } = useGetCreatedNfts();
-  const { removeListingNftMutation } = useRemoveListedNft();
+  const { removeListingNftMutation, isLoading: isRemoveLoading } =
+    useRemoveListedNft();
 
   useEffect(() => {
     // Clears sold and listed nfts when wallet is disconnected
@@ -62,13 +63,14 @@ export default function CreatorDashboard() {
     <>
       <h1 className="py-5 text-2xl font-bold">My listed items</h1>
       {!active ? (
-        getConnectMessage("Connect wallet to view your created assets")
+        getConnectMessage("Connect wallet to view your listed assets")
       ) : (
         <NFTList
           nfts={listedNfts}
           onHandleAction={handleRemoveNft}
+          isActionLoading={isRemoveLoading}
           isLoading={isLoading || isSortNftsLoading}
-          emptyListMessage="No items created"
+          emptyListMessage="No items listed"
         />
       )}
 

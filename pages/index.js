@@ -14,8 +14,9 @@ export default function Home() {
   const { active } = useWeb3React();
   const { setIsWalletPanelOpen } = useToggleWalletPanel();
 
-  const { buyNftMutation } = useBuyNft();
-  const { removeListingNftMutation } = useRemoveListedNft();
+  const { buyNftMutation, isLoading: isBuyLoading } = useBuyNft();
+  const { removeListingNftMutation, isLoading: isRemoveLoading } =
+    useRemoveListedNft();
 
   const handleAction = (nft, action) => {
     if (!active) {
@@ -29,7 +30,7 @@ export default function Home() {
     };
 
     return actions[action]().then((res) => {
-      // Only refetches if user did not cancel the transaction or has insufficient funds
+      // Only refetch if user did not cancel the transaction or has insufficient funds
       if (
         res.code === 4001 ||
         (res.code === -32603 && res.data.code === -32000)
@@ -46,6 +47,7 @@ export default function Home() {
       <NFTList
         nfts={data}
         onHandleAction={handleAction}
+        isActionLoading={isBuyLoading || isRemoveLoading}
         isLoading={isLoading}
         emptyListMessage="No items in marketplace"
       />
