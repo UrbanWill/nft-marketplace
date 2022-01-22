@@ -76,7 +76,10 @@ const Layout = ({ children }) => {
         />
         <WalletPanel isNavOpen={isNavOpen} />
       </div>
-      <div className="p-4 lg:px-8 flex flex-col flex-1" id="layout-body">
+      <div
+        className="p-4 lg:px-8 flex flex-col flex-1 bg-gray-50"
+        id="layout-body"
+      >
         {children}
       </div>
     </div>

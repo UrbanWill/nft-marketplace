@@ -54,7 +54,7 @@ const NFTListItem = ({ nft, onHandleAction, isActionLoading }) => {
 
   return (
     <li
-      className="border shadow rounded-xl overflow-hidden flex flex-col justify-between h-128 cursor-pointer"
+      className="border shadow rounded-lg overflow-hidden flex flex-col justify-between h-128 cursor-pointer p-2 hover:opacity-90 bg-white"
       onClick={handleClick}
     >
       <div className="h-4/5 relative">
@@ -64,6 +64,7 @@ const NFTListItem = ({ nft, onHandleAction, isActionLoading }) => {
           layout="fill"
           objectFit="cover"
           objectPosition="top center"
+          className="rounded-lg rounded-b-none"
         />
       </div>
       <div className="p-2">
@@ -73,7 +74,7 @@ const NFTListItem = ({ nft, onHandleAction, isActionLoading }) => {
         </div>
       </div>
       {price && (
-        <div className="p-4 bg-black">
+        <div className="p-4 bg-black rounded-lg rounded-t-none">
           <p className="text-2xl font-bold text-white">{price} ETH</p>
           {hasAction && (
             <Button

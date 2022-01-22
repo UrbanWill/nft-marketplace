@@ -52,13 +52,17 @@ const useEthers = () => {
 };
 
 /** Static contract values */
-const provider = new ethers.providers.JsonRpcProvider();
+const provider = new ethers.providers.JsonRpcProvider(
+  "https://polygon-mumbai.infura.io/v3/dfd24f5f991f4ebb9206d06d97ee7ef3"
+);
+// const provider = new ethers.providers.JsonRpcProvider();
 const tokenContract = new ethers.Contract(nftaddress, NFT.abi, provider);
 const marketContract = new ethers.Contract(
   nftmarketaddress,
   Market.abi,
   provider
 );
+
 /** Context provider */
 export const EthersProvider = ({ children }) => {
   const values = { ...useEthers(), tokenContract, marketContract };

@@ -61,7 +61,7 @@ const ImageUpload = ({
     <div
       {...getRootProps()}
       className={`h-96 sm:w-96 flex justify-center items-center overflow-hidden ${className} ${
-        !imgPreviewUrl ? "cursor-pointer rounded-xl border-dashed border-2" : ""
+        !imgPreviewUrl ? "cursor-pointer rounded-lg border-dashed border-2" : ""
       }`}
     >
       <input {...getInputProps()} />

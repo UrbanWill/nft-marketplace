@@ -158,17 +158,17 @@ const NftItem = ({ nftId }) => {
   });
 
   return (
-    <div className="flex justify-center pt-10">
-      <div className="w-full md:w-5/6  xl:w-2/3 2xl:w-3/5 border-2 p-10 rounded-xl">
+    <div className="flex justify-center md:pt-10">
+      <div className="w-full p-2 md:w-5/6 md:p-10 xl:w-2/3 2xl:w-3/5 border-2 rounded-lg bg-white">
         <div className="flex flex-col lg:flex-row">
-          <div className="h-96 sm:w-96 relative rounded-xl lg:mr-4">
+          <div className="h-96 sm:w-96 relative rounded-lg lg:mr-8">
             <Image
               src={image}
               alt="NFT image"
               layout="fill"
               objectFit="cover"
               objectPosition="top center"
-              className="rounded-xl"
+              className="rounded-lg"
             />
           </div>
           <div className="flex-1 flex flex-col justify-between pt-5">

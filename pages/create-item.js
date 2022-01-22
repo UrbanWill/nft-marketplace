@@ -96,7 +96,7 @@ export default function CreateItem() {
   });
 
   return (
-    <div className="flex justify-center">
+    <div className="flex justify-center md:pt-10">
       <Formik
         initialValues={initialValues}
         onSubmit={handleSubmit}
@@ -104,7 +104,7 @@ export default function CreateItem() {
         validationSchema={validationSchema}
       >
         {({ isValid }) => (
-          <Form className="w-full md:w-5/6 xl:w-2/3 2xl:w-3/5">
+          <Form className="w-full p-2 md:w-5/6 md:p-10 xl:w-2/3 2xl:w-3/5 border-2 rounded-lg bg-white">
             <h1 className="py-5 text-2xl font-bold">Create new item</h1>
             <div className="flex flex-col lg:flex-row pt-5">
               <ImageUpload
@@ -115,7 +115,7 @@ export default function CreateItem() {
                 isLoading={isIpfsLoading}
                 className="lg:mr-4"
               />
-              <div className="flex-1 flex flex-col justify-between">
+              <div className="flex-1 flex flex-col justify-between pt-2 lg:pt-0">
                 <Input
                   name="name"
                   label="Asset name"
