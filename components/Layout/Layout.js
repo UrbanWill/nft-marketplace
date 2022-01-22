@@ -33,9 +33,11 @@ const contextClass = {
 const Layout = ({ children }) => {
   const [isNavOpen, setIsNavOpen] = useState(false);
   const { isWalletPanelOpen, setIsWalletPanelOpen } = useToggleWalletPanel();
-  const { route } = useRouter();
+  const { route, query } = useRouter();
 
-  const routeTitle = navOptions.find((option) => option.route === route)?.label;
+  const routeTitle =
+    navOptions.find((option) => option.route === route)?.label ||
+    `#${query.nft}`;
 
   return (
     /** pt-20 to match navbar height */
@@ -54,7 +56,7 @@ const Layout = ({ children }) => {
         closeOnClick
       />
       {/* meta component for browser description */}
-      <Meta title={`${defaultMetaTitle} ${routeTitle}`} />
+      <Meta title={`${defaultMetaTitle} ${routeTitle || query.nft}`} />
       {/* div tag with modal id for modal to be rendered with react createPortal */}
       <div id="modal" />
       <Header
