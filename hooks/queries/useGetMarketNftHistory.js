@@ -16,7 +16,7 @@ const useGetMarketNftHistory = (tokenId) => {
   const { marketContract } = useEthers();
 
   const GetMarketNft = useCallback(async () => {
-    if (!marketContract) {
+    if (!marketContract || !tokenId) {
       return;
     }
 

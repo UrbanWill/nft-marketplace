@@ -17,7 +17,7 @@ const useGetNft = (tokenId) => {
   const { tokenContract } = useEthers();
 
   const getNft = useCallback(async () => {
-    if (!tokenContract) {
+    if (!tokenContract || !tokenId) {
       return;
     }
 

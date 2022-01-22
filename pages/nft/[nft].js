@@ -3,9 +3,7 @@ import NftItem from "../../components/Nft/NftItem";
 import Spinner from "../../components/shared/Spinner/Spinner";
 
 const Nft = () => {
-  const router = useRouter();
-
-  const { query } = router;
+  const { query } = useRouter();
 
   return (
     <>
