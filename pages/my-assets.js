@@ -20,8 +20,6 @@ export default function MyAssets() {
       <h1 className="py-5 text-2xl font-bold">My assets</h1>
       <NFTList
         nfts={data}
-        // TODO: Add sell functionality
-        // onHandleAction={handleDoSomeAction}
         isLoading={isLoading}
         emptyListMessage="No assets owned"
       />

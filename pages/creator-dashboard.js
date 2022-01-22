@@ -4,6 +4,7 @@ import { useWeb3React } from "@web3-react/core";
 import NFTList from "../components/NFTList/NFTList";
 
 import useGetCreatedNfts from "../hooks/queries/useGetCreatedNfts";
+import useRemoveListedNft from "../hooks/mutations/useRemoveListedNft";
 
 const getConnectMessage = (message) => (
   <div className="flex flex-col justify-center items-center flex-1">
@@ -13,35 +14,63 @@ const getConnectMessage = (message) => (
 
 export default function CreatorDashboard() {
   const [soldNfts, setSoldNfts] = useState([]);
-  const [isSoldNftsLoading, setIsSoldNftsLoading] = useState(false);
+  const [listedNfts, setListedNfts] = useState([]);
+  const [isSortNftsLoading, setIsSortNftsLoading] = useState(true);
 
   const { active } = useWeb3React();
-  const { data, isLoading } = useGetCreatedNfts();
+  const { data, isLoading, refetch } = useGetCreatedNfts();
+  const { removeListingNftMutation, isLoading: isRemoveLoading } =
+    useRemoveListedNft();
 
   useEffect(() => {
-    // Clears soldNfts when wallet is disconnected
+    // Clears sold and listed nfts when wallet is disconnected
     if (!active) {
       setSoldNfts([]);
+      setListedNfts([]);
     }
-    setIsSoldNftsLoading(true);
-    // Filters for sold nfts
-    const soldItems = data.filter((nft) => nft.sold);
-    setSoldNfts(soldItems);
-    setIsSoldNftsLoading(false);
+    setIsSortNftsLoading(true);
+    const sortedNfts = data.reduce(
+      (acc, nftItem) => {
+        if (nftItem.sold) {
+          acc.sold.push(nftItem);
+        } else {
+          acc.listed.push(nftItem);
+        }
+
+        return acc;
+      },
+      { sold: [], listed: [] }
+    );
+    setSoldNfts(sortedNfts.sold);
+    setListedNfts(sortedNfts.listed);
+
+    setIsSortNftsLoading(false);
   }, [active, data]);
+
+  const handleRemoveNft = (nft) => {
+    removeListingNftMutation(nft.itemId).then((res) => {
+      if (
+        res.code === 4001 ||
+        (res.code === -32603 && res.data.code === -32000)
+      ) {
+        return null;
+      }
+      return refetch();
+    });
+  };
 
   return (
     <>
-      <h1 className="py-5 text-2xl font-bold">Items Created</h1>
+      <h1 className="py-5 text-2xl font-bold">My listed items</h1>
       {!active ? (
-        getConnectMessage("Connect wallet to view your created assets")
+        getConnectMessage("Connect wallet to view your listed assets")
       ) : (
         <NFTList
-          nfts={data}
-          // TODO: Add list/delist functionality
-          // onHandleAction={handleDoSomeAction}
-          isLoading={isLoading}
-          emptyListMessage="No items created"
+          nfts={listedNfts}
+          onHandleAction={handleRemoveNft}
+          isActionLoading={isRemoveLoading}
+          isLoading={isLoading || isSortNftsLoading}
+          emptyListMessage="No items listed"
         />
       )}
 
@@ -51,7 +80,7 @@ export default function CreatorDashboard() {
       ) : (
         <NFTList
           nfts={soldNfts}
-          isLoading={isSoldNftsLoading}
+          isLoading={isLoading || isSortNftsLoading}
           emptyListMessage="No Items sold"
         />
       )}

@@ -1,8 +1,9 @@
 import { useState, useRef } from "react";
 import { ethers } from "ethers";
 import { toast } from "react-toastify";
+import { useWeb3React } from "@web3-react/core";
 import { CRYPTO_CURRENCY } from "../../utils/constants";
-import { nftaddress } from "../../config";
+import { nftaddress, nftmarketaddress } from "../../config";
 import toastUpdate from "../../utils/toastUpdate";
 
 import useEthers from "../contexts/useEthers";
@@ -12,9 +13,11 @@ import useEthers from "../contexts/useEthers";
  * @returns {{ListNftMutation: function}, {isLoading: bool}}
  */
 const useListNft = () => {
-  const [isLoading, setIsloading] = useState(false);
+  const [isLoading, setIsLoading] = useState(false);
   const toastRef = useRef(null);
-  const { signedMarketContract } = useEthers();
+
+  const { signedMarketContract, signedTokenContract } = useEthers();
+  const { account } = useWeb3React();
 
   /** function to list nft
    * @param {tokenId} tokenId id to be listed
@@ -24,7 +27,38 @@ const useListNft = () => {
   const listNftMutation = async (tokenId, price) => {
     const salePrice = ethers.utils.parseUnits(price, CRYPTO_CURRENCY);
 
-    setIsloading(true);
+    setIsLoading(true);
+
+    /** Checks if nftMarket is approved to transact the token */
+    const isMarketApproved = await signedTokenContract.isApprovedForAll(
+      account,
+      nftmarketaddress
+    );
+
+    /** Function to request market approval to transact the token
+     * @returns {Promise {bool}} perssion
+     */
+    const handleRequestApproval = async () => {
+      const approvalRequest = await signedTokenContract
+        .approve(nftmarketaddress, tokenId)
+        .then((transactionReceipt) => {
+          toastUpdate(
+            toastRef.current,
+            toast.TYPE.SUCCESS,
+            "Market approval granted!"
+          );
+          return transactionReceipt;
+        })
+        .catch((err) => {
+          toastUpdate(toastRef.current, toast.TYPE.ERROR, err.message);
+          return err;
+        });
+      return approvalRequest;
+    };
+
+    if (!isMarketApproved) {
+      await handleRequestApproval();
+    }
 
     const listingPrice = await signedMarketContract
       .getListingPrice()
@@ -64,7 +98,7 @@ const useListNft = () => {
         return err;
       });
 
-    setIsloading(false);
+    setIsLoading(false);
 
     return transaction;
   };

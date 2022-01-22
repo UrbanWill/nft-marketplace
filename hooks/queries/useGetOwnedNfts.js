@@ -1,35 +1,33 @@
 import { useState, useEffect, useCallback } from "react";
-import { ethers } from "ethers";
 import { useWeb3React } from "@web3-react/core";
 import { toast } from "react-toastify";
 
 import axios from "axios";
-import { CRYPTO_CURRENCY } from "../../utils/constants";
 
 import useEthers from "../contexts/useEthers";
 
 /**
  * hook to get nfts the connected wallet currently owns
- * @returns { data: [] | array of objects, isLoading: boolen }
+ * @returns { data: [] | array of objects, isLoading: boolean }
  */
 const useGetOwnedNfts = () => {
   const [nfts, setNfts] = useState([]);
   const [isLoading, setIsLoading] = useState(false);
 
-  const { active } = useWeb3React();
-  const { tokenContract, signedMarketContract } = useEthers();
+  const { active, account } = useWeb3React();
+  const { tokenContract } = useEthers();
 
   const loadNFTs = useCallback(async () => {
     setIsLoading(true);
 
-    if (!active || !signedMarketContract || !tokenContract) {
+    if (!active || !tokenContract) {
       // Clears soldNfts when wallet is disconnected
       setNfts([]);
       setIsLoading(false);
       return;
     }
 
-    const data = await signedMarketContract.fetchMyNFTs().catch((error) => {
+    const data = await tokenContract.getTokenIds(account).catch((error) => {
       toast.error(`${error}`);
       return null;
     });
@@ -37,17 +35,10 @@ const useGetOwnedNfts = () => {
     if (data) {
       const formattedItems = await Promise.all(
         data.map(async (item) => {
-          const tokenUri = await tokenContract.tokenURI(item.tokenId);
+          const tokenUri = await tokenContract.tokenURI(item.toNumber());
           const meta = await axios.get(tokenUri);
-          const price = ethers.utils.formatUnits(
-            item.price.toString(),
-            CRYPTO_CURRENCY
-          );
           const formattedItem = {
-            price,
-            tokenId: item.tokenId.toNumber(),
-            seller: item.seller,
-            owner: item.owner,
+            tokenId: item.toNumber(),
             image: meta.data.image,
             name: meta.data.name,
             description: meta.data.description,
@@ -59,7 +50,7 @@ const useGetOwnedNfts = () => {
     }
 
     setIsLoading(false);
-  }, [signedMarketContract, tokenContract, active]);
+  }, [tokenContract, active, account]);
 
   useEffect(() => {
     loadNFTs();

@@ -8,7 +8,7 @@ const propTypes = {
   label: PropTypes.string,
   placeholder: PropTypes.string,
   errorMessage: PropTypes.string,
-  onHandleChange: PropTypes.func.isRequired,
+  onHandleChange: PropTypes.func,
   maxLength: PropTypes.number,
 };
 
@@ -54,5 +54,6 @@ Textarea.defaultProps = {
   errorMessage: "This is a required field",
   label: "",
   maxLength: TEXTAREA_MAX_LENGTH,
+  onHandleChange: null,
 };
 export default Textarea;
