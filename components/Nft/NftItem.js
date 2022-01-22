@@ -65,12 +65,29 @@ const NftItem = ({ nftId }) => {
 
   const { price, sold, itemId, seller } = currentMarketListing;
 
-  const isOwner = account === tokenOwner || account === seller;
+  const hasBeenListed = !!Object.keys(currentMarketListing).length;
+
+  const getIsOwner = () => {
+    if (!active) {
+      return false;
+    }
+    if (account === tokenOwner) {
+      return true;
+    }
+    if (hasBeenListed) {
+      return !sold && account === seller;
+    }
+    return false;
+  };
+
+  const isOwner = getIsOwner();
   // canListItem is true if the item has never been listed before and isOwner
   // or is owner and item is currently not for sale
   const canListItem = (!itemId && isOwner) || (isOwner && sold);
   //  canRemoveItem is true only if user is logged in, there is an item, is not sold and seller is the owner
   const canRemoveItem = !!active && !sold && !!itemId && isOwner;
+
+  const shouldShowPrice = hasBeenListed && !sold && !canListItem;
 
   useEffect(() => {
     if (canListItem) {
@@ -157,7 +174,7 @@ const NftItem = ({ nftId }) => {
           <div className="flex-1 flex flex-col justify-between pt-5">
             <h1 className="text-2xl font-bold">{`${name} #${nftId}`}</h1>
             <p className="font-medium">{description}</p>
-            {!sold && !canListItem && (
+            {shouldShowPrice && (
               <div>
                 <p className="font-medium py-2">Price</p>
                 <div className="flex items-center">
