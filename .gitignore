@@ -41,7 +41,7 @@ node_modules
 
 # hardhat files
 cache
-artifacts
+# artifacts
 
 # eslint
 .eslintcache
