@@ -6,6 +6,7 @@ import { Formik, Form } from "formik";
 import * as yup from "yup";
 import Button from "../shared/Button/Button";
 import Spinner from "../shared/Spinner/Spinner";
+import NftOwnerTable from "../NftOwnerTable/NftOwnerTable";
 
 import useGetNft from "../../hooks/queries/useGetNft";
 import useGetMarketNftHistory from "../../hooks/queries/useGetMarketNftHistory";
@@ -158,68 +159,71 @@ const NftItem = ({ nftId }) => {
   });
 
   return (
-    <div className="flex justify-center md:pt-10">
-      <div className="w-full p-2 md:w-5/6 md:p-10 xl:w-2/3 2xl:w-3/5 border-2 rounded-lg bg-white">
-        <div className="flex flex-col lg:flex-row">
-          <div className="h-96 sm:w-96 relative rounded-lg lg:mr-8">
-            <Image
-              src={image}
-              alt="NFT image"
-              layout="fill"
-              objectFit="cover"
-              objectPosition="top center"
-              className="rounded-lg"
-            />
-          </div>
-          <div className="flex-1 flex flex-col justify-between pt-5">
-            <h1 className="text-2xl font-bold">{`${name} #${nftId}`}</h1>
-            <p className="font-medium">{description}</p>
-            {shouldShowPrice && (
-              <div>
-                <p className="font-medium py-2">Price</p>
-                <div className="flex items-center">
-                  <Image
-                    src={maticIcon}
-                    alt="Metamask logo"
-                    height={24}
-                    width={24}
-                  />
-                  <p className="font-bold text-2xl ml-2">{price}</p>
-                </div>
-              </div>
-            )}
-            <Formik
-              initialValues={initialValues}
-              onSubmit={handleSubmit}
-              validationSchema={validationSchema}
-              validateOnMount
-            >
-              {({ isValid }) => (
-                <Form>
-                  {canListItem && (
-                    <Input
-                      name="price"
-                      label="Asset price in ETH"
-                      placeholder="Example: 0.75"
-                      errorMessage="Asset price is a required field"
-                      type="number"
+    <>
+      <div className="flex flex-col items-center md:pt-10">
+        <div className="w-full p-2 md:w-5/6 md:p-10 xl:w-2/3 2xl:w-3/5 border-2 rounded-lg bg-white">
+          <div className="flex flex-col lg:flex-row">
+            <div className="h-96 sm:w-96 relative rounded-lg lg:mr-8">
+              <Image
+                src={image}
+                alt="NFT image"
+                layout="fill"
+                objectFit="cover"
+                objectPosition="top center"
+                className="rounded-lg"
+              />
+            </div>
+            <div className="flex-1 flex flex-col justify-between pt-5">
+              <h1 className="text-2xl font-bold">{`${name} #${nftId}`}</h1>
+              <p className="font-medium">{description}</p>
+              {shouldShowPrice && (
+                <div>
+                  <p className="font-medium py-2">Price</p>
+                  <div className="flex items-center">
+                    <Image
+                      src={maticIcon}
+                      alt="Metamask logo"
+                      height={24}
+                      width={24}
                     />
-                  )}
-                  <Button
-                    label={actions[action].label}
-                    isDisabled={(sold && !isOwner) || !isValid}
-                    isLoading={isLoading}
-                    className="mt-4 w-full"
-                    isTypeSubmit
-                    size="lg"
-                  />
-                </Form>
+                    <p className="font-bold text-2xl ml-2">{price}</p>
+                  </div>
+                </div>
               )}
-            </Formik>
+              <Formik
+                initialValues={initialValues}
+                onSubmit={handleSubmit}
+                validationSchema={validationSchema}
+                validateOnMount
+              >
+                {({ isValid }) => (
+                  <Form>
+                    {canListItem && (
+                      <Input
+                        name="price"
+                        label="Asset price in ETH"
+                        placeholder="Example: 0.75"
+                        errorMessage="Asset price is a required field"
+                        type="number"
+                      />
+                    )}
+                    <Button
+                      label={actions[action].label}
+                      isDisabled={(sold && !isOwner) || !isValid}
+                      isLoading={isLoading}
+                      className="mt-4 w-full"
+                      isTypeSubmit
+                      size="lg"
+                    />
+                  </Form>
+                )}
+              </Formik>
+            </div>
           </div>
         </div>
       </div>
-    </div>
+      <NftOwnerTable data={data} />
+    </>
   );
 };
 
