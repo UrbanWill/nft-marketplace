@@ -12,8 +12,9 @@ import useToggleWalletPanel from "../../hooks/contexts/useToggleWalletPanel";
 import WalletProvidersList from "./WalletProvidersList";
 import WalletInfo from "./WalletInfo";
 import Dropdown from "../shared/Dropdown/Dropdown";
+import shortenWalletAddress from "../../utils/shortenWalletAddress";
 
-const propTyepes = {
+const propTypes = {
   isNavOpen: PropTypes.bool.isRequired,
 };
 
@@ -86,9 +87,7 @@ const WalletPanel = ({ isNavOpen }) => {
               }}
             >
               <span className="text-sm text-gray-500">
-                {`${account.substring(0, 6)}...${account.substring(
-                  account.length - 4
-                )}`}
+                {shortenWalletAddress(account)}
               </span>
             </button>
           )}
@@ -103,5 +102,5 @@ const WalletPanel = ({ isNavOpen }) => {
   );
 };
 
-WalletPanel.propTyepes = propTyepes;
+WalletPanel.propTypes = propTypes;
 export default WalletPanel;
