@@ -58,7 +58,11 @@ const NftHistoryTable = ({ data }) => {
   return (
     <>
       <h1 className="py-5 text-xl font-bold">Item activity</h1>
-      <Table columns={columns} data={data} />
+      <Table
+        columns={columns}
+        data={data}
+        emptyTableMessage="No item activity"
+      />
     </>
   );
 };

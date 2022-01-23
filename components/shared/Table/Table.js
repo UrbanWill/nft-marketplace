@@ -5,9 +5,10 @@ import PropTypes from "prop-types";
 const propTypes = {
   data: PropTypes.arrayOf(PropTypes.object).isRequired,
   columns: PropTypes.arrayOf(PropTypes.object).isRequired,
+  emptyTableMessage: PropTypes.string,
 };
 
-const Table = ({ columns, data }) => {
+const Table = ({ columns, data, emptyTableMessage }) => {
   const { getTableProps, getTableBodyProps, headerGroups, rows, prepareRow } =
     useTable({
       columns,
@@ -42,21 +43,29 @@ const Table = ({ columns, data }) => {
                 {...getTableBodyProps()}
                 className="bg-white divide-y divide-gray-200"
               >
-                {rows.map((row) => {
-                  prepareRow(row);
-                  return (
-                    <tr {...row.getRowProps()}>
-                      {row.cells.map((cell) => (
-                        <td
-                          {...cell.getCellProps()}
-                          className="px-1 sm:px-6 py-4 whitespace-nowrap"
-                        >
-                          {cell.render("Cell")}
-                        </td>
-                      ))}
-                    </tr>
-                  );
-                })}
+                {rows.length ? (
+                  rows.map((row) => {
+                    prepareRow(row);
+                    return (
+                      <tr {...row.getRowProps()}>
+                        {row.cells.map((cell) => (
+                          <td
+                            {...cell.getCellProps()}
+                            className="px-1 sm:px-6 py-4 whitespace-nowrap"
+                          >
+                            {cell.render("Cell")}
+                          </td>
+                        ))}
+                      </tr>
+                    );
+                  })
+                ) : (
+                  <tr className="relative h-12">
+                    <td className="px-1 sm:px-6 py-4 whitespace-nowrap absolute top-1/2 left-1/2 transform -translate-x-1/2 -translate-y-1/2 ">
+                      {emptyTableMessage}
+                    </td>
+                  </tr>
+                )}
               </tbody>
             </table>
           </div>
@@ -66,5 +75,8 @@ const Table = ({ columns, data }) => {
   );
 };
 
+Table.defaultProps = {
+  emptyTableMessage: "No data for this item",
+};
 Table.propTypes = propTypes;
 export default Table;
