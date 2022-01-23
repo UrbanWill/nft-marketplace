@@ -1,7 +1,8 @@
-import { useMemo } from "react";
+import { useMemo, useState, useEffect } from "react";
 import PropTypes from "prop-types";
 import Image from "next/image";
 import Table from "../shared/Table/Table";
+import shortenWalletAddress from "../../utils/shortenWalletAddress";
 
 import maticIcon from "../../assets/images/polygon-matic.svg";
 
@@ -12,11 +13,29 @@ const propTypes = {
 };
 
 const NftOwnerTable = ({ data, price }) => {
+  const [isMobile, setIsMobile] = useState(window.innerWidth < 500);
+
+  const handleResize = () => {
+    if (window.innerWidth < 500) {
+      setIsMobile(true);
+    } else {
+      setIsMobile(false);
+    }
+  };
+
+  useEffect(() => {
+    window.addEventListener("resize", handleResize);
+    return () => window.removeEventListener("resize", handleResize);
+  });
+
   const columns = useMemo(
     () => [
       {
         Header: "Owner",
         accessor: "owner",
+        Cell: ({ value }) => (
+          <div>{isMobile ? shortenWalletAddress(value) : value}</div>
+        ),
       },
       {
         Header: "Price",
@@ -31,7 +50,12 @@ const NftOwnerTable = ({ data, price }) => {
     ],
     []
   );
-  return <Table columns={columns} data={[{ ...data, price }]} />;
+  return (
+    <>
+      <h1 className="py-5 text-xl font-bold">Owner</h1>
+      <Table columns={columns} data={[{ ...data, price }]} />
+    </>
+  );
 };
 
 NftOwnerTable.defaultProps = {
