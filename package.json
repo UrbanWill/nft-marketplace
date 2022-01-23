@@ -10,8 +10,8 @@
     "prepare": "husky install"
   },
   "engines": {
-    "node": "16.13.1",
-    "npm": "8.1.2"
+    "node": "14.16.1",
+    "npm": "7.9.0"
   },
   "dependencies": {
     "@headlessui/react": "^1.4.2",
