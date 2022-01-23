@@ -1,6 +1,7 @@
 import { useMemo, useState, useEffect } from "react";
 import PropTypes from "prop-types";
 import Image from "next/image";
+import { toast } from "react-toastify";
 import Table from "../shared/Table/Table";
 import shortenWalletAddress from "../../utils/shortenWalletAddress";
 
@@ -10,6 +11,11 @@ const propTypes = {
   data: PropTypes.shape({ price: PropTypes.number, owner: PropTypes.string })
     .isRequired,
   price: PropTypes.string,
+};
+
+const handleClick = (address) => {
+  navigator.clipboard.writeText(address);
+  toast.success("Copied wallet address!");
 };
 
 const NftOwnerTable = ({ data, price }) => {
@@ -34,7 +40,9 @@ const NftOwnerTable = ({ data, price }) => {
         Header: "Owner",
         accessor: "owner",
         Cell: ({ value }) => (
-          <div>{isMobile ? shortenWalletAddress(value) : value}</div>
+          <button type="button" onClick={() => handleClick(value)}>
+            {isMobile ? shortenWalletAddress(value) : value}
+          </button>
         ),
       },
       {
@@ -48,7 +56,7 @@ const NftOwnerTable = ({ data, price }) => {
         ),
       },
     ],
-    []
+    [isMobile]
   );
   return (
     <>

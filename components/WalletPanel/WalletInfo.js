@@ -60,7 +60,7 @@ const WalletInfo = ({ walletAddress }) => {
           className="mt-2 px-6 lg:ml-2 lg:my-0"
           onHandleClick={() => {
             navigator.clipboard.writeText(walletAddress);
-            toast.success("Copied wallet dddress!");
+            toast.success("Copied wallet address!");
           }}
         />
       </div>
