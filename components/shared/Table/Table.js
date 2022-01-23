@@ -1,5 +1,11 @@
 /* eslint-disable react/jsx-key */ // React-table is already handling the keys
 import { useTable } from "react-table";
+import PropTypes from "prop-types";
+
+const propTypes = {
+  data: PropTypes.arrayOf(PropTypes.object).isRequired,
+  columns: PropTypes.arrayOf(PropTypes.object).isRequired,
+};
 
 const Table = ({ columns, data }) => {
   const { getTableProps, getTableBodyProps, headerGroups, rows, prepareRow } =
@@ -60,4 +66,5 @@ const Table = ({ columns, data }) => {
   );
 };
 
+Table.propTypes = propTypes;
 export default Table;

@@ -222,7 +222,7 @@ const NftItem = ({ nftId }) => {
           </div>
         </div>
         <div className="pt-4 w-full md:w-5/6 xl:w-2/3 2xl:w-3/5 md:pt-10">
-          <NftOwnerTable data={data} />
+          <NftOwnerTable data={data} price={price} />
         </div>
       </div>
     </>

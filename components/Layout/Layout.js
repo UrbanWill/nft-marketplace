@@ -37,7 +37,7 @@ const Layout = ({ children }) => {
 
   const routeTitle =
     navOptions.find((option) => option.route === route)?.label ||
-    `#${query.nft}`;
+    `#${query.nft || "0000"}`;
 
   return (
     /** pt-20 to match navbar height */
