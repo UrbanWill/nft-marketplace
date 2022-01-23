@@ -7,6 +7,7 @@ import * as yup from "yup";
 import Button from "../shared/Button/Button";
 import Spinner from "../shared/Spinner/Spinner";
 import NftOwnerTable from "../NftOwnerTable/NftOwnerTable";
+import NftHistoryTable from "../NftHistoryTable/NftHistoryTable";
 
 import useGetNft from "../../hooks/queries/useGetNft";
 import useGetMarketNftHistory from "../../hooks/queries/useGetMarketNftHistory";
@@ -221,8 +222,9 @@ const NftItem = ({ nftId }) => {
             </div>
           </div>
         </div>
-        <div className="pt-4 w-full md:w-5/6 xl:w-2/3 2xl:w-3/5 md:pt-10">
+        <div className="w-full md:w-5/6 xl:w-2/3 2xl:w-3/5">
           <NftOwnerTable data={data} price={price} />
+          <NftHistoryTable data={marketNftHistory} />
         </div>
       </div>
     </>
