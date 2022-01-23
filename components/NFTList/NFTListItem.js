@@ -5,6 +5,7 @@ import PropTypes from "prop-types";
 import Image from "next/image";
 import { useWeb3React } from "@web3-react/core";
 import { useRouter } from "next/router";
+import maticIcon from "../../assets/images/polygon-matic.svg";
 
 import { nftPropType } from "../../utils/propTypes";
 import { ACTION_TYPES } from "../../utils/constants";
@@ -75,7 +76,10 @@ const NFTListItem = ({ nft, onHandleAction, isActionLoading }) => {
       </div>
       {price && (
         <div className="p-4 bg-black rounded-lg rounded-t-none">
-          <p className="text-2xl font-bold text-white">{price} ETH</p>
+          <div className="flex">
+            <Image src={maticIcon} alt="Metamask logo" height={28} width={28} />
+            <p className="text-2xl font-bold text-white ml-2">{price}</p>
+          </div>
           {hasAction && (
             <Button
               onHandleClick={handleAction}
