@@ -1,5 +1,6 @@
 import { useWeb3React } from "@web3-react/core";
 import Image from "next/image";
+import { toast } from "react-toastify";
 import { injected, fortmatic } from "../../utils/connectors";
 
 import MetaMaskLogo from "../../assets/images/metamask-logo.webp";
@@ -29,7 +30,11 @@ const WalletProvidersList = () => {
   const { active, activate, deactivate } = useWeb3React();
 
   //   TODO: Throw error/success modals
-  const handleToggleConnect = async (connector) => {
+  const handleToggleConnect = async (connector, methodName) => {
+    if (methodName === "Metamask" && !window.ethereum) {
+      toast.warn("Please install Metamask");
+      return;
+    }
     if (active) {
       deactivate();
     } else {
@@ -76,7 +81,7 @@ const WalletProvidersList = () => {
                 <button
                   className="p-3 w-full flex items-center font-bold"
                   type="button"
-                  onClick={() => handleToggleConnect(method)}
+                  onClick={() => handleToggleConnect(method, name)}
                 >
                   <div className="h-full w-6 mr-4 relative flex">{logo}</div>
                   {name}
