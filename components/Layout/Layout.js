@@ -1,6 +1,8 @@
 import { useState } from "react";
 import { useRouter } from "next/router";
 import { ToastContainer } from "react-toastify";
+import { useWeb3React } from "@web3-react/core";
+import { ExclamationIcon } from "@heroicons/react/solid";
 import Header from "../Header/Header";
 import HeaderNavPanel from "../Header/HeaderNavPanel";
 import Meta from "../Meta/Meta";
@@ -35,6 +37,8 @@ const Layout = ({ children }) => {
   const { isWalletPanelOpen, setIsWalletPanelOpen } = useToggleWalletPanel();
   const { route, query } = useRouter();
 
+  const { chainId, active } = useWeb3React();
+
   const routeTitle =
     navOptions.find((option) => option.route === route)?.label ||
     `#${query.nft || "0000"}`;
@@ -65,6 +69,20 @@ const Layout = ({ children }) => {
         isNavOpen={isNavOpen}
         onSetIsNavOpen={setIsNavOpen}
       />
+      {chainId !== 80001 && active && (
+        <div className="bg-yellow-200 text-yellow-600 h-12 flex items-center justify-center">
+          <ExclamationIcon className="h-6 w-6 mr-2" />
+          <p>Please switch to</p>
+          <a
+            href="https://github.com/UrbanWill/nft-marketplace#setup"
+            target="_blank"
+            rel="noopener noreferrer"
+            className="underline ml-1"
+          >
+            Polygon test net
+          </a>
+        </div>
+      )}
       {/* div with relative class needed to render slideover panel */}
       <div className="relative">
         <HeaderNavPanel
