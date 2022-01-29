@@ -57,7 +57,11 @@ const useBuyNft = () => {
           });
       })
       .catch((err) => {
-        toastUpdate(toastRef.current, toast.TYPE.ERROR, err.message);
+        let errorMessage = err.message;
+        if (err.data.code === -32000) {
+          errorMessage = "Insufficient funds";
+        }
+        toastUpdate(toastRef.current, toast.TYPE.ERROR, errorMessage);
         return err;
       });
 
