@@ -1,13 +1,12 @@
 import { useState, useEffect } from "react";
 import { useRouter } from "next/router";
 import { useWeb3React } from "@web3-react/core";
-import { create } from "ipfs-http-client";
 import { Formik, Form } from "formik";
 import * as yup from "yup";
-import { toast } from "react-toastify";
 import useToggleWalletPanel from "../hooks/contexts/useToggleWalletPanel";
 
 import useCreateNft from "../hooks/mutations/useCreateNft";
+import useIpfsUpload from "../hooks/mutations/useIpfsUpload";
 
 import Input from "../components/shared/Input/Input";
 import Textarea from "../components/shared/Textarea/Textarea";
@@ -15,42 +14,24 @@ import ImageUpload from "../components/shared/ImageUpload/ImageUpload";
 
 import Button from "../components/shared/Button/Button";
 
-const client = create("https://ipfs.infura.io:5001/api/v0");
 const ipfsInfuraUrl = "https://ipfs.infura.io/ipfs";
 
 export default function CreateItem() {
   const [uploadedImages, setUploadedImages] = useState([]);
   const [ipfsUrl, setIpfsUrl] = useState("");
-  const [isIpfsLoading, setIsIpfsLoading] = useState(false);
+  // const [isIpfsLoading, setIsIpfsLoading] = useState(false);
+
   const { setIsWalletPanelOpen } = useToggleWalletPanel();
   const { active } = useWeb3React();
   const router = useRouter();
 
   const { createNftMutation, isLoading } = useCreateNft();
-
-  // TODO: handleIpfsUpload should be a hook
-  /**
-   * function to upload data to ipfs
-   * @param {File | object} File or file data to be uploaded to ipfs
-   * @returns {Promise < Object >} ipfs data
-   */
-  const handleIpfsUpload = async (data) => {
-    setIsIpfsLoading(true);
-    return client
-      .add(data)
-      .then((createNftReceipt) => {
-        setIsIpfsLoading(false);
-        return createNftReceipt;
-      })
-      .catch((error) => {
-        toast.error(`Failed to upload file to IPFS ${error}`);
-      });
-  };
+  const { ipfsUploadMutation, isLoading: isIpfsLoading } = useIpfsUpload();
 
   /* Make an upload to ipfs and sets ipfsUrl whenever an image is uploaded */
   useEffect(() => {
     const ipfsUploadData = async () => {
-      const ipfsData = await handleIpfsUpload(uploadedImages[0]);
+      const ipfsData = await ipfsUploadMutation(uploadedImages[0]);
       setIpfsUrl(`${ipfsInfuraUrl}/${ipfsData.path}`);
     };
     if (uploadedImages.length) {
@@ -75,7 +56,7 @@ export default function CreateItem() {
       description,
       image: ipfsUrl,
     });
-    const uploadedData = await handleIpfsUpload(data);
+    const uploadedData = await ipfsUploadMutation(data);
     const url = `${ipfsInfuraUrl}/${uploadedData.path}`;
 
     return createNftMutation(url).then(
