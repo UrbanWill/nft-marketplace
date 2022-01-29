@@ -31,7 +31,7 @@ const useGetMarketNfts = () => {
           return formatItem(item, meta);
         })
       );
-      setNfts(formattedItems);
+      setNfts(formattedItems.reverse());
     }
 
     setIsLoading(false);
