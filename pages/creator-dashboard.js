@@ -16,6 +16,7 @@ export default function CreatorDashboard() {
   const [soldNfts, setSoldNfts] = useState([]);
   const [listedNfts, setListedNfts] = useState([]);
   const [isSortNftsLoading, setIsSortNftsLoading] = useState(true);
+  const [selectedNft, setSelectedNft] = useState({});
 
   const { active } = useWeb3React();
   const { data, isLoading, refetch } = useGetCreatedNfts();
@@ -48,7 +49,9 @@ export default function CreatorDashboard() {
   }, [active, data]);
 
   const handleRemoveNft = (nft) => {
+    setSelectedNft(nft);
     removeListingNftMutation(nft.itemId).then((res) => {
+      setSelectedNft({});
       if (
         res.code === 4001 ||
         (res.code === -32603 && res.data.code === -32000)
@@ -67,6 +70,7 @@ export default function CreatorDashboard() {
       ) : (
         <NFTList
           nfts={listedNfts}
+          selectedTokenId={selectedNft.tokenId}
           onHandleAction={handleRemoveNft}
           isActionLoading={isRemoveLoading}
           isLoading={isLoading || isSortNftsLoading}

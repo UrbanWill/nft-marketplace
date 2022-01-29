@@ -1,3 +1,4 @@
+import { useState } from "react";
 import { useWeb3React } from "@web3-react/core";
 import NFTList from "../components/NFTList/NFTList";
 import useGetMarketNfts from "../hooks/queries/useGetMarketNfts";
@@ -10,6 +11,7 @@ import useRemoveListedNft from "../hooks/mutations/useRemoveListedNft";
 const { REMOVE_ITEM, BUY } = ACTION_TYPES;
 
 export default function Home() {
+  const [selectedNft, setSelectedNft] = useState({});
   const { data, isLoading, refetch } = useGetMarketNfts();
   const { active } = useWeb3React();
   const { setIsWalletPanelOpen } = useToggleWalletPanel();
@@ -23,13 +25,14 @@ export default function Home() {
       // Opens wallet panel for user to connect wallet before making a purchase
       return setIsWalletPanelOpen(true);
     }
-
+    setSelectedNft(nft);
     const actions = {
       [REMOVE_ITEM]: () => removeListingNftMutation(nft.itemId),
       [BUY]: () => buyNftMutation(nft),
     };
 
     return actions[action]().then((res) => {
+      setSelectedNft({});
       // Only refetch if user did not cancel the transaction or has insufficient funds
       if (
         res.code === 4001 ||
@@ -46,6 +49,7 @@ export default function Home() {
       <h1 className="py-5 text-2xl font-bold">Explore NFTs</h1>
       <NFTList
         nfts={data}
+        selectedTokenId={selectedNft.tokenId}
         onHandleAction={handleAction}
         isActionLoading={isBuyLoading || isRemoveLoading}
         isLoading={isLoading}

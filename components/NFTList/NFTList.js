@@ -11,6 +11,7 @@ const propTypes = {
   isActionLoading: PropTypes.bool,
   isLoading: PropTypes.bool.isRequired,
   emptyListMessage: PropTypes.string.isRequired,
+  selectedTokenId: PropTypes.number,
 };
 
 const getContent = (content) => (
@@ -23,6 +24,7 @@ const NFTList = ({
   isActionLoading,
   isLoading,
   emptyListMessage,
+  selectedTokenId,
 }) => {
   if (isLoading) {
     return getContent(<Spinner size="10" />);
@@ -40,6 +42,7 @@ const NFTList = ({
           key={nft.tokenId}
           onHandleAction={onHandleAction}
           isActionLoading={isActionLoading}
+          selectedTokenId={selectedTokenId}
         />
       ))}
     </ul>
@@ -49,6 +52,7 @@ const NFTList = ({
 NFTList.defaultProps = {
   onHandleAction: null,
   isActionLoading: false,
+  selectedTokenId: null,
 };
 
 NFTList.propTypes = propTypes;
