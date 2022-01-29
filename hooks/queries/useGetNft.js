@@ -1,6 +1,6 @@
 import { useState, useEffect, useCallback } from "react";
-
 import axios from "axios";
+import formatItem from "../../utils/formatItem";
 
 import useEthers from "../contexts/useEthers";
 
@@ -33,14 +33,8 @@ const useGetNft = (tokenId) => {
 
     const tokenUri = await tokenContract.tokenURI(tokenId);
     const meta = await axios.get(tokenUri);
-    const formattedItem = {
-      tokenId,
-      image: meta.data.image,
-      name: meta.data.name,
-      description: meta.data.description,
-      owner,
-    };
-    setNft(formattedItem);
+
+    setNft(formatItem({ tokenId, owner }, meta));
 
     setIsLoading(false);
   }, [tokenContract, tokenId]);

@@ -1,9 +1,7 @@
 import { useState, useEffect, useCallback } from "react";
-import { ethers } from "ethers";
 import { toast } from "react-toastify";
-
 import axios from "axios";
-import { CRYPTO_CURRENCY } from "../../utils/constants";
+import formatItem from "../../utils/formatItem";
 
 import useEthers from "../contexts/useEthers";
 
@@ -30,21 +28,7 @@ const useGetMarketNfts = () => {
         data.map(async (item) => {
           const tokenUri = await tokenContract.tokenURI(item.tokenId);
           const meta = await axios.get(tokenUri);
-          const price = ethers.utils.formatUnits(
-            item.price.toString(),
-            CRYPTO_CURRENCY
-          );
-          const formattedItem = {
-            price,
-            tokenId: item.tokenId.toNumber(),
-            itemId: item.itemId.toNumber(),
-            seller: item.seller,
-            owner: item.owner,
-            image: meta.data.image,
-            name: meta.data.name,
-            description: meta.data.description,
-          };
-          return formattedItem;
+          return formatItem(item, meta);
         })
       );
       setNfts(formattedItems);

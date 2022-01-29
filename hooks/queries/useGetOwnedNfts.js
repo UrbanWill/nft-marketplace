@@ -1,8 +1,8 @@
 import { useState, useEffect, useCallback } from "react";
 import { useWeb3React } from "@web3-react/core";
 import { toast } from "react-toastify";
-
 import axios from "axios";
+import formatItem from "../../utils/formatItem";
 
 import useEthers from "../contexts/useEthers";
 
@@ -37,13 +37,7 @@ const useGetOwnedNfts = () => {
         data.map(async (item) => {
           const tokenUri = await tokenContract.tokenURI(item.toNumber());
           const meta = await axios.get(tokenUri);
-          const formattedItem = {
-            tokenId: item.toNumber(),
-            image: meta.data.image,
-            name: meta.data.name,
-            description: meta.data.description,
-          };
-          return formattedItem;
+          return formatItem(item, meta);
         })
       );
       setNfts(formattedItems);

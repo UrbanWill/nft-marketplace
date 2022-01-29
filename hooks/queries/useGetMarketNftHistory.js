@@ -1,6 +1,5 @@
 import { useState, useEffect, useCallback } from "react";
-import { ethers } from "ethers";
-import { CRYPTO_CURRENCY } from "../../utils/constants";
+import formatItem from "../../utils/formatItem";
 
 import useEthers from "../contexts/useEthers";
 
@@ -26,21 +25,7 @@ const useGetMarketNftHistory = (tokenId) => {
 
     if (marketNftHistory) {
       const formattedItems = await Promise.all(
-        marketNftHistory.map(async (item) => {
-          const price = ethers.utils.formatUnits(
-            item.price.toString(),
-            CRYPTO_CURRENCY
-          );
-          const formattedItem = {
-            price,
-            tokenId: item.tokenId.toNumber(),
-            itemId: item.itemId.toNumber(),
-            seller: item.seller,
-            owner: item.owner,
-            sold: item.sold,
-          };
-          return formattedItem;
-        })
+        marketNftHistory.map(async (item) => formatItem(item))
       );
       setNftMarketHistory(formattedItems);
     }
