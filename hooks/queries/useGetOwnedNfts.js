@@ -37,7 +37,7 @@ const useGetOwnedNfts = () => {
         data.map(async (item) => {
           const tokenUri = await tokenContract.tokenURI(item.toNumber());
           const meta = await axios.get(tokenUri);
-          return formatItem(item, meta);
+          return formatItem({ tokenId: item }, meta);
         })
       );
       setNfts(formattedItems);
