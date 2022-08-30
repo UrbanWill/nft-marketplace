@@ -1,11 +1,16 @@
 import { useWeb3React } from "@web3-react/core";
 import Image from "next/image";
 import { toast } from "react-toastify";
+
+// utils
+import { changeNetwork } from "../../utils/wallet";
 import { injected, fortmatic } from "../../utils/connectors";
 
+// assets
 import MetaMaskLogo from "../../assets/images/metamask-logo.webp";
 import FortmaticLogo from "../../assets/images/fortmatic-logo.webp";
 
+// constants
 const connectors = {
   Injected: {
     name: "Metamask",
@@ -27,7 +32,7 @@ const dappUrl = "nft-marketplace-dusky.vercel.app/";
 const metamaskAppDeepLink = `https://metamask.app.link/dapp/${dappUrl}`;
 
 const WalletProvidersList = () => {
-  const { active, activate, deactivate } = useWeb3React();
+  const { active, activate, deactivate, chainId } = useWeb3React();
 
   //   TODO: Throw error/success modals
   const handleToggleConnect = async (connector, methodName) => {
@@ -35,6 +40,15 @@ const WalletProvidersList = () => {
       toast.warn("Please install Metamask");
       return;
     }
+
+    if (chainId !== 80001) {
+      const response = await changeNetwork();
+      if (!response) {
+        toast.warn("Please switch to Polygon testnet");
+        return;
+      }
+    }
+
     if (active) {
       deactivate();
     } else {
