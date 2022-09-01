@@ -17,10 +17,23 @@ const ACTION_TYPES = {
   BUY: "buy",
 };
 
+const MATIC_NETWORK = {
+  chainId: "0x13881",
+  rpcUrls: ["https://matic-mumbai.chainstacklabs.com/"],
+  chainName: "Matic Test net",
+  nativeCurrency: {
+    name: "MATIC",
+    symbol: "MATIC",
+    decimals: 18,
+  },
+  blockExplorerUrls: ["https://mumbai.polygonscan.com/"],
+};
+
 export {
   HEADER_ROUTES,
   INPUT_MAX_LENGTH,
   TEXTAREA_MAX_LENGTH,
   CRYPTO_CURRENCY,
   ACTION_TYPES,
+  MATIC_NETWORK,
 };

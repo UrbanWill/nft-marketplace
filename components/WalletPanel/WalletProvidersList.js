@@ -1,12 +1,19 @@
 import { useWeb3React } from "@web3-react/core";
 import Image from "next/image";
 import { toast } from "react-toastify";
+
+// utils
+import { changeNetwork } from "../../utils/wallet";
 import { injected, fortmatic } from "../../utils/connectors";
 
+// assets
 import MetaMaskLogo from "../../assets/images/metamask-logo.webp";
 import FortmaticLogo from "../../assets/images/fortmatic-logo.webp";
 
-const connectors = {
+// constants
+import { MATIC_NETWORK } from "../../utils/constants";
+
+const CONNECTORS = {
   Injected: {
     name: "Metamask",
     logo: <Image src={MetaMaskLogo} alt="Metamask logo" />,
@@ -35,12 +42,15 @@ const WalletProvidersList = () => {
       toast.warn("Please install Metamask");
       return;
     }
+
     if (active) {
       deactivate();
     } else {
       await activate(connector)
-        .then(() => {
-          console.log("Connected wallet successfully");
+        .then(async () => {
+          if (window.ethereum.chainId !== MATIC_NETWORK.chainId) {
+            await changeNetwork();
+          }
         })
         .catch((err) => {
           console.log(err);
@@ -55,7 +65,7 @@ const WalletProvidersList = () => {
       </p>
       <div className="w-full bg-white rounded shadow">
         <ul className="divide-y-2 divide-gray-100">
-          {Object.values(connectors).map((connector) => {
+          {Object.values(CONNECTORS).map((connector) => {
             const { name, logo, method } = connector;
 
             if (isMobileDevice() && name === "Metamask" && !window.ethereum) {

@@ -1,26 +1,15 @@
 /* eslint-disable import/prefer-default-export */
+import { MATIC_NETWORK } from "./constants";
 
 /**
  * @function changeNetwork
  * @return { Promise<Object> }
  */
 
-export const changeNetwork = () => {
+export const changeNetwork = async () => {
   if (!window.ethereum) return null;
   return window.ethereum.request({
     method: "wallet_addEthereumChain",
-    params: [
-      {
-        chainId: "0x13881",
-        rpcUrls: ["https://matic-mumbai.chainstacklabs.com/"],
-        chainName: "Matic Test net",
-        nativeCurrency: {
-          name: "MATIC",
-          symbol: "MATIC",
-          decimals: 18,
-        },
-        blockExplorerUrls: ["https://mumbai.polygonscan.com/"],
-      },
-    ],
+    params: [MATIC_NETWORK],
   });
 };

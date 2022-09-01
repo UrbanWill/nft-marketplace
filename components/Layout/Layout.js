@@ -3,12 +3,21 @@ import { useRouter } from "next/router";
 import { ToastContainer } from "react-toastify";
 import { useWeb3React } from "@web3-react/core";
 import { ExclamationIcon } from "@heroicons/react/solid";
+
+// hooks
+import useToggleWalletPanel from "../../hooks/contexts/useToggleWalletPanel";
+
+// components
 import Header from "../Header/Header";
 import HeaderNavPanel from "../Header/HeaderNavPanel";
 import Meta from "../Meta/Meta";
-import useToggleWalletPanel from "../../hooks/contexts/useToggleWalletPanel";
 import WalletPanel from "../WalletPanel/WalletPanel";
+
+// styles
 import "react-toastify/dist/ReactToastify.css";
+
+// utils
+import { changeNetwork } from "../../utils/wallet";
 
 import { HEADER_ROUTES } from "../../utils/constants";
 
@@ -72,15 +81,15 @@ const Layout = ({ children }) => {
       {chainId !== 80001 && active && (
         <div className="bg-yellow-200 text-yellow-600 h-12 flex items-center justify-center">
           <ExclamationIcon className="h-6 w-6 mr-2" />
-          <p>Please switch to</p>
-          <a
-            href="https://github.com/UrbanWill/nft-marketplace#setup"
-            target="_blank"
-            rel="noopener noreferrer"
-            className="underline ml-1"
+          <span>Please click</span>
+          <button
+            type="button"
+            onClick={changeNetwork}
+            className="underline m-1"
           >
-            Polygon test net
-          </a>
+            here
+          </button>
+          <span>to switch to Polygon test net</span>
         </div>
       )}
       {/* div with relative class needed to render slideover panel */}

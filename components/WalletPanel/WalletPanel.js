@@ -33,7 +33,6 @@ const WalletPanel = ({ isNavOpen }) => {
   const handleWalletDisconnect = (event) => {
     event.stopPropagation();
     deactivate();
-    toast.warn("Wallet disconnected successfully");
   };
 
   const dropdownOptions = [
