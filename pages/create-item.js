@@ -16,17 +16,17 @@ import Button from "../components/shared/Button/Button";
 
 const ipfsInfuraUrl = "https://ipfs.infura.io/ipfs";
 
-export default function CreateItem() {
+export default function CreateItem({ ipfsApiKey }) {
   const [uploadedImages, setUploadedImages] = useState([]);
   const [ipfsUrl, setIpfsUrl] = useState("");
-  // const [isIpfsLoading, setIsIpfsLoading] = useState(false);
 
   const { setIsWalletPanelOpen } = useToggleWalletPanel();
   const { active } = useWeb3React();
   const router = useRouter();
 
   const { createNftMutation, isLoading } = useCreateNft();
-  const { ipfsUploadMutation, isLoading: isIpfsLoading } = useIpfsUpload();
+  const { ipfsUploadMutation, isLoading: isIpfsLoading } =
+    useIpfsUpload(ipfsApiKey);
 
   /* Make an upload to ipfs and sets ipfsUrl whenever an image is uploaded */
   useEffect(() => {
@@ -124,4 +124,12 @@ export default function CreateItem() {
       </Formik>
     </div>
   );
+}
+
+export async function getServerSideProps() {
+  return {
+    props: {
+      ipfsApiKey: process.env.IPFS_API_KEY,
+    },
+  };
 }

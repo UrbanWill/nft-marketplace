@@ -1,12 +1,33 @@
 import { useState } from "react";
 import { toast } from "react-toastify";
+import { Buffer } from "buffer";
 import { create } from "ipfs-http-client";
 
-const client = create("https://ipfs.infura.io:5001/api/v0");
+// constants
+import { IPFS_PROJECT_ID } from "../../utils/constants";
 
-const useIpfsUpload = () => {
+/**
+ * function to return hook, data and loading state
+ * @param {ipfsApiKey} string secret ipfs key
+ * @returns {ipfsUploadMutation: fn, isLoading: bool, data: ipfs data response} ipfs data
+ */
+
+const useIpfsUpload = (ipfsApiKey) => {
   const [isLoading, setIsLoading] = useState(false);
   const [data, setData] = useState([]);
+
+  const auth = `Basic ${Buffer.from(
+    `${IPFS_PROJECT_ID}:${ipfsApiKey}`
+  ).toString("base64")}`;
+
+  const client = create({
+    host: "ipfs.infura.io",
+    port: 5001,
+    protocol: "https",
+    headers: {
+      authorization: auth,
+    },
+  });
 
   /**
    * function to upload data to ipfs
