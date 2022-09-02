@@ -29,6 +29,8 @@ const MATIC_NETWORK = {
   blockExplorerUrls: ["https://mumbai.polygonscan.com/"],
 };
 
+const IPFS_PROJECT_ID = "2EB324y279lAM6hkaRLDEPQjcLU";
+
 export {
   HEADER_ROUTES,
   INPUT_MAX_LENGTH,
@@ -36,4 +38,5 @@ export {
   CRYPTO_CURRENCY,
   ACTION_TYPES,
   MATIC_NETWORK,
+  IPFS_PROJECT_ID,
 };
