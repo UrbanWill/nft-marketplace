@@ -35,7 +35,7 @@ const SlideOverPanel = ({ isOpen, onSetIsOpen, children, shouldStayOpen }) => {
 
   useEffect(() => {
     if (isOpen && !shouldStayOpen) {
-      /* Prevent scrolling on mount and adds background style 
+      /* Prevent scrolling on mount and adds background style
       if shouldStayOpen is true do not add event listeners again
       */
       document.body.style.overflow = "hidden";

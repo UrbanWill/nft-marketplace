@@ -19,6 +19,16 @@ const propTypes = {
 const Header = ({ navOptions, currentRoute, isNavOpen, onSetIsNavOpen }) => {
   const { setIsWalletPanelOpen } = useToggleWalletPanel();
 
+  const handleWalletOpen = (e) => {
+    e.stopPropagation();
+    setIsWalletPanelOpen((prev) => !prev);
+  };
+
+  const handleToggleNavPanel = (e) => {
+    e.stopPropagation();
+    onSetIsNavOpen((prev) => !prev);
+  };
+
   return (
     <nav className="fixed inset-x-0 top-0 border-b shadow-md p-6 pb-4 z-40 bg-white h-20">
       <div className="flex items-center">
@@ -45,10 +55,7 @@ const Header = ({ navOptions, currentRoute, isNavOpen, onSetIsNavOpen }) => {
           </div>
           <div className="ml-auto flex items-center">
             <div className="lg:hidden flex">
-              <button
-                type="button"
-                onClick={() => onSetIsNavOpen((prev) => !prev)}
-              >
+              <button type="button" onClick={(e) => handleToggleNavPanel(e)}>
                 <span className="sr-only">Open main menu</span>
                 {isNavOpen ? (
                   <XIcon className="block h-7 w-7" aria-hidden="true" />
@@ -61,7 +68,7 @@ const Header = ({ navOptions, currentRoute, isNavOpen, onSetIsNavOpen }) => {
               icon={
                 <CubeTransparentIcon className="h-6 w-6" aria-hidden="true" />
               }
-              onHandleClick={() => setIsWalletPanelOpen((prev) => !prev)}
+              onHandleClick={(e) => handleWalletOpen(e)}
               className="hidden lg:block"
             />
           </div>
