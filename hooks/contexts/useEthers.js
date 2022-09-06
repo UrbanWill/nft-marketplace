@@ -2,9 +2,15 @@ import { createContext, useContext, useState, useEffect } from "react";
 import { useWeb3React } from "@web3-react/core";
 import { ethers } from "ethers";
 
+// ABIs
 import NFT from "../../artifacts/contracts/NFT.sol/NFT.json";
 import Market from "../../artifacts/contracts/NFTMarket.sol/NFTMarket.json";
+
+// contract addresses
 import { nftaddress, nftmarketaddress } from "../../config";
+
+// constants
+import { PROJECT_ID } from "../../utils/constants";
 
 const EthersContext = createContext();
 
@@ -52,9 +58,11 @@ const useEthers = () => {
 };
 
 /** Static contract values */
-const provider = new ethers.providers.JsonRpcProvider(
-  "https://polygon-mumbai.infura.io/v3/dfd24f5f991f4ebb9206d06d97ee7ef3"
+const provider = new ethers.providers.InfuraProvider(
+  "maticmum", // polygon mumbai network
+  PROJECT_ID // project id
 );
+
 // const provider = new ethers.providers.JsonRpcProvider();
 const tokenContract = new ethers.Contract(nftaddress, NFT.abi, provider);
 const marketContract = new ethers.Contract(

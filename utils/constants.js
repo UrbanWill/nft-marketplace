@@ -13,6 +13,10 @@ const CRYPTO_CURRENCY = "ether";
 
 const INFURA_URL = "infura-ipfs.io";
 
+const PROJECT_ID = "3ded568cc04c4432ae7b581e2e510f14";
+
+const IPFS_PROJECT_ID = "2EB324y279lAM6hkaRLDEPQjcLU";
+
 const ACTION_TYPES = {
   LIST_ITEM: "list_item",
   REMOVE_ITEM: "remove_item",
@@ -31,8 +35,6 @@ const MATIC_NETWORK = {
   blockExplorerUrls: ["https://mumbai.polygonscan.com/"],
 };
 
-const IPFS_PROJECT_ID = "2EB324y279lAM6hkaRLDEPQjcLU";
-
 export {
   HEADER_ROUTES,
   INPUT_MAX_LENGTH,
@@ -42,4 +44,5 @@ export {
   MATIC_NETWORK,
   IPFS_PROJECT_ID,
   INFURA_URL,
+  PROJECT_ID,
 };
