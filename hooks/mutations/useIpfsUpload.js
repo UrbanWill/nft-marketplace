@@ -4,7 +4,7 @@ import { Buffer } from "buffer";
 import { create } from "ipfs-http-client";
 
 // constants
-import { IPFS_PROJECT_ID } from "../../utils/constants";
+import { IPFS_PROJECT_ID, INFURA_URL } from "../../utils/constants";
 
 /**
  * function to return hook, data and loading state
@@ -21,7 +21,7 @@ const useIpfsUpload = (ipfsApiKey) => {
   ).toString("base64")}`;
 
   const client = create({
-    host: "ipfs.infura.io",
+    host: INFURA_URL,
     port: 5001,
     protocol: "https",
     headers: {

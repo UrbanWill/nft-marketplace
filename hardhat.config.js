@@ -1,10 +1,10 @@
+import { PROJECT_ID } from "./utils/constants";
+
 require("@nomiclabs/hardhat-waffle");
 const fs = require("fs");
 
 const privateKey =
   fs.readFileSync(".secret").toString().trim() || "01234567890123456789";
-
-const projectId = "dfd24f5f991f4ebb9206d06d97ee7ef3";
 
 module.exports = {
   defaultNetwork: "hardhat",
@@ -13,11 +13,11 @@ module.exports = {
       chainId: 1337,
     },
     mumbai: {
-      url: `https://polygon-mumbai.infura.io/v3/${projectId}`,
+      url: `https://polygon-mumbai.infura.io/v3/${PROJECT_ID}`,
       accounts: [privateKey],
     },
     mainnet: {
-      url: `https://polygon-mainnet.infura.io/v3/${projectId}`,
+      url: `https://polygon-mainnet.infura.io/v3/${PROJECT_ID}`,
       accounts: [privateKey],
     },
   },
