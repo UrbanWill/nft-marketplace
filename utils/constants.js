@@ -11,6 +11,8 @@ const TEXTAREA_MAX_LENGTH = 255;
 
 const CRYPTO_CURRENCY = "ether";
 
+const INFURA_URL = "infura-ipfs.io";
+
 const ACTION_TYPES = {
   LIST_ITEM: "list_item",
   REMOVE_ITEM: "remove_item",
@@ -39,4 +41,5 @@ export {
   ACTION_TYPES,
   MATIC_NETWORK,
   IPFS_PROJECT_ID,
+  INFURA_URL,
 };
